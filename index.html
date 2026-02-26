@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DarkRoot • Team Hub</title>
+    <title>DarkRoot • Admin Hub</title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -138,6 +138,50 @@
             font-size: 0.875rem;
         }
 
+        /* Input Fields */
+        .input-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-xs);
+            margin-left: var(--space-xs);
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1rem;
+        }
+
+        .input-field input {
+            width: 100%;
+            height: 48px;
+            padding: 0 var(--space-md) 0 calc(var(--space-xl) + var(--space-sm));
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
         /* Buttons */
         .btn {
             height: 48px;
@@ -174,22 +218,6 @@
             background: var(--gray-100);
             border-color: var(--primary);
             color: var(--primary);
-        }
-
-        .btn-google {
-            background: white;
-            color: var(--gray-700);
-            border: 1px solid var(--gray-300);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-google:active {
-            background: var(--gray-100);
-        }
-
-        .btn-google i {
-            color: #ea4335;
-            font-size: 1.2rem;
         }
 
         .btn-danger {
@@ -1211,53 +1239,97 @@
         .search-box input:focus {
             outline: none;
         }
-
-        /* Loading overlay for redirect */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            flex-direction: column;
-            gap: var(--space-md);
-        }
-        .loading-overlay .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--gray-200);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
     </style>
 </head>
 <body>
-    <!-- Loading overlay for redirect -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <p>Signing in, please wait...</p>
-    </div>
-
-    <!-- Auth Section (only Google login) -->
+    <!-- Auth Section -->
     <div id="authSection" class="auth-section">
-        <div class="auth-card">
+        <div id="loginCard" class="auth-card">
             <div class="auth-header">
                 <div class="auth-logo">
                     <i class="fas fa-building"></i>
                 </div>
-                <h2>Welcome to DarkRoot</h2>
-                <p>Sign in with your Google account</p>
+                <h2>Welcome Back</h2>
+                <p>Sign in to continue</p>
             </div>
             
-            <button class="btn btn-google" id="googleLoginBtn">
-                <i class="fab fa-google"></i>
-                <span>Continue with Google</span>
+            <div class="input-group">
+                <label class="input-label">Email</label>
+                <div class="input-field">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="name@darkroot.com">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Password</label>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Enter password">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+
+            <button class="btn btn-outline" id="showSignupBtn" style="margin-top: var(--space-sm);">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </div>
+
+        <!-- Signup Card -->
+        <div id="signupCard" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h2>Create Account</h2>
+                <p>Join DarkRoot</p>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Full Name</label>
+                <div class="input-field">
+                    <i class="far fa-user"></i>
+                    <input type="text" id="signupName" placeholder="John Doe">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Email</label>
+                <div class="input-field">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" id="signupEmail" placeholder="john@darkroot.com">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Password</label>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupPassword" placeholder="Min 6 chars">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Confirm Password</label>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupConfirmPassword" placeholder="Re-enter">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="signupBtn">
+                <i class="fas fa-check-circle"></i>
+                Register
+            </button>
+
+            <button class="btn btn-outline" id="backToLoginBtn" style="margin-top: var(--space-sm);">
+                <i class="fas fa-arrow-left"></i>
+                Back
             </button>
         </div>
     </div>
@@ -1735,7 +1807,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         // ==================== IMGBB CONFIG ====================
         const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
@@ -1760,7 +1831,6 @@
         const toastIcon = document.getElementById('toastIcon');
         const adminNavItem = document.getElementById('adminNavItem');
         const adminBottomNav = document.getElementById('adminBottomNav');
-        const loadingOverlay = document.getElementById('loadingOverlay');
 
         // Views
         const dashboardView = document.getElementById('dashboardView');
@@ -1934,32 +2004,7 @@
             });
         });
 
-        // ==================== AUTH - GOOGLE REDIRECT (improved) ====================
-        document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-            try {
-                loadingOverlay.style.display = 'flex';
-                // Use redirect for better mobile compatibility
-                await auth.signInWithRedirect(googleProvider);
-                // The page will redirect, so no need to hide overlay
-            } catch (error) {
-                loadingOverlay.style.display = 'none';
-                showToast(error.message, 'error');
-            }
-        });
-
-        // Handle redirect result - call this before setting up the auth listener to capture any error
-        auth.getRedirectResult().then(async (result) => {
-            if (result.user) {
-                // Successfully signed in via redirect - set flag for welcome popup
-                isNewLogin = true;
-                // The user will be picked up by onAuthStateChanged
-            }
-        }).catch((error) => {
-            // Show error and hide loading if it's still visible
-            loadingOverlay.style.display = 'none';
-            showToast(error.message, 'error');
-        });
-
+        // ==================== AUTH ====================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
@@ -1973,12 +2018,6 @@
                         await db.ref('members/' + user.uid).update({
                             lastActive: Date.now()
                         });
-                        
-                        // Update photoURL from Google if changed (optional)
-                        if (user.photoURL && currentMemberData.photoURL !== user.photoURL) {
-                            await db.ref('members/' + user.uid).update({ photoURL: user.photoURL });
-                            currentMemberData.photoURL = user.photoURL;
-                        }
                         
                         // Check if admin
                         if (currentMemberData.role === 'admin') {
@@ -2010,17 +2049,14 @@
                         showToast('Welcome back, ' + (currentMemberData.name || 'Member'));
                     } else {
                         await createMemberRecord(user);
-                        isNewLogin = true; // will trigger welcome popup
+                        isNewLogin = true;
                     }
                 } catch (error) {
                     showToast('Error loading profile', 'error');
-                } finally {
-                    loadingOverlay.style.display = 'none';
                 }
             } else {
                 authSection.style.display = 'flex';
                 dashboardSection.style.display = 'none';
-                loadingOverlay.style.display = 'none'; // in case we come back signed out
             }
         });
 
@@ -2028,8 +2064,7 @@
             const memberData = {
                 name: user.displayName || 'New Member',
                 email: user.email,
-                photoURL: user.photoURL || '',
-                role: 'Member',
+                role: 'Member',  // default role
                 points: 0,
                 salary: 0,
                 status: 'Active',
@@ -2046,7 +2081,7 @@
             
             currentMemberData = memberData;
             updateUIWithMemberData();
-            showWelcomePopup(); // immediate for new signup
+            showWelcomePopup();
         }
 
         function updateUIWithMemberData() {
@@ -2074,9 +2109,6 @@
             
             if (currentMemberData.photoURL) {
                 updateProfilePicture(currentMemberData.photoURL);
-            } else if (currentUser?.photoURL) {
-                // fallback to Google photo if not in DB yet
-                updateProfilePicture(currentUser.photoURL);
             }
             
             calculateRank();
@@ -2112,6 +2144,64 @@
                 console.error('Error calculating rank:', error);
             }
         }
+
+        // ==================== LOGIN ====================
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                isNewLogin = true;
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        document.getElementById('showSignupBtn').addEventListener('click', () => {
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('signupCard').style.display = 'block';
+        });
+
+        document.getElementById('backToLoginBtn').addEventListener('click', () => {
+            document.getElementById('signupCard').style.display = 'none';
+            document.getElementById('loginCard').style.display = 'block';
+        });
+
+        document.getElementById('signupBtn').addEventListener('click', async () => {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirmPassword').value;
+            
+            if (!name || !email || !password || !confirm) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('Password must be 6+ characters', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                await userCredential.user.updateProfile({ displayName: name });
+                showToast('Account created!');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
 
         document.getElementById('logoutBtn').addEventListener('click', () => {
             auth.signOut();
@@ -2582,7 +2672,7 @@
             const snapshot = await db.ref('members').once('value');
             const members = [];
             snapshot.forEach(child => members.push({ uid: child.key, ...child.val() }));
-            allMembers = members;
+            allMembers = members; // update global
             displayAdminUsers(members);
         }
 
@@ -2615,7 +2705,7 @@
         }
 
         document.getElementById('adminUserSearch')?.addEventListener('input', () => {
-            loadAdminUsers();
+            loadAdminUsers(); // re-filter
         });
 
         window.openEditUserModal = function(uid) {
@@ -2676,29 +2766,22 @@
         }
 
         function initCharts() {
+            // Member growth chart (last 7 days)
             const ctx1 = document.getElementById('memberChart').getContext('2d');
             const ctx2 = document.getElementById('pointsChart').getContext('2d');
             
+            // Destroy existing charts if any
             if (memberChart) memberChart.destroy();
             if (pointsChart) pointsChart.destroy();
             
+            // Generate last 7 days labels
             const labels = [];
             for (let i = 6; i >= 0; i--) {
                 labels.push(moment().subtract(i, 'days').format('ddd'));
             }
             
-            // Use real member counts per day? For demo we'll use cumulative from all members join dates.
-            // Simplified: just show total members as last point.
-            const memberData = [];
-            let cumulative = 0;
-            for (let i = 6; i >= 0; i--) {
-                const dayStart = moment().subtract(i, 'days').startOf('day').valueOf();
-                const dayEnd = moment().subtract(i, 'days').endOf('day').valueOf();
-                const count = allMembers.filter(m => m.joinDate >= dayStart && m.joinDate <= dayEnd).length;
-                cumulative += count;
-                memberData.push(cumulative);
-            }
-            
+            // Mock data - in real app you'd aggregate from joinDate
+            const memberData = [5, 8, 12, 15, 18, 22, allMembers.length];
             const pointsData = [1200, 1500, 1800, 2100, 2400, 2700, allMembers.reduce((sum, m) => sum + (m.points || 0), 0)];
             
             memberChart = new Chart(ctx1, {
@@ -2760,7 +2843,7 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        console.log('DarkRoot - Google Redirect Auth (improved)');
+        console.log('DarkRoot Admin Hub - ready');
     </script>
 </body>
 </html>
