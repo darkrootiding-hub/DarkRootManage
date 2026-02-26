@@ -1903,14 +1903,25 @@
             });
         });
 
-        // ==================== AUTH - GOOGLE ONLY ====================
+        // ==================== AUTH - GOOGLE REDIRECT ====================
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             try {
-                await auth.signInWithPopup(googleProvider);
-                isNewLogin = true; // will be used after auth state change
+                // Use redirect for better mobile compatibility
+                await auth.signInWithRedirect(googleProvider);
+                // No need to handle result here, it will redirect and come back
             } catch (error) {
                 showToast(error.message, 'error');
             }
+        });
+
+        // Handle redirect result on page load
+        auth.getRedirectResult().then(async (result) => {
+            if (result.user) {
+                // Successfully signed in via redirect
+                isNewLogin = true; // will be used in onAuthStateChanged
+            }
+        }).catch((error) => {
+            showToast(error.message, 'error');
         });
 
         auth.onAuthStateChanged(async (user) => {
@@ -2699,7 +2710,7 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        console.log('DarkRoot - Google Only Auth, all features intact');
+        console.log('DarkRoot - Google Redirect Auth, all features intact');
     </script>
 </body>
 </html>
