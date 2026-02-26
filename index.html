@@ -1211,9 +1211,39 @@
         .search-box input:focus {
             outline: none;
         }
+
+        /* Loading overlay for redirect */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        .loading-overlay .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
+    <!-- Loading overlay for redirect -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Signing in, please wait...</p>
+    </div>
+
     <!-- Auth Section (only Google login) -->
     <div id="authSection" class="auth-section">
         <div class="auth-card">
@@ -1227,7 +1257,7 @@
             
             <button class="btn btn-google" id="googleLoginBtn">
                 <i class="fab fa-google"></i>
-                Continue with Google
+                <span>Continue with Google</span>
             </button>
         </div>
     </div>
@@ -1730,6 +1760,7 @@
         const toastIcon = document.getElementById('toastIcon');
         const adminNavItem = document.getElementById('adminNavItem');
         const adminBottomNav = document.getElementById('adminBottomNav');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
         // Views
         const dashboardView = document.getElementById('dashboardView');
@@ -1903,24 +1934,29 @@
             });
         });
 
-        // ==================== AUTH - GOOGLE REDIRECT ====================
+        // ==================== AUTH - GOOGLE REDIRECT (improved) ====================
         document.getElementById('googleLoginBtn').addEventListener('click', async () => {
             try {
+                loadingOverlay.style.display = 'flex';
                 // Use redirect for better mobile compatibility
                 await auth.signInWithRedirect(googleProvider);
-                // No need to handle result here, it will redirect and come back
+                // The page will redirect, so no need to hide overlay
             } catch (error) {
+                loadingOverlay.style.display = 'none';
                 showToast(error.message, 'error');
             }
         });
 
-        // Handle redirect result on page load
+        // Handle redirect result - call this before setting up the auth listener to capture any error
         auth.getRedirectResult().then(async (result) => {
             if (result.user) {
-                // Successfully signed in via redirect
-                isNewLogin = true; // will be used in onAuthStateChanged
+                // Successfully signed in via redirect - set flag for welcome popup
+                isNewLogin = true;
+                // The user will be picked up by onAuthStateChanged
             }
         }).catch((error) => {
+            // Show error and hide loading if it's still visible
+            loadingOverlay.style.display = 'none';
             showToast(error.message, 'error');
         });
 
@@ -1978,10 +2014,13 @@
                     }
                 } catch (error) {
                     showToast('Error loading profile', 'error');
+                } finally {
+                    loadingOverlay.style.display = 'none';
                 }
             } else {
                 authSection.style.display = 'flex';
                 dashboardSection.style.display = 'none';
+                loadingOverlay.style.display = 'none'; // in case we come back signed out
             }
         });
 
@@ -2648,7 +2687,18 @@
                 labels.push(moment().subtract(i, 'days').format('ddd'));
             }
             
-            const memberData = [5, 8, 12, 15, 18, 22, allMembers.length];
+            // Use real member counts per day? For demo we'll use cumulative from all members join dates.
+            // Simplified: just show total members as last point.
+            const memberData = [];
+            let cumulative = 0;
+            for (let i = 6; i >= 0; i--) {
+                const dayStart = moment().subtract(i, 'days').startOf('day').valueOf();
+                const dayEnd = moment().subtract(i, 'days').endOf('day').valueOf();
+                const count = allMembers.filter(m => m.joinDate >= dayStart && m.joinDate <= dayEnd).length;
+                cumulative += count;
+                memberData.push(cumulative);
+            }
+            
             const pointsData = [1200, 1500, 1800, 2100, 2400, 2700, allMembers.reduce((sum, m) => sum + (m.points || 0), 0)];
             
             memberChart = new Chart(ctx1, {
@@ -2710,7 +2760,7 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        console.log('DarkRoot - Google Redirect Auth, all features intact');
+        console.log('DarkRoot - Google Redirect Auth (improved)');
     </script>
 </body>
 </html>
