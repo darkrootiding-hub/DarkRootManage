@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DarkRoot • Enterprise Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DarkRoot • Enterprise Command Center</title>
     <!-- Font Awesome 6 Pro -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts - Premium Corporate Fonts -->
@@ -22,37 +22,42 @@
         :root {
             /* Premium Corporate Color Palette */
             --primary: #1a5cff;
-            --primary-light: #e8f0fe;
             --primary-dark: #0a3c9e;
+            --primary-light: #e8f0fe;
             --secondary: #6c5ce7;
+            --secondary-light: #f0f0ff;
             --success: #00b894;
+            --success-light: #e0f7f0;
             --warning: #fdcb6e;
+            --warning-light: #fff4e0;
             --danger: #ff7675;
+            --danger-light: #ffe8e8;
             --info: #0984e3;
-            --dark: #2d3436;
-            --gray-900: #1e272e;
-            --gray-800: #2c3e50;
-            --gray-700: #34495e;
-            --gray-600: #636e72;
-            --gray-500: #7f8c8d;
-            --gray-400: #bdc3c7;
-            --gray-300: #dfe6e9;
-            --gray-200: #f0f3f5;
+            --info-light: #e3f2fd;
+            
+            /* Neutral Colors - Sophisticated Gray Scale */
+            --gray-900: #1e293b;
+            --gray-800: #334155;
+            --gray-700: #475569;
+            --gray-600: #64748b;
+            --gray-500: #94a3b8;
+            --gray-400: #cbd5e1;
+            --gray-300: #e2e8f0;
+            --gray-200: #f1f5f9;
             --gray-100: #f8fafc;
             --white: #ffffff;
             
-            /* Gradients */
+            /* Gradients - Subtle & Professional */
             --gradient-primary: linear-gradient(135deg, #1a5cff, #6c5ce7);
             --gradient-success: linear-gradient(135deg, #00b894, #0984e3);
             --gradient-warning: linear-gradient(135deg, #fdcb6e, #e17055);
             
-            /* Shadows - Clean & Professional */
+            /* Shadows */
             --shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.02);
             --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.03);
             --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.06);
-            --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.02);
             
             /* Borders */
             --border-light: 1px solid rgba(0, 0, 0, 0.05);
@@ -65,6 +70,11 @@
             --space-lg: 24px;
             --space-xl: 32px;
             --space-2xl: 40px;
+            
+            /* Layout */
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --mobile-nav-height: 70px;
         }
 
         body {
@@ -72,47 +82,184 @@
             background: var(--gray-100);
             color: var(--gray-900);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            margin: 0;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Main Container - Clean & Professional */
-        .app-container {
-            width: 100%;
-            max-width: 428px;
-            background: var(--white);
-            height: 100vh;
-            max-height: 932px;
+        /* ==================== RESPONSIVE LAYOUT ==================== */
+        .dashboard {
             display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: var(--shadow-xl);
-            border-radius: 0;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        @media (min-width: 429px) {
-            .app-container {
-                border-radius: 32px;
-                height: 90vh;
-                margin: 20px auto;
-                box-shadow: var(--shadow-xl);
+        /* Desktop Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            border-right: var(--border-light);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            box-shadow: var(--shadow-md);
+            z-index: 50;
+            transition: transform 0.3s ease;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--mobile-nav-height);
+            background: var(--white);
+            border-top: var(--border-light);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            padding: 0 var(--space-md);
+        }
+
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100%;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray-500);
+            font-size: 0.7rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 40px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item.active i {
+            font-weight: 900;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: var(--space-md);
+            left: var(--space-md);
+            z-index: 1001;
+            width: 44px;
+            height: 44px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: var(--border-light);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            background: var(--gray-100);
+            transition: margin-left 0.3s ease;
+        }
+
+        /* ==================== RESPONSIVE BREAKPOINTS ==================== */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .leaderboard-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Status Bar - Clean & Minimal */
-        .status-bar {
-            padding: var(--space-lg) var(--space-lg) var(--space-sm);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding-bottom: var(--mobile-nav-height);
+            }
+            
+            .mobile-nav {
+                display: block;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .top-nav {
+                padding-left: 70px !important;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .profile-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-nav-actions .icon-button:not(#mobileMenuBtn) {
+                display: none;
+            }
+            
+            .page-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .stat-card {
+                padding: var(--space-md);
+            }
+        }
+
+        /* ==================== SIDEBAR COMPONENTS ==================== */
+        .sidebar-header {
+            padding: var(--space-xl) var(--space-lg);
             border-bottom: var(--border-light);
-            background: var(--white);
         }
 
         .logo-area {
@@ -122,360 +269,259 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .logo-text h1 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            letter-spacing: -0.02em;
-        }
-
-        .logo-text p {
-            font-size: 0.65rem;
-            color: var(--gray-500);
-            letter-spacing: 0.5px;
-            font-weight: 500;
-        }
-
-        .connection-badge {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 8px 14px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(26, 92, 255, 0.1);
-        }
-
-        .connection-badge i {
-            font-size: 0.6rem;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: var(--space-lg);
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: var(--gray-400) var(--gray-200);
-            background: var(--gray-100);
-        }
-
-        .main-content::-webkit-scrollbar {
-            width: 4px;
-        }
-        .main-content::-webkit-scrollbar-track {
-            background: var(--gray-200);
-        }
-        .main-content::-webkit-scrollbar-thumb {
-            background: var(--gray-400);
-            border-radius: 10px;
-        }
-
-        /* Auth Cards - Clean & Minimal */
-        .auth-section {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .auth-card {
-            background: var(--white);
-            border-radius: 24px;
-            padding: var(--space-2xl) var(--space-lg);
-            box-shadow: var(--shadow-lg);
-            margin-bottom: var(--space-md);
-            border: var(--border-light);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: var(--space-xl);
-        }
-
-        .auth-header h2 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin-bottom: var(--space-xs);
-            letter-spacing: -0.02em;
-        }
-
-        .auth-header p {
-            color: var(--gray-600);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Clean Input Fields */
-        .input-field {
-            margin-bottom: var(--space-lg);
-        }
-
-        .input-field label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--gray-600);
-            margin-bottom: var(--space-xs);
-            margin-left: var(--space-md);
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 18px;
-            color: var(--gray-400);
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 16px 16px 16px 52px;
-            background: var(--gray-100);
-            border: 2px solid transparent;
-            border-radius: 50px;
-            color: var(--gray-900);
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--primary);
-            outline: none;
-            background: var(--white);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .input-wrapper input:focus + i {
-            color: var(--primary);
-        }
-
-        .input-wrapper input::placeholder {
-            color: var(--gray-400);
-        }
-
-        /* Professional Buttons */
-        .btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--gray-200);
-            color: var(--gray-700);
-            box-shadow: none;
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--primary-light);
-            transform: none;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff7675, #d63031);
-        }
-
-        /* Member Panel */
-        .member-panel {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Profile Header - Clean Corporate */
-        .profile-header {
-            background: linear-gradient(145deg, var(--white), var(--gray-100));
-            border-radius: 20px;
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
-            box-shadow: var(--shadow-sm);
-            border: var(--border-light);
-        }
-
-        .profile-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .profile-avatar {
-            width: 70px;
-            height: 70px;
-            background: var(--gradient-primary);
-            border-radius: 18px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
-            font-weight: 600;
             color: white;
             box-shadow: var(--shadow-md);
         }
 
-        .profile-info h3 {
+        .logo-text h1 {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* User Card */
+        .user-card {
+            padding: var(--space-lg);
+            margin: var(--space-md) var(--space-lg);
+            background: var(--gray-100);
+            border-radius: 16px;
+            border: var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-card:hover {
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: var(--space-md);
+        }
+
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.2s;
+        }
+
+        .user-avatar:hover .avatar-overlay {
+            transform: translateY(0);
+        }
+
+        .user-details h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--gray-900);
             margin-bottom: 4px;
         }
 
-        .profile-badge {
-            background: var(--primary-light);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .user-details p {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        .user-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: var(--primary);
-        }
-
-        .profile-badge.ceo { background: #fff3e0; color: #e67e22; }
-        .profile-badge.manager { background: #e8f0fe; color: var(--primary); }
-        .profile-badge.senior { background: #f0f4fa; color: var(--secondary); }
-
-        /* Stats Cards - Clean Corporate */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: var(--space-xl);
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 16px 8px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            border: var(--border-light);
-            transition: all 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-icon {
-            width: 40px;
-            height: 40px;
+            padding: 4px 12px;
             background: var(--primary-light);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        .stat-value {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            line-height: 1.2;
-        }
-
-        .stat-label {
+            border-radius: 40px;
             font-size: 0.7rem;
-            color: var(--gray-600);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
             font-weight: 600;
+            color: var(--primary);
         }
 
-        /* Cards - Clean Glassmorphism */
-        .card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
-            box-shadow: var(--shadow-md);
-            border: var(--border-light);
-            transition: all 0.2s;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-header {
+        .user-stats {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: var(--space-md);
+            padding-top: var(--space-sm);
+            border-top: var(--border-light);
         }
 
-        .card-header h4 {
+        .stat-mini {
+            text-align: center;
+        }
+
+        .stat-mini .value {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .stat-mini .label {
+            font-size: 0.65rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            flex: 1;
+            padding: var(--space-lg);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: var(--gray-600);
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 1.2rem;
+            color: var(--gray-500);
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .nav-item:hover i {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-item.active i {
+            color: var(--primary);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: var(--space-lg) 0;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            margin-bottom: var(--space-sm);
+            padding-left: var(--space-md);
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: var(--space-lg);
+            border-top: var(--border-light);
+        }
+
+        .connection-status {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 10px 16px;
+            background: var(--gray-100);
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--gray-700);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 2px var(--success-light);
+        }
+
+        /* ==================== TOP NAVIGATION ==================== */
+        .top-nav {
+            height: var(--header-height);
+            background: var(--white);
+            border-bottom: var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-xl);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: var(--shadow-xs);
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
             color: var(--gray-900);
         }
 
-        .card-header i {
-            color: var(--primary);
-        }
-
-        .badge {
+        .page-title .badge {
             background: var(--primary-light);
             color: var(--primary);
             padding: 4px 12px;
@@ -484,127 +530,664 @@
             font-weight: 600;
         }
 
-        /* Chart Container */
-        .chart-container {
-            background: var(--gray-100);
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 10px;
-            height: 200px;
-        }
-
-        /* Filter Chips */
-        .member-filters {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 16px;
-            scrollbar-width: none;
-        }
-
-        .filter-chip {
-            background: var(--gray-100);
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            white-space: nowrap;
-            border: 1px solid var(--gray-200);
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--gray-600);
-        }
-
-        .filter-chip i {
-            margin-right: 5px;
-        }
-
-        .filter-chip.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        /* Member Items */
-        .member-item {
+        .top-nav-actions {
             display: flex;
             align-items: center;
-            padding: 14px;
+            gap: var(--space-lg);
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
             background: var(--gray-100);
-            border-radius: 16px;
-            border: 1px solid var(--gray-200);
+            border: 2px solid transparent;
+            border-radius: 40px;
+            font-size: 0.9rem;
             transition: all 0.2s;
-            margin-bottom: 8px;
         }
 
-        .member-item:hover {
-            background: var(--white);
-            box-shadow: var(--shadow-md);
+        .search-bar input:focus {
             border-color: var(--primary);
+            outline: none;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
         }
 
-        .member-avatar-sm {
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .icon-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .icon-button:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
+            padding: var(--space-xl);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-header i {
             width: 48px;
             height: 48px;
-            background: var(--gradient-primary);
+            background: var(--primary-light);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: white;
-            margin-right: 14px;
+            font-size: 1.4rem;
+            color: var(--primary);
         }
 
-        .member-details {
-            flex: 1;
+        .stat-change {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 40px;
+            background: var(--success-light);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        /* Charts Row */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .chart-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .chart-header h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Tables */
+        .table-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+            margin-bottom: var(--space-xl);
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .table-header h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .filter-dropdown {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 40px;
+            background: var(--white);
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Member Table */
+        .member-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .member-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .member-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .member-table tr:hover td {
+            background: var(--gray-100);
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .member-avatar-small {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .member-avatar-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .member-name {
             font-weight: 600;
             color: var(--gray-900);
-            margin-bottom: 4px;
         }
 
-        .member-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 0.7rem;
-            color: var(--gray-600);
+        .member-email {
+            font-size: 0.8rem;
+            color: var(--gray-500);
         }
 
-        .member-role-badge {
-            background: var(--primary-light);
-            padding: 2px 8px;
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
             border-radius: 40px;
-            color: var(--primary);
+            font-size: 0.8rem;
             font-weight: 500;
         }
 
-        .member-points {
+        .role-badge.ceo {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .role-badge.manager {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .role-badge.senior {
+            background: var(--secondary-light);
+            color: var(--secondary);
+        }
+
+        .role-badge.member {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .points-cell {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .salary-cell {
             font-weight: 600;
             color: var(--success);
         }
 
-        /* Leaderboard Items */
-        .leaderboard-item {
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .action-cell {
             display: flex;
             align-items: center;
-            padding: 14px;
-            background: var(--gray-100);
-            border-radius: 16px;
-            margin-bottom: 8px;
-            border: 1px solid var(--gray-200);
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--gray-500);
+            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .leaderboard-item:hover {
+        .action-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Member Profile Card */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .profile-card {
             background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+            text-align: center;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto var(--space-lg);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-avatar-large .avatar-image {
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
             box-shadow: var(--shadow-md);
         }
 
-        .rank {
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            border-radius: 0 0 30px 30px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .profile-avatar-large:hover .avatar-upload-overlay {
+            opacity: 1;
+        }
+
+        .profile-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-xs);
+        }
+
+        .profile-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: var(--primary-light);
+            border-radius: 40px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding: var(--space-lg) 0;
+            border-top: var(--border-light);
+            border-bottom: var(--border-light);
+        }
+
+        .profile-stat-item {
+            text-align: center;
+        }
+
+        .profile-stat-value {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.2;
+        }
+
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+        }
+
+        .profile-info-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+        }
+
+        .info-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .info-section h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section h4 i {
+            color: var(--primary);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        /* Team Member Cards Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .team-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .team-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: var(--space-md);
+        }
+
+        .team-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-info h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .team-info p {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        .team-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-md) 0;
+            border-top: var(--border-light);
+            border-bottom: var(--border-light);
+            margin-bottom: var(--space-md);
+        }
+
+        .team-stat {
+            text-align: center;
+        }
+
+        .team-stat .value {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .team-stat .label {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+        }
+
+        .team-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-role {
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .team-role.ceo {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .team-role.manager {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .team-role.senior {
+            background: var(--secondary-light);
+            color: var(--secondary);
+        }
+
+        .team-role.member {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .team-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        /* Leaderboard */
+        .leaderboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+        }
+
+        .leaderboard-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            border: var(--border-light);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-rank {
             width: 36px;
             height: 36px;
             border-radius: 12px;
@@ -612,14 +1195,23 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            margin-right: 14px;
-            background: var(--gray-200);
-            color: var(--gray-700);
+            margin-right: 12px;
         }
 
-        .rank-1 { background: linear-gradient(135deg, #f1c40f, #f39c12); color: white; }
-        .rank-2 { background: linear-gradient(135deg, #bdc3c7, #95a5a6); color: white; }
-        .rank-3 { background: linear-gradient(135deg, #e67e22, #d35400); color: white; }
+        .rank-1 {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: white;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #bdc3c7, #95a5a6);
+            color: white;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+        }
 
         .leaderboard-info {
             flex: 1;
@@ -631,23 +1223,27 @@
         }
 
         .leaderboard-role {
-            font-size: 0.7rem;
-            color: var(--gray-600);
+            font-size: 0.75rem;
+            color: var(--gray-500);
         }
 
-        .leaderboard-score {
+        .leaderboard-points {
             font-weight: 700;
             color: var(--primary);
         }
 
-        /* Notice Items */
+        /* Notices */
+        .notices-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
         .notice-item {
             background: var(--gray-100);
             border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 10px;
+            padding: var(--space-lg);
             border-left: 4px solid var(--primary);
-            border: 1px solid var(--gray-200);
             transition: all 0.2s;
         }
 
@@ -657,120 +1253,255 @@
         }
 
         .notice-date {
-            font-size: 0.7rem;
-            color: var(--gray-600);
-            margin-bottom: 6px;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: var(--space-xs);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+        }
+
+        .notice-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-xs);
+            font-size: 1.1rem;
         }
 
         .notice-text {
-            font-weight: 500;
-            color: var(--gray-900);
+            color: var(--gray-700);
+            margin-bottom: var(--space-sm);
         }
 
-        /* Profile Details */
-        .detail-row {
+        .notice-meta {
             display: flex;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: var(--gray-600);
-            font-size: 0.9rem;
-        }
-
-        .detail-label i {
-            color: var(--primary);
-            width: 20px;
-        }
-
-        .detail-value {
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-
-        /* Bottom Navigation - Clean Corporate */
-        .bottom-nav {
-            background: var(--white);
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 16px 16px;
-            box-shadow: var(--shadow-inner);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            color: var(--gray-500);
-            font-size: 0.7rem;
+            gap: var(--space-md);
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+
+        /* Auth Section */
+        .auth-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gray-100), var(--white));
+            padding: var(--space-md);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--white);
+            border-radius: 32px;
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-xl);
+            border: var(--border-light);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .auth-header .logo-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-lg);
+            font-size: 2rem;
+        }
+
+        .auth-header h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-xs);
+        }
+
+        .auth-header p {
+            color: var(--gray-600);
+        }
+
+        .input-field {
+            margin-bottom: var(--space-lg);
+        }
+
+        .input-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-xs);
+            margin-left: 16px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 16px 16px 52px;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            font-size: 1rem;
             transition: all 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            padding: 4px 0;
-            border-radius: 40px;
-            flex: 1;
-            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .nav-item i {
-            font-size: 1.3rem;
-            margin-bottom: 4px;
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
         }
 
-        .nav-item.active {
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
             color: var(--primary);
+            background: var(--primary-light);
         }
 
-        .nav-item.active i {
-            font-weight: 900;
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--space-md);
         }
 
-        /* Toast Notification */
+        .modal {
+            background: var(--white);
+            border-radius: 24px;
+            padding: var(--space-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+        }
+
+        .modal-header h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 100px;
-            left: 20px;
-            right: 20px;
-            max-width: 400px;
-            margin: 0 auto;
+            bottom: 30px;
+            right: 30px;
             background: var(--white);
-            border: 1px solid var(--gray-200);
-            border-radius: 50px;
-            padding: 14px 20px;
-            color: var(--gray-900);
-            font-weight: 500;
+            border-left: 4px solid var(--success);
+            border-radius: 12px;
+            padding: 16px 24px;
             box-shadow: var(--shadow-lg);
             display: none;
             align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            animation: slideUp 0.3s ease;
+            gap: 12px;
+            z-index: 1100;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .toast {
+                bottom: 80px;
+                right: 20px;
+                left: 20px;
+            }
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
         }
 
         .toast i {
-            color: var(--primary);
+            font-size: 1.2rem;
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray-500);
+        .toast.success i {
+            color: var(--success);
         }
 
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            color: var(--gray-400);
+        .toast.error i {
+            color: var(--danger);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Loading Spinner */
@@ -781,346 +1512,598 @@
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 20px auto;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 380px) {
-            .profile-avatar {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-            
-            .profile-info h3 {
-                font-size: 1.2rem;
-            }
-            
-            .stat-value {
-                font-size: 1.3rem;
-            }
+        /* Hidden Input */
+        .hidden-input {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Status Bar -->
-        <div class="status-bar">
-            <div class="logo-area">
+    <!-- Auth Section -->
+    <div id="authSection" class="auth-section">
+        <!-- Login Card -->
+        <div id="loginCard" class="auth-card">
+            <div class="auth-header">
                 <div class="logo-icon">
                     <i class="fas fa-building"></i>
                 </div>
-                <div class="logo-text">
-                    <h1>DARKROOT</h1>
-                    <p>ENTERPRISE</p>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your enterprise account</p>
+            </div>
+            
+            <div class="input-field">
+                <label>Work Email</label>
+                <div class="input-wrapper">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="name@darkroot.com">
                 </div>
             </div>
-            <div class="connection-badge" id="connectionStatus">
-                <i class="fas fa-circle"></i>
-                <span>Connected</span>
+
+            <div class="input-field">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
             </div>
+
+            <button class="btn btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+
+            <button class="btn btn-outline" id="showSignupBtn" style="margin-top: 12px;">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content" id="mainContent">
-            <!-- Auth Section -->
-            <div id="authSection" class="auth-section">
-                <!-- Login Card -->
-                <div id="loginCard" class="auth-card">
-                    <div class="auth-header">
-                        <h2>Welcome Back</h2>
-                        <p>Sign in to your enterprise account</p>
-                    </div>
-                    
-                    <div class="input-field">
-                        <label>Work Email</label>
-                        <div class="input-wrapper">
-                            <i class="far fa-envelope"></i>
-                            <input type="email" id="loginEmail" placeholder="name@darkroot.com">
-                        </div>
-                    </div>
-
-                    <div class="input-field">
-                        <label>Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="loginPassword" placeholder="Enter your password">
-                        </div>
-                    </div>
-
-                    <button class="btn" id="loginBtn">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Sign In
-                    </button>
-
-                    <button class="btn btn-outline" id="showSignupBtn" style="margin-top: 12px;">
-                        <i class="fas fa-user-plus"></i>
-                        Create Account
-                    </button>
+        <!-- Signup Card -->
+        <div id="signupCard" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="logo-icon">
+                    <i class="fas fa-building"></i>
                 </div>
+                <h2>Create Account</h2>
+                <p>Join the DarkRoot enterprise</p>
+            </div>
 
-                <!-- Signup Card -->
-                <div id="signupCard" class="auth-card" style="display: none;">
-                    <div class="auth-header">
-                        <h2>Create Account</h2>
-                        <p>Join the DarkRoot enterprise</p>
-                    </div>
-
-                    <div class="input-field">
-                        <label>Full Name</label>
-                        <div class="input-wrapper">
-                            <i class="far fa-user"></i>
-                            <input type="text" id="signupName" placeholder="John Doe">
-                        </div>
-                    </div>
-
-                    <div class="input-field">
-                        <label>Email Address</label>
-                        <div class="input-wrapper">
-                            <i class="far fa-envelope"></i>
-                            <input type="email" id="signupEmail" placeholder="john@darkroot.com">
-                        </div>
-                    </div>
-
-                    <div class="input-field">
-                        <label>Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="signupPassword" placeholder="Min. 6 characters">
-                        </div>
-                    </div>
-
-                    <div class="input-field">
-                        <label>Confirm Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="signupConfirmPassword" placeholder="Re-enter password">
-                        </div>
-                    </div>
-
-                    <button class="btn" id="signupBtn">
-                        <i class="fas fa-check-circle"></i>
-                        Register
-                    </button>
-
-                    <button class="btn btn-outline" id="backToLoginBtn" style="margin-top: 12px;">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Sign In
-                    </button>
+            <div class="input-field">
+                <label>Full Name</label>
+                <div class="input-wrapper">
+                    <i class="far fa-user"></i>
+                    <input type="text" id="signupName" placeholder="John Doe">
                 </div>
             </div>
 
-            <!-- Member Panel -->
-            <div id="memberPanel" class="member-panel">
-                <!-- Profile Header -->
-                <div class="profile-header">
-                    <div class="profile-row">
-                        <div class="profile-avatar" id="profileAvatar">JD</div>
-                        <div class="profile-info">
-                            <h3 id="profileDisplayName">Loading...</h3>
-                            <div class="profile-badge" id="profileRoleBadge">
-                                <i class="fas fa-shield-alt"></i>
-                                <span id="profileRoleText">Member</span>
+            <div class="input-field">
+                <label>Email Address</label>
+                <div class="input-wrapper">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" id="signupEmail" placeholder="john@darkroot.com">
+                </div>
+            </div>
+
+            <div class="input-field">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupPassword" placeholder="Min. 6 characters">
+                </div>
+            </div>
+
+            <div class="input-field">
+                <label>Confirm Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupConfirmPassword" placeholder="Re-enter password">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="signupBtn">
+                <i class="fas fa-check-circle"></i>
+                Register
+            </button>
+
+            <button class="btn btn-outline" id="backToLoginBtn" style="margin-top: 12px;">
+                <i class="fas fa-arrow-left"></i>
+                Back to Sign In
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardSection" class="dashboard" style="display: none;">
+        <!-- Mobile Menu Button -->
+        <div class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>DARKROOT</h1>
+                        <p>ENTERPRISE</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Card -->
+            <div class="user-card" id="userCard" onclick="showView('profile')">
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar">
+                        <span id="sidebarAvatarText">JD</span>
+                        <img id="sidebarAvatarImg" style="display: none;">
+                        <div class="avatar-overlay">Change</div>
+                    </div>
+                    <div class="user-details">
+                        <h4 id="sidebarName">John Doe</h4>
+                        <p id="sidebarEmail">john@darkroot.com</p>
+                        <span class="user-badge" id="sidebarRole">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Member</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="user-stats">
+                    <div class="stat-mini">
+                        <div class="value" id="sidebarPoints">0</div>
+                        <div class="label">Points</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="value" id="sidebarRank">#0</div>
+                        <div class="label">Rank</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="value" id="sidebarSalary">$0</div>
+                        <div class="label">Salary</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <div class="nav-label">MAIN</div>
+                <div class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="members">
+                    <i class="fas fa-users"></i>
+                    <span>Team Directory</span>
+                </div>
+                <div class="nav-item" data-view="leaderboard">
+                    <i class="fas fa-crown"></i>
+                    <span>Leaderboard</span>
+                </div>
+                <div class="nav-item" data-view="notices">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Announcements</span>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <div class="nav-label">PERSONAL</div>
+                <div class="nav-item" data-view="profile">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </div>
+                <div class="nav-item" data-view="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="connection-status" id="pcConnectionStatus">
+                    <div class="status-dot"></div>
+                    <span>Connected to enterprise network</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="page-title">
+                    <h2 id="currentPageTitle">Dashboard</h2>
+                    <span class="badge" id="pageBadge">Overview</span>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="globalSearch" placeholder="Search members, notices...">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="icon-button" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="icon-button" id="notificationsBtn">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button class="icon-button" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area" id="contentArea">
+                <!-- Dashboard View -->
+                <div id="dashboardView">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-users"></i>
+                                <span class="stat-change" id="totalMembersChange">+12%</span>
+                            </div>
+                            <div class="stat-value" id="totalMembers">156</div>
+                            <div class="stat-label">Total Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-user-check"></i>
+                                <span class="stat-change" id="activeMembersChange">+8%</span>
+                            </div>
+                            <div class="stat-value" id="activeMembers">142</div>
+                            <div class="stat-label">Active Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-star"></i>
+                                <span class="stat-change" id="totalPointsChange">+23%</span>
+                            </div>
+                            <div class="stat-value" id="totalPoints">45.2K</div>
+                            <div class="stat-label">Total Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <i class="fas fa-coins"></i>
+                                <span class="stat-change" id="totalPayrollChange">+5%</span>
+                            </div>
+                            <div class="stat-value" id="totalPayroll">$1.2M</div>
+                            <div class="stat-label">Monthly Payroll</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-line" style="color: var(--primary); margin-right: 8px;"></i>Performance Trends</h3>
+                                <select class="filter-dropdown" id="performanceTimeframe">
+                                    <option>Last 6 Months</option>
+                                    <option>Last Year</option>
+                                    <option>All Time</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-pie" style="color: var(--primary); margin-right: 8px;"></i>Team Distribution</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="distributionChart"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
+                    <!-- Team Members Grid -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3><i class="fas fa-user-plus" style="color: var(--primary); margin-right: 8px;"></i>Team Members</h3>
+                            <div class="table-actions">
+                                <button class="btn btn-outline" style="padding: 8px 16px; width: auto;" onclick="showView('members')">
+                                    View All <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="stat-value" id="statPoints">0</div>
-                        <div class="stat-label">Points</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
+                        <div class="team-grid" id="teamMembersGrid">
+                            <!-- Filled dynamically -->
                         </div>
-                        <div class="stat-value" id="statRank">#0</div>
-                        <div class="stat-label">Rank</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="stat-value" id="statSalary">$0</div>
-                        <div class="stat-label">Salary</div>
-                    </div>
-                </div>
-
-                <!-- Dashboard View -->
-                <div id="dashboardView">
-                    <!-- Performance Chart Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-chart-line"></i> Performance Overview</h4>
-                            <span class="badge" id="monthYearBadge">May 2024</span>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Recent Notices Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-bullhorn"></i> Announcements</h4>
-                            <span class="badge">Latest</span>
-                        </div>
-                        <div id="recentNotices"></div>
                     </div>
                 </div>
 
                 <!-- Members View -->
                 <div id="membersView" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-users"></i> Team Directory</h4>
-                            <span class="badge" id="memberCount">0 members</span>
-                        </div>
-                        
-                        <!-- Filter Chips -->
-                        <div class="member-filters" id="roleFilters">
-                            <div class="filter-chip active" data-role="all">All</div>
-                            <div class="filter-chip" data-role="CEO">CEO</div>
-                            <div class="filter-chip" data-role="Manager">Manager</div>
-                            <div class="filter-chip" data-role="Senior">Senior</div>
-                            <div class="filter-chip" data-role="Member">Member</div>
-                        </div>
-
-                        <!-- Search -->
-                        <div style="margin: 16px 0;">
-                            <div class="input-wrapper">
-                                <i class="fas fa-search"></i>
-                                <input type="text" id="memberSearch" placeholder="Search team members...">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3><i class="fas fa-users" style="color: var(--primary); margin-right: 8px;"></i>Team Directory</h3>
+                            <div class="table-actions">
+                                <select class="filter-dropdown" id="memberRoleFilter">
+                                    <option value="all">All Roles</option>
+                                    <option value="CEO">CEO</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Senior">Senior</option>
+                                    <option value="Member">Member</option>
+                                </select>
+                                <button class="btn btn-primary" style="width: auto; padding: 8px 24px;" onclick="exportMembers()">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Member List -->
-                        <div class="member-list" id="memberListContainer"></div>
+                        
+                        <!-- Mobile: Grid View, Desktop: Table View -->
+                        <div class="team-grid" id="membersGridView" style="display: none;">
+                            <!-- Filled dynamically for mobile -->
+                        </div>
+                        <table class="member-table" id="membersTableView">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Role</th>
+                                    <th>Points</th>
+                                    <th>Salary</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody">
+                                <!-- Filled dynamically -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <!-- Leaderboard View -->
                 <div id="leaderboardView" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-trophy"></i> Top Performers</h4>
-                            <span class="badge">This Month</span>
+                    <div class="leaderboard-grid">
+                        <div class="leaderboard-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-crown" style="color: var(--warning); margin-right: 8px;"></i>Top Performers</h3>
+                                <span class="badge">This Month</span>
+                            </div>
+                            <div id="leaderboardList"></div>
                         </div>
-                        <div id="leaderboardContainer"></div>
+                        <div class="leaderboard-card">
+                            <div class="chart-header">
+                                <h3><i class="fas fa-chart-bar" style="color: var(--primary); margin-right: 8px;"></i>Points Distribution</h3>
+                            </div>
+                            <div class="chart-container" style="height: 400px;">
+                                <canvas id="pointsChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Notices View -->
                 <div id="noticesView" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-newspaper"></i> All Announcements</h4>
-                            <span class="badge">Archive</span>
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3><i class="fas fa-bullhorn" style="color: var(--primary); margin-right: 8px;"></i>Announcements</h3>
+                            <button class="btn btn-primary" style="width: auto; padding: 8px 24px;" onclick="showAddNoticeModal()">
+                                <i class="fas fa-plus"></i> New Announcement
+                            </button>
                         </div>
-                        <div id="allNoticesContainer"></div>
+                        <div class="notices-list" id="noticesList">
+                            <!-- Filled dynamically -->
+                        </div>
                     </div>
                 </div>
 
                 <!-- Profile View -->
                 <div id="profileView" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-id-card"></i> Profile Details</h4>
-                        </div>
-                        
-                        <div style="text-align: center; margin-bottom: 24px;">
-                            <div style="width: 100px; height: 100px; background: var(--gradient-primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 2.5rem; font-weight: 600; color: white;">
-                                <span id="profileAvatarLarge">JD</span>
+                    <div class="profile-grid">
+                        <!-- Profile Card -->
+                        <div class="profile-card">
+                            <div class="profile-avatar-large" onclick="document.getElementById('profileImageUpload').click()">
+                                <div class="avatar-image" id="profileAvatarLarge">
+                                    <span id="profileAvatarLargeText">JD</span>
+                                    <img id="profileAvatarLargeImg" style="display: none;">
+                                </div>
+                                <div class="avatar-upload-overlay">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </div>
                             </div>
-                            <h3 id="profileFullName" style="font-size: 1.6rem; font-weight: 600; margin-bottom: 4px;">John Doe</h3>
-                            <div class="profile-badge" style="display: inline-flex;" id="profileRoleLarge">
+                            <input type="file" id="profileImageUpload" class="hidden-input" accept="image/*" onchange="handleProfileImageUpload(event)">
+                            
+                            <h3 class="profile-name" id="profileFullName">John Doe</h3>
+                            <div class="profile-role" id="profileRole">
                                 <i class="fas fa-shield-alt"></i>
                                 <span>Member</span>
                             </div>
+
+                            <div class="profile-stats">
+                                <div class="profile-stat-item">
+                                    <div class="profile-stat-value" id="profilePoints">0</div>
+                                    <div class="profile-stat-label">Points</div>
+                                </div>
+                                <div class="profile-stat-item">
+                                    <div class="profile-stat-value" id="profileRank">#0</div>
+                                    <div class="profile-stat-label">Rank</div>
+                                </div>
+                                <div class="profile-stat-item">
+                                    <div class="profile-stat-value" id="profileSalary">$0</div>
+                                    <div class="profile-stat-label">Salary</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="far fa-envelope"></i> Email</span>
-                            <span class="detail-value" id="profileEmail">john@darkroot.com</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-star"></i> Total Points</span>
-                            <span class="detail-value" id="profilePoints">0</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-coins"></i> Base Salary</span>
-                            <span class="detail-value" id="profileSalary">$0</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-calendar-alt"></i> Join Date</span>
-                            <span class="detail-value" id="profileJoinDate">2024-01-01</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-clock"></i> Last Active</span>
-                            <span class="detail-value" id="profileLastActive">Just now</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fas fa-circle"></i> Status</span>
-                            <span class="detail-value" style="color: var(--success);" id="profileStatus">Active</span>
-                        </div>
+                        <!-- Info Card -->
+                        <div class="profile-info-card">
+                            <div class="info-section">
+                                <h4><i class="fas fa-info-circle"></i> Personal Information</h4>
+                                <div class="info-row">
+                                    <span class="info-label"><i class="far fa-envelope"></i> Email</span>
+                                    <span class="info-value" id="profileEmail">john@darkroot.com</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label"><i class="fas fa-calendar-alt"></i> Join Date</span>
+                                    <span class="info-value" id="profileJoinDate">2024-01-01</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label"><i class="fas fa-clock"></i> Last Active</span>
+                                    <span class="info-value" id="profileLastActive">Just now</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label"><i class="fas fa-circle"></i> Status</span>
+                                    <span class="info-value" style="color: var(--success);" id="profileStatus">Active</span>
+                                </div>
+                            </div>
 
-                        <button class="btn btn-outline" id="logoutBtn" style="margin-top: 24px;">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Sign Out
-                        </button>
+                            <div class="info-section">
+                                <h4><i class="fas fa-chart-line"></i> Performance</h4>
+                                <div class="info-row">
+                                    <span class="info-label">Total Points</span>
+                                    <span class="info-value" id="profileTotalPoints">0</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Monthly Average</span>
+                                    <span class="info-value" id="profileMonthlyAvg">0</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Best Month</span>
+                                    <span class="info-value" id="profileBestMonth">-</span>
+                                </div>
+                            </div>
+
+                            <div class="info-section">
+                                <h4><i class="fas fa-coins"></i> Compensation</h4>
+                                <div class="info-row">
+                                    <span class="info-label">Base Salary</span>
+                                    <span class="info-value" id="profileBaseSalary">$0</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Bonus</span>
+                                    <span class="info-value" id="profileBonus">$0</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Total Compensation</span>
+                                    <span class="info-value" id="profileTotalComp">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="settingsView" style="display: none;">
+                    <div class="profile-grid">
+                        <div class="profile-card">
+                            <h3 style="margin-bottom: var(--space-lg);">Settings</h3>
+                            <div class="info-section">
+                                <h4><i class="fas fa-bell"></i> Notifications</h4>
+                                <div class="info-row">
+                                    <span class="info-label">Email Notifications</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Push Notifications</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="pushNotifications" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-info-card">
+                            <h3 style="margin-bottom: var(--space-lg);">Preferences</h3>
+                            <div class="info-section">
+                                <h4><i class="fas fa-palette"></i> Theme</h4>
+                                <select class="filter-dropdown" style="width: 100%;">
+                                    <option>Light Mode</option>
+                                    <option>Dark Mode</option>
+                                    <option>System Default</option>
+                                </select>
+                            </div>
+                            <div class="info-section">
+                                <h4><i class="fas fa-language"></i> Language</h4>
+                                <select class="filter-dropdown" style="width: 100%;">
+                                    <option>English (US)</option>
+                                    <option>Spanish</option>
+                                    <option>French</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav" id="bottomNav" style="display: none;">
-            <div class="nav-item active" data-view="dashboard">
-                <i class="fas fa-chart-pie"></i>
-                <span>Home</span>
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-items">
+                <div class="mobile-nav-item active" data-view="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Home</span>
+                </div>
+                <div class="mobile-nav-item" data-view="members">
+                    <i class="fas fa-users"></i>
+                    <span>Team</span>
+                </div>
+                <div class="mobile-nav-item" data-view="leaderboard">
+                    <i class="fas fa-crown"></i>
+                    <span>Top</span>
+                </div>
+                <div class="mobile-nav-item" data-view="notices">
+                    <i class="fas fa-bell"></i>
+                    <span>News</span>
+                </div>
+                <div class="mobile-nav-item" data-view="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </div>
             </div>
-            <div class="nav-item" data-view="members">
-                <i class="fas fa-users"></i>
-                <span>Team</span>
-            </div>
-            <div class="nav-item" data-view="leaderboard">
-                <i class="fas fa-crown"></i>
-                <span>Top</span>
-            </div>
-            <div class="nav-item" data-view="notices">
-                <i class="fas fa-bell"></i>
-                <span>News</span>
-            </div>
-            <div class="nav-item" data-view="profile">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </div>
-        </div>
+        </nav>
+    </div>
 
-        <!-- Toast -->
-        <div class="toast" id="toast">
-            <i class="fas fa-info-circle"></i>
-            <span id="toastMessage">Notification</span>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Notification</span>
+    </div>
+
+    <!-- Add Notice Modal -->
+    <div class="modal-overlay" id="noticeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>New Announcement</h3>
+                <button class="modal-close" onclick="closeModal('noticeModal')">&times;</button>
+            </div>
+            <div class="input-field">
+                <label>Title</label>
+                <input type="text" id="noticeTitle" placeholder="Announcement title">
+            </div>
+            <div class="input-field">
+                <label>Content</label>
+                <textarea id="noticeContent" rows="5" style="width: 100%; padding: 16px; background: var(--gray-100); border: 2px solid transparent; border-radius: 16px; font-family: inherit;" placeholder="Write your announcement..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="postNotice()">
+                <i class="fas fa-paper-plane"></i> Post Announcement
+            </button>
+        </div>
+    </div>
+
+    <!-- Member Profile Modal -->
+    <div class="modal-overlay" id="memberProfileModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Member Profile</h3>
+                <button class="modal-close" onclick="closeModal('memberProfileModal')">&times;</button>
+            </div>
+            <div id="memberProfileContent"></div>
         </div>
     </div>
 
@@ -1146,6 +2129,9 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
+        // ==================== IMGBB CONFIG ====================
+        const IMGBB_API_KEY = '9aa96ce19fd64571b8b51cfb33f27d3c';
+
         // ==================== LOCALFORAGE SETUP ====================
         localforage.config({
             name: 'DarkRootEnterprise',
@@ -1157,19 +2143,16 @@
         let currentMemberData = null;
         let allMembers = [];
         let allNotices = [];
-        let currentFilterRole = 'all';
-        let searchTimeout = null;
         let performanceChart = null;
+        let distributionChart = null;
+        let pointsChart = null;
 
         // ==================== DOM ELEMENTS ====================
         const authSection = document.getElementById('authSection');
-        const memberPanel = document.getElementById('memberPanel');
-        const bottomNav = document.getElementById('bottomNav');
-        const loginCard = document.getElementById('loginCard');
-        const signupCard = document.getElementById('signupCard');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const sidebar = document.getElementById('sidebar');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
-        const connectionStatus = document.getElementById('connectionStatus');
 
         // Views
         const dashboardView = document.getElementById('dashboardView');
@@ -1177,8 +2160,49 @@
         const leaderboardView = document.getElementById('leaderboardView');
         const noticesView = document.getElementById('noticesView');
         const profileView = document.getElementById('profileView');
+        const settingsView = document.getElementById('settingsView');
 
-        // ==================== SMART FIRST-TIME LOGIN DETECTION ====================
+        // ==================== RESPONSIVE HANDLING ====================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+            }
+            updateViewForScreenSize();
+        });
+
+        function updateViewForScreenSize() {
+            const isMobile = window.innerWidth <= 768;
+            const membersTable = document.getElementById('membersTableView');
+            const membersGrid = document.getElementById('membersGridView');
+
+            if (membersTable && membersGrid) {
+                if (isMobile) {
+                    membersTable.style.display = 'none';
+                    membersGrid.style.display = 'grid';
+                } else {
+                    membersTable.style.display = 'table';
+                    membersGrid.style.display = 'none';
+                }
+            }
+        }
+
+        // ==================== SMART FIRST-TIME LOGIN ====================
         async function checkFirstTimeLogin(uid) {
             const key = `first_login_${uid}`;
             const isFirstLogin = await localforage.getItem(key);
@@ -1190,35 +2214,72 @@
             return false;
         }
 
+        // ==================== IMGBB UPLOAD ====================
+        async function uploadToImgBB(file) {
+            const formData = new FormData();
+            formData.append('key', IMGBB_API_KEY);
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('https://api.imgbb.com/1/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    return data.data.url;
+                }
+                return null;
+            } catch (error) {
+                console.error('Upload error:', error);
+                return null;
+            }
+        }
+
+        window.handleProfileImageUpload = async function(event) {
+            const file = event.target.files[0];
+            if (!file || !currentUser) return;
+
+            showToast('Uploading image...', 'info');
+
+            const imageUrl = await uploadToImgBB(file);
+            if (imageUrl) {
+                await db.ref('members/' + currentUser.uid).update({
+                    photoURL: imageUrl
+                });
+
+                updateProfilePicture(imageUrl);
+                showToast('Profile picture updated!', 'success');
+            }
+        };
+
+        function updateProfilePicture(url) {
+            // Update sidebar avatar
+            document.getElementById('sidebarAvatarText').style.display = 'none';
+            const sidebarImg = document.getElementById('sidebarAvatarImg');
+            sidebarImg.src = url;
+            sidebarImg.style.display = 'block';
+
+            // Update profile avatar
+            document.getElementById('profileAvatarLargeText').style.display = 'none';
+            const profileImg = document.getElementById('profileAvatarLargeImg');
+            profileImg.src = url;
+            profileImg.style.display = 'block';
+
+            // Update in member data
+            if (currentMemberData) {
+                currentMemberData.photoURL = url;
+            }
+        }
+
         // ==================== UTILITY FUNCTIONS ====================
         function showToast(message, type = 'success') {
             toastMessage.textContent = message;
-            toast.style.borderColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
-            toast.querySelector('i').style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            toast.className = 'toast ' + type;
             toast.style.display = 'flex';
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
-        }
-
-        function updateConnectionStatus(online) {
-            if (online) {
-                connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Connected</span>';
-                connectionStatus.style.color = 'var(--success)';
-            } else {
-                connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Offline</span>';
-                connectionStatus.style.color = 'var(--danger)';
-            }
-        }
-
-        const connectedRef = db.ref('.info/connected');
-        connectedRef.on('value', (snap) => {
-            updateConnectionStatus(snap.val());
-        });
-
-        function formatDate(timestamp) {
-            if (!timestamp) return 'Just now';
-            return moment(timestamp).fromNow();
         }
 
         function getInitials(name) {
@@ -1226,32 +2287,66 @@
             return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
 
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Just now';
+            return moment(timestamp).fromNow();
+        }
+
+        function formatDateTime(timestamp) {
+            return moment(timestamp).format('MMMM DD, YYYY • h:mm A');
+        }
+
         // ==================== VIEW MANAGEMENT ====================
         function showView(viewId) {
+            // Hide all views
             dashboardView.style.display = 'none';
             membersView.style.display = 'none';
             leaderboardView.style.display = 'none';
             noticesView.style.display = 'none';
             profileView.style.display = 'none';
+            settingsView.style.display = 'none';
 
+            // Show selected view
             document.getElementById(viewId + 'View').style.display = 'block';
 
-            document.querySelectorAll('.nav-item').forEach(item => {
+            // Update navigation (both desktop and mobile)
+            document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.view === viewId) {
                     item.classList.add('active');
                 }
             });
 
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                members: 'Team Directory',
+                leaderboard: 'Leaderboard',
+                notices: 'Announcements',
+                profile: 'My Profile',
+                settings: 'Settings'
+            };
+            document.getElementById('currentPageTitle').textContent = titles[viewId];
+
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+            }
+
+            // Load data based on view
             switch(viewId) {
                 case 'members':
                     loadMembers();
+                    updateViewForScreenSize();
                     break;
                 case 'leaderboard':
                     loadLeaderboard();
                     break;
                 case 'notices':
-                    loadAllNotices();
+                    loadNotices();
+                    break;
+                case 'profile':
+                    updateProfileView();
                     break;
             }
         }
@@ -1274,30 +2369,33 @@
                         // Check first login
                         const isFirstLogin = await checkFirstTimeLogin(user.uid);
                         
+                        // Update UI
                         updateUIWithMemberData();
                         
+                        // Show dashboard
                         authSection.style.display = 'none';
-                        memberPanel.style.display = 'block';
-                        bottomNav.style.display = 'flex';
+                        dashboardSection.style.display = 'flex';
                         
+                        // Load all data
                         loadDashboardData();
-                        loadRecentNotices();
+                        loadTeamMembersGrid();
                         
+                        // Show dashboard view
                         showView('dashboard');
                         
                         if (isFirstLogin) {
                             showToast(`Welcome to DarkRoot, ${currentMemberData.name}!`);
                         }
+                    } else {
+                        await createMemberRecord(user);
                     }
                 } catch (error) {
                     showToast('Error loading profile', 'error');
                 }
             } else {
-                currentUser = null;
-                currentMemberData = null;
-                authSection.style.display = 'block';
-                memberPanel.style.display = 'none';
-                bottomNav.style.display = 'none';
+                // Show auth section
+                authSection.style.display = 'flex';
+                dashboardSection.style.display = 'none';
             }
         });
 
@@ -1341,30 +2439,51 @@
             const points = currentMemberData.points || 0;
             const salary = currentMemberData.salary || 0;
             
-            document.getElementById('profileAvatar').textContent = initials;
-            document.getElementById('profileAvatarLarge').textContent = initials;
-            document.getElementById('profileDisplayName').textContent = name;
-            document.getElementById('profileRoleText').textContent = role;
+            // Update sidebar
+            document.getElementById('sidebarAvatarText').textContent = initials;
+            document.getElementById('sidebarName').textContent = name;
+            document.getElementById('sidebarEmail').textContent = currentMemberData.email || '';
+            document.getElementById('sidebarRole').innerHTML = `<i class="fas fa-shield-alt"></i><span>${role}</span>`;
+            document.getElementById('sidebarPoints').textContent = points.toLocaleString();
+            document.getElementById('sidebarSalary').textContent = '$' + salary.toLocaleString();
             
-            const roleBadge = document.getElementById('profileRoleBadge');
-            roleBadge.className = 'profile-badge ' + role.toLowerCase();
-            
-            document.getElementById('statPoints').textContent = points.toLocaleString();
-            document.getElementById('statSalary').textContent = '$' + salary.toLocaleString();
-            
+            // Update profile view
+            document.getElementById('profileAvatarLargeText').textContent = initials;
             document.getElementById('profileFullName').textContent = name;
+            document.getElementById('profileRole').innerHTML = `<i class="fas fa-shield-alt"></i> <span>${role}</span>`;
             document.getElementById('profileEmail').textContent = currentMemberData.email || '';
             document.getElementById('profilePoints').textContent = points.toLocaleString();
             document.getElementById('profileSalary').textContent = '$' + salary.toLocaleString();
+            document.getElementById('profileTotalPoints').textContent = points.toLocaleString();
+            document.getElementById('profileBaseSalary').textContent = '$' + salary.toLocaleString();
+            document.getElementById('profileTotalComp').textContent = '$' + (salary + (currentMemberData.bonus || 0)).toLocaleString();
             document.getElementById('profileJoinDate').textContent = moment(currentMemberData.joinDate).format('MMMM DD, YYYY');
             document.getElementById('profileLastActive').textContent = formatDate(currentMemberData.lastActive);
             document.getElementById('profileStatus').textContent = currentMemberData.status || 'Active';
-            document.getElementById('profileRoleLarge').innerHTML = `<i class="fas fa-shield-alt"></i> <span>${role}</span>`;
             
-            calculateUserRank();
+            // Calculate monthly average
+            const performance = currentMemberData.performance || {};
+            const values = Object.values(performance);
+            const avg = values.reduce((a, b) => a + b, 0) / values.length || 0;
+            document.getElementById('profileMonthlyAvg').textContent = Math.round(avg).toLocaleString();
+            
+            // Find best month
+            if (values.length > 0) {
+                const max = Math.max(...values);
+                const maxIndex = values.indexOf(max);
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                document.getElementById('profileBestMonth').textContent = months[maxIndex] + ' ' + max;
+            }
+            
+            // Profile picture
+            if (currentMemberData.photoURL) {
+                updateProfilePicture(currentMemberData.photoURL);
+            }
+            
+            calculateRank();
         }
 
-        async function calculateUserRank() {
+        async function calculateRank() {
             try {
                 const snapshot = await db.ref('members').orderByChild('points').once('value');
                 const members = [];
@@ -1377,239 +2496,14 @@
                 
                 members.sort((a, b) => b.points - a.points);
                 const rank = members.findIndex(m => m.uid === currentUser.uid) + 1;
-                document.getElementById('statRank').textContent = '#' + rank;
+                document.getElementById('sidebarRank').textContent = '#' + rank;
+                document.getElementById('profileRank').textContent = '#' + rank;
             } catch (error) {
                 console.error('Error calculating rank:', error);
             }
         }
 
-        // ==================== DASHBOARD ====================
-        function loadDashboardData() {
-            loadPerformanceChart();
-        }
-
-        function loadPerformanceChart() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            
-            if (performanceChart) {
-                performanceChart.destroy();
-            }
-            
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-            const data = [65, 70, 85, 90, 88, 95];
-            
-            performanceChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        data: data,
-                        borderColor: '#1a5cff',
-                        backgroundColor: 'rgba(26, 92, 255, 0.05)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#1a5cff',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { enabled: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(0,0,0,0.03)' },
-                            ticks: { display: false }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#7f8c8d' }
-                        }
-                    }
-                }
-            });
-            
-            document.getElementById('monthYearBadge').textContent = moment().format('MMMM YYYY');
-        }
-
-        async function loadRecentNotices() {
-            try {
-                const snapshot = await db.ref('notices').orderByChild('timestamp').limitToLast(3).once('value');
-                const container = document.getElementById('recentNotices');
-                container.innerHTML = '';
-                
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No announcements</p></div>';
-                    return;
-                }
-                
-                const notices = [];
-                snapshot.forEach(child => {
-                    notices.push({ id: child.key, ...child.val() });
-                });
-                
-                notices.reverse().forEach(notice => {
-                    container.innerHTML += `
-                        <div class="notice-item">
-                            <div class="notice-date"><i class="far fa-clock"></i> ${formatDate(notice.timestamp)}</div>
-                            <div class="notice-text">${notice.text}</div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading notices:', error);
-            }
-        }
-
-        // ==================== MEMBERS ====================
-        async function loadMembers() {
-            try {
-                const snapshot = await db.ref('members').once('value');
-                allMembers = [];
-                
-                snapshot.forEach(child => {
-                    allMembers.push({
-                        uid: child.key,
-                        ...child.val()
-                    });
-                });
-                
-                document.getElementById('memberCount').textContent = allMembers.length + ' members';
-                filterAndDisplayMembers();
-            } catch (error) {
-                console.error('Error loading members:', error);
-            }
-        }
-
-        function filterAndDisplayMembers() {
-            const searchTerm = document.getElementById('memberSearch')?.value.toLowerCase() || '';
-            
-            const filtered = allMembers.filter(member => {
-                if (currentFilterRole !== 'all' && member.role !== currentFilterRole) return false;
-                if (searchTerm) {
-                    return (member.name && member.name.toLowerCase().includes(searchTerm)) ||
-                           (member.email && member.email.toLowerCase().includes(searchTerm));
-                }
-                return true;
-            });
-            
-            displayMembers(filtered);
-        }
-
-        function displayMembers(members) {
-            const container = document.getElementById('memberListContainer');
-            
-            if (members.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-users-slash"></i><p>No members found</p></div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            members.sort((a, b) => (b.points || 0) - (a.points || 0));
-            
-            members.forEach(member => {
-                const initials = getInitials(member.name);
-                container.innerHTML += `
-                    <div class="member-item">
-                        <div class="member-avatar-sm">${initials}</div>
-                        <div class="member-details">
-                            <div class="member-name">${member.name}</div>
-                            <div class="member-meta">
-                                <span class="member-role-badge">${member.role}</span>
-                                <span>${(member.points || 0).toLocaleString()} pts</span>
-                            </div>
-                        </div>
-                        <div class="member-points">$${(member.salary || 0).toLocaleString()}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // ==================== LEADERBOARD ====================
-        async function loadLeaderboard() {
-            try {
-                const snapshot = await db.ref('members').orderByChild('points').once('value');
-                const members = [];
-                
-                snapshot.forEach(child => {
-                    members.push({
-                        uid: child.key,
-                        ...child.val()
-                    });
-                });
-                
-                members.sort((a, b) => (b.points || 0) - (a.points || 0));
-                
-                const container = document.getElementById('leaderboardContainer');
-                container.innerHTML = '';
-                
-                if (members.length === 0) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-trophy"></i><p>No data</p></div>';
-                    return;
-                }
-                
-                members.slice(0, 20).forEach((member, index) => {
-                    const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-                    container.innerHTML += `
-                        <div class="leaderboard-item">
-                            <div class="rank ${rankClass}">${index + 1}</div>
-                            <div class="leaderboard-info">
-                                <div class="leaderboard-name">${member.name}</div>
-                                <div class="leaderboard-role">${member.role}</div>
-                            </div>
-                            <div class="leaderboard-score">${(member.points || 0).toLocaleString()}</div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading leaderboard:', error);
-            }
-        }
-
-        // ==================== NOTICES ====================
-        async function loadAllNotices() {
-            try {
-                const snapshot = await db.ref('notices').orderByChild('timestamp').once('value');
-                const notices = [];
-                
-                snapshot.forEach(child => {
-                    notices.push({
-                        id: child.key,
-                        ...child.val()
-                    });
-                });
-                
-                notices.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                
-                const container = document.getElementById('allNoticesContainer');
-                container.innerHTML = '';
-                
-                if (notices.length === 0) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No announcements</p></div>';
-                    return;
-                }
-                
-                notices.forEach(notice => {
-                    container.innerHTML += `
-                        <div class="notice-item">
-                            <div class="notice-date"><i class="far fa-clock"></i> ${moment(notice.timestamp).format('MMM DD, YYYY')}</div>
-                            <div class="notice-text">${notice.text}</div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error('Error loading notices:', error);
-            }
-        }
-
-        // ==================== EVENT LISTENERS ====================
+        // ==================== LOGIN ====================
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -1627,13 +2521,13 @@
         });
 
         document.getElementById('showSignupBtn').addEventListener('click', () => {
-            loginCard.style.display = 'none';
-            signupCard.style.display = 'block';
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('signupCard').style.display = 'block';
         });
 
         document.getElementById('backToLoginBtn').addEventListener('click', () => {
-            signupCard.style.display = 'none';
-            loginCard.style.display = 'block';
+            document.getElementById('signupCard').style.display = 'none';
+            document.getElementById('loginCard').style.display = 'block';
         });
 
         document.getElementById('signupBtn').addEventListener('click', async () => {
@@ -1671,42 +2565,504 @@
             showToast('Signed out successfully', 'success');
         });
 
-        document.querySelectorAll('.nav-item').forEach(item => {
+        // Navigation
+        document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 showView(item.dataset.view);
             });
         });
 
-        document.querySelectorAll('.filter-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                currentFilterRole = chip.dataset.role;
-                filterAndDisplayMembers();
+        // ==================== DASHBOARD ====================
+        function loadDashboardData() {
+            loadPerformanceChart();
+            loadDistributionChart();
+            loadStats();
+        }
+
+        function loadPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Performance',
+                        data: [65, 70, 85, 90, 88, 95],
+                        borderColor: '#1a5cff',
+                        backgroundColor: 'rgba(26, 92, 255, 0.05)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#1a5cff',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
             });
-        });
+        }
 
-        document.getElementById('memberSearch')?.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                filterAndDisplayMembers();
-            }, 300);
-        });
+        function loadDistributionChart() {
+            const ctx = document.getElementById('distributionChart').getContext('2d');
+            
+            if (distributionChart) {
+                distributionChart.destroy();
+            }
+            
+            distributionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['CEO', 'Manager', 'Senior', 'Member'],
+                    datasets: [{
+                        data: [1, 5, 15, 135],
+                        backgroundColor: [
+                            '#fdcb6e',
+                            '#1a5cff',
+                            '#6c5ce7',
+                            '#94a3b8'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
 
-        // Real-time updates
+        function loadPointsChart() {
+            const ctx = document.getElementById('pointsChart').getContext('2d');
+            
+            if (pointsChart) {
+                pointsChart.destroy();
+            }
+            
+            pointsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Top 10', '11-20', '21-30', '31-40', '41-50'],
+                    datasets: [{
+                        data: [4500, 3200, 2100, 1500, 800],
+                        backgroundColor: '#1a5cff',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        async function loadStats() {
+            const snapshot = await db.ref('members').once('value');
+            let total = 0;
+            let active = 0;
+            let totalPoints = 0;
+            let totalSalary = 0;
+            
+            snapshot.forEach(child => {
+                const member = child.val();
+                total++;
+                if (member.status === 'Active') active++;
+                totalPoints += member.points || 0;
+                totalSalary += member.salary || 0;
+            });
+            
+            document.getElementById('totalMembers').textContent = total;
+            document.getElementById('activeMembers').textContent = active;
+            document.getElementById('totalPoints').textContent = (totalPoints / 1000).toFixed(1) + 'K';
+            document.getElementById('totalPayroll').textContent = '$' + (totalSalary / 1000).toFixed(1) + 'K';
+        }
+
+        async function loadTeamMembersGrid() {
+            const snapshot = await db.ref('members').orderByChild('points').limitToLast(6).once('value');
+            const container = document.getElementById('teamMembersGrid');
+            container.innerHTML = '';
+            
+            const members = [];
+            snapshot.forEach(child => {
+                members.push({ uid: child.key, ...child.val() });
+            });
+            
+            members.reverse().forEach(member => {
+                const initials = getInitials(member.name);
+                container.innerHTML += `
+                    <div class="team-card" onclick="showMemberProfile('${member.uid}')">
+                        <div class="team-card-header">
+                            <div class="team-avatar">
+                                ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                            </div>
+                            <div class="team-info">
+                                <h4>${member.name}</h4>
+                                <p>${member.email}</p>
+                            </div>
+                        </div>
+                        <div class="team-stats">
+                            <div class="team-stat">
+                                <div class="value">${member.points || 0}</div>
+                                <div class="label">Points</div>
+                            </div>
+                            <div class="team-stat">
+                                <div class="value">$${member.salary || 0}</div>
+                                <div class="label">Salary</div>
+                            </div>
+                        </div>
+                        <div class="team-footer">
+                            <span class="team-role ${member.role?.toLowerCase() || 'member'}">${member.role || 'Member'}</span>
+                            <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==================== MEMBERS ====================
+        async function loadMembers() {
+            const snapshot = await db.ref('members').once('value');
+            allMembers = [];
+            
+            snapshot.forEach(child => {
+                allMembers.push({
+                    uid: child.key,
+                    ...child.val()
+                });
+            });
+            
+            filterAndDisplayMembers();
+        }
+
+        function filterAndDisplayMembers() {
+            const roleFilter = document.getElementById('memberRoleFilter').value;
+            
+            const filtered = allMembers.filter(member => {
+                if (roleFilter !== 'all' && member.role !== roleFilter) return false;
+                return true;
+            });
+            
+            displayMembersTable(filtered);
+            displayMembersGrid(filtered);
+        }
+
+        function displayMembersTable(members) {
+            const tbody = document.getElementById('membersTableBody');
+            tbody.innerHTML = '';
+            
+            members.sort((a, b) => (b.points || 0) - (a.points || 0));
+            
+            members.forEach(member => {
+                const initials = getInitials(member.name);
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="member-info">
+                                <div class="member-avatar-small">
+                                    ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                                </div>
+                                <div>
+                                    <div class="member-name">${member.name}</div>
+                                    <div class="member-email">${member.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge ${member.role?.toLowerCase() || 'member'}">${member.role || 'Member'}</span></td>
+                        <td class="points-cell">${member.points || 0}</td>
+                        <td class="salary-cell">$${member.salary || 0}</td>
+                        <td><span class="status-badge"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span></td>
+                        <td>${moment(member.joinDate).format('MMM DD, YYYY')}</td>
+                        <td class="action-cell">
+                            <button class="action-btn" onclick="showMemberProfile('${member.uid}')"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn" onclick="editMember('${member.uid}')"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function displayMembersGrid(members) {
+            const grid = document.getElementById('membersGridView');
+            grid.innerHTML = '';
+            
+            members.sort((a, b) => (b.points || 0) - (a.points || 0));
+            
+            members.forEach(member => {
+                const initials = getInitials(member.name);
+                grid.innerHTML += `
+                    <div class="team-card" onclick="showMemberProfile('${member.uid}')">
+                        <div class="team-card-header">
+                            <div class="team-avatar">
+                                ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                            </div>
+                            <div class="team-info">
+                                <h4>${member.name}</h4>
+                                <p>${member.email}</p>
+                            </div>
+                        </div>
+                        <div class="team-stats">
+                            <div class="team-stat">
+                                <div class="value">${member.points || 0}</div>
+                                <div class="label">Points</div>
+                            </div>
+                            <div class="team-stat">
+                                <div class="value">$${member.salary || 0}</div>
+                                <div class="label">Salary</div>
+                            </div>
+                        </div>
+                        <div class="team-footer">
+                            <span class="team-role ${member.role?.toLowerCase() || 'member'}">${member.role || 'Member'}</span>
+                            <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('memberRoleFilter').addEventListener('change', filterAndDisplayMembers);
+
+        window.showMemberProfile = async function(uid) {
+            const member = allMembers.find(m => m.uid === uid);
+            if (!member) return;
+            
+            const content = document.getElementById('memberProfileContent');
+            const initials = getInitials(member.name);
+            
+            content.innerHTML = `
+                <div style="text-align: center; margin-bottom: var(--space-lg);">
+                    <div class="profile-avatar-large" style="margin: 0 auto;">
+                        <div class="avatar-image">
+                            ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                        </div>
+                    </div>
+                    <h3 style="font-size: 1.5rem; margin: var(--space-md) 0 var(--space-xs);">${member.name}</h3>
+                    <span class="role-badge ${member.role?.toLowerCase() || 'member'}">${member.role || 'Member'}</span>
+                </div>
+                <div class="info-section">
+                    <div class="info-row">
+                        <span class="info-label"><i class="far fa-envelope"></i> Email</span>
+                        <span class="info-value">${member.email}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-star"></i> Points</span>
+                        <span class="info-value">${member.points || 0}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-coins"></i> Salary</span>
+                        <span class="info-value">$${member.salary || 0}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-calendar-alt"></i> Joined</span>
+                        <span class="info-value">${moment(member.joinDate).format('MMMM DD, YYYY')}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-circle"></i> Status</span>
+                        <span class="info-value" style="color: var(--success);">${member.status || 'Active'}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('memberProfileModal').style.display = 'flex';
+        };
+
+        window.editMember = function(uid) {
+            // Implement edit functionality
+            showToast('Edit feature coming soon', 'info');
+        };
+
+        window.exportMembers = function() {
+            const dataStr = JSON.stringify(allMembers, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `darkroot_members_${moment().format('YYYY-MM-DD')}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showToast('Members exported successfully!', 'success');
+        };
+
+        // ==================== LEADERBOARD ====================
+        async function loadLeaderboard() {
+            const snapshot = await db.ref('members').orderByChild('points').once('value');
+            const members = [];
+            
+            snapshot.forEach(child => {
+                members.push({
+                    uid: child.key,
+                    ...child.val()
+                });
+            });
+            
+            members.sort((a, b) => (b.points || 0) - (a.points || 0));
+            
+            const container = document.getElementById('leaderboardList');
+            container.innerHTML = '';
+            
+            members.slice(0, 10).forEach((member, index) => {
+                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                container.innerHTML += `
+                    <div class="leaderboard-item" onclick="showMemberProfile('${member.uid}')" style="cursor: pointer;">
+                        <div class="leaderboard-rank ${rankClass}">${index + 1}</div>
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-name">${member.name}</div>
+                            <div class="leaderboard-role">${member.role}</div>
+                        </div>
+                        <div class="leaderboard-points">${member.points || 0} pts</div>
+                    </div>
+                `;
+            });
+            
+            loadPointsChart();
+        }
+
+        // ==================== NOTICES ====================
+        async function loadNotices() {
+            const snapshot = await db.ref('notices').orderByChild('timestamp').once('value');
+            const notices = [];
+            
+            snapshot.forEach(child => {
+                notices.push({
+                    id: child.key,
+                    ...child.val()
+                });
+            });
+            
+            notices.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            
+            const container = document.getElementById('noticesList');
+            container.innerHTML = '';
+            
+            if (notices.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><p>No announcements</p></div>';
+                return;
+            }
+            
+            notices.forEach(notice => {
+                container.innerHTML += `
+                    <div class="notice-item">
+                        <div class="notice-date"><i class="far fa-clock"></i> ${formatDateTime(notice.timestamp)}</div>
+                        <div class="notice-title">${notice.title || 'Announcement'}</div>
+                        <div class="notice-text">${notice.text}</div>
+                        <div class="notice-meta">
+                            <span><i class="fas fa-user"></i> ${notice.postedBy || 'System'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.showAddNoticeModal = function() {
+            document.getElementById('noticeModal').style.display = 'flex';
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        };
+
+        window.postNotice = async function() {
+            const title = document.getElementById('noticeTitle').value;
+            const text = document.getElementById('noticeContent').value;
+            
+            if (!title || !text) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+            
+            await db.ref('notices').push({
+                title: title,
+                text: text,
+                postedBy: currentMemberData?.name || 'Admin',
+                timestamp: Date.now()
+            });
+            
+            showToast('Announcement posted successfully!', 'success');
+            closeModal('noticeModal');
+            document.getElementById('noticeTitle').value = '';
+            document.getElementById('noticeContent').value = '';
+            loadNotices();
+        };
+
+        // ==================== PROFILE ====================
+        function updateProfileView() {
+            // Already updated in updateUIWithMemberData
+        }
+
+        // ==================== REAL-TIME UPDATES ====================
         db.ref('members').on('child_changed', () => {
-            if (membersView.style.display !== 'none') loadMembers();
-            if (leaderboardView.style.display !== 'none') loadLeaderboard();
-            calculateUserRank();
+            if (currentUser) {
+                calculateRank();
+                if (membersView.style.display !== 'none') loadMembers();
+                if (leaderboardView.style.display !== 'none') loadLeaderboard();
+                if (dashboardView.style.display !== 'none') {
+                    loadTeamMembersGrid();
+                    loadStats();
+                }
+            }
+        });
+
+        db.ref('members').on('child_added', () => {
+            if (currentUser) {
+                loadStats();
+            }
         });
 
         db.ref('notices').on('child_added', () => {
             if (noticesView.style.display !== 'none') {
-                loadAllNotices();
-            } else {
-                loadRecentNotices();
+                loadNotices();
             }
         });
+
+        // ==================== GLOBAL SEARCH ====================
+        document.getElementById('globalSearch').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (membersView.style.display !== 'none') {
+                const filtered = allMembers.filter(member => 
+                    member.name?.toLowerCase().includes(searchTerm) ||
+                    member.email?.toLowerCase().includes(searchTerm)
+                );
+                displayMembersTable(filtered);
+                displayMembersGrid(filtered);
+            }
+        });
+
+        // ==================== REFRESH ====================
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            loadDashboardData();
+            loadTeamMembersGrid();
+            if (membersView.style.display !== 'none') loadMembers();
+            if (leaderboardView.style.display !== 'none') loadLeaderboard();
+            if (noticesView.style.display !== 'none') loadNotices();
+            showToast('Data refreshed', 'success');
+        });
+
+        // ==================== INITIALIZATION ====================
+        // Set default view for mobile/desktop
+        updateViewForScreenSize();
+        
+        // Handle window resize
+        window.addEventListener('resize', updateViewForScreenSize);
 
         console.log('DarkRoot Enterprise Portal initialized');
     </script>
