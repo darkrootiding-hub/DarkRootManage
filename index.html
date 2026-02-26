@@ -1356,7 +1356,9 @@
                     <div id="aiInsights"></div>
                 </div>
 
-              
+                <!-- Activity Feed (optional) -->
+                <!-- (commented out to keep layout clean) -->
+                
                 <!-- Team Members -->
                 <div class="section-header">
                     <h2><i class="fas fa-users" style="margin-right: var(--space-xs);"></i> Team</h2>
@@ -1453,9 +1455,13 @@
                         <span style="color: var(--success);" id="profileStatus">Active</span>
                     </div>
 
-                    <button class="btn btn-outline" id="logoutBtn" style="margin-top: var(--space-lg);">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Sign Out
+                    <!-- Edit Name Button -->
+                    <button class="btn btn-outline" onclick="openEditNameModal()" style="margin-top: var(--space-md);">
+                        <i class="fas fa-edit"></i> Edit Name
+                    </button>
+
+                    <button class="btn btn-outline" id="logoutBtn" style="margin-top: var(--space-md);">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
                     </button>
                 </div>
             </div>
@@ -1532,6 +1538,40 @@
         </div>
     </div>
 
+    <!-- Edit Name Modal -->
+    <div class="modal-overlay" id="editNameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Your Name</h3>
+                <div class="modal-close" onclick="closeModal('editNameModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <input type="text" id="editNameInput" class="chat-input" placeholder="New name" value="">
+                <button class="btn btn-primary" onclick="updateName()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Popup Modal -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>👋 Welcome to DarkRoot!</h3>
+                <div class="modal-close" onclick="closeModal('welcomeModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div style="text-align: center; padding: var(--space-md) 0;">
+                <i class="fas fa-users" style="font-size: 3rem; color: var(--primary); margin-bottom: var(--space-md);"></i>
+                <p style="font-size: 1.1rem; margin-bottom: var(--space-md);">You've automatically joined our group.</p>
+                <p style="color: var(--gray-600);">Start chatting and collaborating with your team!</p>
+                <button class="btn btn-primary" onclick="closeModal('welcomeModal')" style="margin-top: var(--space-lg);">Got it</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle" id="toastIcon"></i>
@@ -1568,6 +1608,7 @@
         let allMembers = [];
         let selectedImageFile = null;
         let chatMessagesRef = null;
+        let isNewLogin = false; // flag to show welcome popup only once per session
 
         // DOM Elements
         const authSection = document.getElementById('authSection');
@@ -1582,7 +1623,6 @@
         // Views
         const dashboardView = document.getElementById('dashboardView');
         const membersView = document.getElementById('membersView');
-        const leaderboardView = document.getElementById('leaderboardView'); // kept for compatibility, but we'll use team tabs
         const noticesView = document.getElementById('noticesView');
         const profileView = document.getElementById('profileView');
         const chatView = document.getElementById('chatView');
@@ -1621,6 +1661,35 @@
             if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
             return moment(timestamp).format('MMM DD');
         }
+
+        // ==================== WELCOME POPUP ====================
+        function showWelcomePopup() {
+            document.getElementById('welcomeModal').style.display = 'flex';
+        }
+
+        // ==================== EDIT NAME ====================
+        window.openEditNameModal = function() {
+            document.getElementById('editNameInput').value = currentMemberData?.name || '';
+            document.getElementById('editNameModal').style.display = 'flex';
+        };
+
+        window.updateName = async function() {
+            const newName = document.getElementById('editNameInput').value.trim();
+            if (!newName) {
+                showToast('Name cannot be empty', 'error');
+                return;
+            }
+
+            try {
+                await db.ref('members/' + currentUser.uid).update({ name: newName });
+                currentMemberData.name = newName;
+                updateUIWithMemberData();
+                showToast('Name updated successfully!');
+                closeModal('editNameModal');
+            } catch (error) {
+                showToast('Failed to update name', 'error');
+            }
+        };
 
         // ==================== SIDEBAR ====================
         function toggleSidebar() {
@@ -1744,10 +1813,18 @@
                         
                         // Show dashboard view
                         showView('dashboard');
+
+                        // Show welcome popup if it's a new login (not page reload)
+                        if (isNewLogin) {
+                            showWelcomePopup();
+                            isNewLogin = false;
+                        }
                         
                         showToast('Welcome back, ' + (currentMemberData.name || 'Member'));
                     } else {
                         await createMemberRecord(user);
+                        // For new signup, also show welcome popup
+                        isNewLogin = true; // will be used after record creation
                     }
                 } catch (error) {
                     showToast('Error loading profile', 'error');
@@ -1780,6 +1857,9 @@
             
             currentMemberData = memberData;
             updateUIWithMemberData();
+            
+            // Show welcome popup for new signup
+            showWelcomePopup();
         }
 
         function updateUIWithMemberData() {
@@ -1860,6 +1940,7 @@
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
+                isNewLogin = true; // mark as new login to show welcome popup
             } catch (error) {
                 showToast(error.message, 'error');
             }
@@ -1900,6 +1981,7 @@
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 await userCredential.user.updateProfile({ displayName: name });
                 showToast('Account created!');
+                // Welcome popup will be shown in createMemberRecord
             } catch (error) {
                 showToast(error.message, 'error');
             }
@@ -1917,7 +1999,7 @@
 
         window.closeModal = function(modalId) {
             document.getElementById(modalId).style.display = 'none';
-            resetImageUpload();
+            if (modalId === 'imageUploadModal') resetImageUpload();
         };
 
         function resetImageUpload() {
@@ -1994,7 +2076,7 @@
         async function loadDashboardData() {
             loadStats();
             loadAIInsights();
-            loadActivities();
+            // loadActivities(); // optional, can be added back if needed
             loadTeamMembers();
             updateGreeting();
         }
@@ -2089,67 +2171,6 @@
             } catch (error) {
                 console.error('Error loading insights:', error);
                 document.getElementById('aiInsights').innerHTML = '<div class="insight-item">Error loading insights</div>';
-            }
-        }
-
-        async function loadActivities() {
-            try {
-                const container = document.getElementById('activityFeed');
-                
-                const logsSnapshot = await db.ref('activity_logs')
-                    .orderByChild('timestamp')
-                    .limitToLast(10)
-                    .once('value');
-                
-                const activities = [];
-                logsSnapshot.forEach(child => {
-                    activities.push({ id: child.key, ...child.val() });
-                });
-                
-                activities.reverse();
-
-                if (activities.length === 0) {
-                    container.innerHTML = '<div class="activity-item">No recent activity</div>';
-                    return;
-                }
-
-                container.innerHTML = activities.slice(0, 8).map(activity => {
-                    const userName = activity.user || activity.email?.split('@')[0] || 'Member';
-                    const initials = getInitials(userName);
-                    const isOnline = activity.online || (activity.time && activity.time > Date.now() - 300000);
-                    
-                    let actionText = activity.action || 'updated profile';
-                    let targetText = activity.target || '';
-                    
-                    if (activity.pointsEarned) {
-                        actionText = 'earned points';
-                        targetText = `+${activity.pointsEarned} pts`;
-                    } else if (activity.type === 'task_complete') {
-                        actionText = 'completed task';
-                        targetText = activity.taskName || 'Task';
-                    } else if (activity.type === 'level_up') {
-                        actionText = 'leveled up';
-                        targetText = `Level ${activity.newLevel || '5'}`;
-                    }
-
-                    return `
-                        <div class="activity-item">
-                            <div class="activity-avatar ${isOnline ? 'online' : ''}">${initials}</div>
-                            <div class="activity-content">
-                                <div class="activity-title">${userName} ${actionText}</div>
-                                <div class="activity-meta">
-                                    <span>${targetText}</span>
-                                    <span>•</span>
-                                    <span>${formatDate(activity.time || Date.now())}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                console.error('Error loading activities:', error);
-                document.getElementById('activityFeed').innerHTML = '<div class="activity-item">Error loading activities</div>';
             }
         }
 
@@ -2525,7 +2546,7 @@
             }
         });
 
-        console.log('DarkRoot Team Hub');
+        console.log('DarkRoot Team Hub - with welcome popup and edit name!');
     </script>
 </body>
 </html>
