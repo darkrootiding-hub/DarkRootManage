@@ -1250,6 +1250,35 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-300) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-stat {
+            height: 60px;
+            border-radius: var(--radius-md);
+        }
+        .skeleton-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+        }
+        .skeleton-text {
+            height: 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+        .skeleton-title {
+            height: 20px;
+            width: 60%;
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -1411,7 +1440,7 @@
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Sidebar -->
+        <!-- Sidebar (updated with new features, old options removed) -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -1451,25 +1480,14 @@
             </div>
 
             <nav class="nav-menu" id="sidebarNav">
-                <div class="nav-item active" data-view="dashboard">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
+                <!-- New features: Analytics and Calendar -->
+                <div class="nav-item active" data-view="analytics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
                 </div>
-                <div class="nav-item" data-view="members">
-                    <i class="fas fa-users"></i>
-                    <span>Team</span>
-                </div>
-                <div class="nav-item" data-view="chat">
-                    <i class="fas fa-comments"></i>
-                    <span>Chat</span>
-                </div>
-                <div class="nav-item" data-view="notices">
-                    <i class="fas fa-bullhorn"></i>
-                    <span>Notices</span>
-                </div>
-                <div class="nav-item" data-view="profile">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
+                <div class="nav-item" data-view="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendar</span>
                 </div>
                 <!-- Admin nav item (hidden by default) -->
                 <div class="nav-item" id="adminNavItem" data-view="admin" style="display: none;">
@@ -1481,42 +1499,15 @@
 
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Dashboard View -->
+            <!-- Dashboard View (original) -->
             <div id="dashboardView">
-                <!-- Stats Grid -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-value" id="totalMembers">0</div>
-                        <div class="stat-label">Members</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="stat-value" id="totalPoints">0</div>
-                        <div class="stat-label">Points</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="stat-value" id="topPerformer">0</div>
-                        <div class="stat-label">Top</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="stat-value" id="activeNow">0</div>
-                        <div class="stat-label">Active</div>
-                    </div>
+                <!-- Stats Grid with skeleton -->
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Will be populated by JS -->
                 </div>
 
-                <!-- AI Insights -->
-                <div class="ai-panel">
+                <!-- AI Insights with skeleton -->
+                <div class="ai-panel" id="aiPanel">
                     <div class="ai-header">
                         <i class="fas fa-robot"></i>
                         <h3>AI Insights</h3>
@@ -1524,7 +1515,7 @@
                     <div id="aiInsights"></div>
                 </div>
 
-                <!-- Team Members -->
+                <!-- Team Members with skeleton -->
                 <div class="section-header">
                     <h2><i class="fas fa-users" style="margin-right: var(--space-xs);"></i> Team</h2>
                     <span class="view-all" onclick="showView('members')">View All</span>
@@ -1687,9 +1678,63 @@
                 </div>
                 <div id="adminActivityList" class="activity-feed"></div>
             </div>
+
+            <!-- New Analytics View (placeholder) -->
+            <div id="analyticsView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Analytics</h2>
+                </div>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+                <div class="stats-grid" style="margin-top: var(--space-md);">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                        <div class="stat-value">1.2k</div>
+                        <div class="stat-label">Views</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-download"></i></div>
+                        <div class="stat-value">340</div>
+                        <div class="stat-label">Downloads</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-share"></i></div>
+                        <div class="stat-value">89</div>
+                        <div class="stat-label">Shares</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">4.5h</div>
+                        <div class="stat-label">Avg Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Calendar View (placeholder) -->
+            <div id="calendarView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-calendar-alt"></i> Calendar</h2>
+                </div>
+                <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); text-align: center;">
+                    <p style="margin-bottom: var(--space-md);">📅 Upcoming events</p>
+                    <div class="activity-item" style="justify-content: space-between;">
+                        <span>Team meeting</span>
+                        <span class="badge">Today 3pm</span>
+                    </div>
+                    <div class="activity-item" style="justify-content: space-between;">
+                        <span>Project deadline</span>
+                        <span class="badge">Tomorrow</span>
+                    </div>
+                    <div class="activity-item" style="justify-content: space-between;">
+                        <span>Client call</span>
+                        <span class="badge">Fri 10am</span>
+                    </div>
+                </div>
+            </div>
         </main>
 
-        <!-- Bottom Navigation -->
+        <!-- Bottom Navigation (unchanged) -->
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item-bottom active" data-view="dashboard">
                 <i class="fas fa-home"></i>
@@ -1871,7 +1916,7 @@
         let selectedImageFile = null;
         let chatMessagesRef = null;
         let isNewLogin = false;
-        let memberChart, pointsChart;
+        let memberChart, pointsChart, analyticsChart;
 
         // DOM Elements
         const splashScreen = document.getElementById('splashScreen');
@@ -1894,6 +1939,8 @@
         const profileView = document.getElementById('profileView');
         const chatView = document.getElementById('chatView');
         const adminView = document.getElementById('adminView');
+        const analyticsView = document.getElementById('analyticsView');
+        const calendarView = document.getElementById('calendarView');
 
         // Login/Signup elements
         const loginCard = document.getElementById('loginCard');
@@ -1937,6 +1984,36 @@
             if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
             if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
             return moment(timestamp).format('MMM DD');
+        }
+
+        // ==================== SKELETON LOADING ====================
+        function showSkeletons() {
+            // Stats grid
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
+                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
+                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
+                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
+            `;
+
+            // AI Insights
+            const aiInsights = document.getElementById('aiInsights');
+            aiInsights.innerHTML = `
+                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
+                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
+                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
+                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
+            `;
+
+            // Team grid
+            const teamGrid = document.getElementById('teamGrid');
+            teamGrid.innerHTML = `
+                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
+                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
+                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
+                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
+            `;
         }
 
         // ==================== WELCOME POPUP ====================
@@ -1986,6 +2063,8 @@
             noticesView.style.display = 'none';
             profileView.style.display = 'none';
             adminView.style.display = 'none';
+            analyticsView.style.display = 'none';
+            calendarView.style.display = 'none';
 
             // Show selected view
             if (viewName === 'members') {
@@ -1997,11 +2076,19 @@
             } else if (viewName === 'admin') {
                 adminView.style.display = 'block';
                 loadAdminData();
+            } else if (viewName === 'analytics') {
+                analyticsView.style.display = 'block';
+                initAnalyticsChart();
+            } else if (viewName === 'calendar') {
+                calendarView.style.display = 'block';
             } else {
                 document.getElementById(viewName + 'View').style.display = 'block';
+                if (viewName === 'dashboard') {
+                    loadDashboardData();
+                }
             }
 
-            // Update navigation
+            // Update navigation in sidebar and bottom nav
             document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.view === viewName) {
@@ -2098,7 +2185,7 @@
             try {
                 splashScreen.style.display = 'flex'; // show loading
                 await auth.signInWithEmailAndPassword(email, password);
-                isNewLogin = true; // will trigger welcome if new login (but for existing users, not new)
+                isNewLogin = true;
             } catch (error) {
                 splashScreen.style.display = 'none';
                 showToast(error.message, 'error');
@@ -2183,6 +2270,9 @@
                         splashScreen.style.display = 'none';
                         authSection.style.display = 'none';
                         dashboardSection.style.display = 'block';
+                        
+                        // Show skeletons while loading data
+                        showSkeletons();
                         
                         // Load data
                         loadDashboardData();
@@ -2390,9 +2480,9 @@
 
         // ==================== DASHBOARD ====================
         async function loadDashboardData() {
-            loadStats();
-            loadAIInsights();
-            loadTeamMembers();
+            await loadStats();
+            await loadAIInsights();
+            await loadTeamMembers();
             updateGreeting();
         }
 
@@ -2410,11 +2500,30 @@
                 if ((member.points || 0) > topPoints) topPoints = member.points;
                 if (member.status === 'Active') active++;
             });
-            
-            document.getElementById('totalMembers').textContent = total;
-            document.getElementById('totalPoints').textContent = (totalPoints / 1000).toFixed(1) + 'K';
-            document.getElementById('topPerformer').textContent = topPoints;
-            document.getElementById('activeNow').textContent = active;
+
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value">${total}</div>
+                    <div class="stat-label">Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-value">${(totalPoints / 1000).toFixed(1)}K</div>
+                    <div class="stat-label">Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-value">${topPoints}</div>
+                    <div class="stat-label">Top</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value">${active}</div>
+                    <div class="stat-label">Active</div>
+                </div>
+            `;
         }
 
         async function loadAIInsights() {
@@ -2929,6 +3038,30 @@
             });
         }
 
+        // ==================== ANALYTICS CHART ====================
+        function initAnalyticsChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            if (analyticsChart) analyticsChart.destroy();
+            analyticsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Visits',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        borderColor: 'var(--primary)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
         // ==================== INITIALIZATION ====================
         db.ref('members').on('child_changed', () => {
             if (currentUser) {
@@ -2949,7 +3082,7 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        console.log('DarkRoot - Email/Password Auth, all features intact');
+        console.log('DarkRoot - Email/Password Auth with skeleton & new sidebar features');
     </script>
 </body>
 </html>
