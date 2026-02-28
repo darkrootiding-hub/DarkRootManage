@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DarkRoot • Admin Command Center</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Moment.js -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <style>
+        /* (Keep all existing styles, unchanged) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --primary-soft: #e74c3c20;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --dark-bg: #0a0c10;
+            --card-bg: #14181f;
+            --card-light: #1e2630;
+            --border: #2c3a47;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --text-muted: #7f8c8d;
+            --admin-accent: #e67e22;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--dark-bg);
+            height: 100vh;
+            max-height: 1000px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 40px rgba(231, 76, 60, 0.1);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        @media (min-width: 481px) {
+            .admin-container {
+                border-radius: 32px;
+                height: 95vh;
+                margin: 20px auto;
+                border: 1px solid var(--border);
+            }
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(145deg, #1a1f2a, #0f141c);
+            padding: 16px 20px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .admin-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-header h1 i {
+            color: var(--primary);
+            background: var(--primary-soft);
+            padding: 10px;
+            border-radius: 16px;
+        }
+        .admin-badge {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .admin-badge:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        .admin-badge img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 4px;
+        }
+
+        /* Main Scroll Area */
+        .admin-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--card-light);
+        }
+        .admin-main::-webkit-scrollbar {
+            width: 4px;
+        }
+        .admin-main::-webkit-scrollbar-track {
+            background: var(--card-light);
+        }
+        .admin-main::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 40px 24px;
+            border: 1px solid var(--border);
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(231, 76, 60, 0.15);
+        }
+        .auth-card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Input Fields */
+        .input-field {
+            margin-bottom: 20px;
+        }
+        .input-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: var(--card-light);
+            border: 2px solid transparent;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+        .input-wrapper textarea {
+            padding: 16px;
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: #1f2a36;
+        }
+        .input-wrapper select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+        .btn-success {
+            background: var(--success);
+        }
+        .btn-warning {
+            background: var(--warning);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .card-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-header i {
+            color: var(--primary);
+        }
+
+        /* Search Bar */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        /* Filters */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            scrollbar-width: none;
+        }
+        .filter-tab {
+            background: var(--card-light);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .filter-tab i {
+            margin-right: 5px;
+        }
+
+        /* Member Table/List */
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .member-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+        }
+        .member-card:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        .member-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, var(--primary), #a03232);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            overflow: hidden;
+        }
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .member-info {
+            flex: 1;
+        }
+        .member-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        .member-email {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .member-email i {
+            color: var(--primary);
+            font-size: 0.7rem;
+        }
+        .member-role-badge {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .role-ceo { background: #f1c40f30; color: #f1c40f; }
+        .role-manager { background: #3498db30; color: #3498db; }
+        .role-senior { background: #e67e2230; color: #e67e22; }
+        .role-member { background: #2ecc7130; color: #2ecc71; }
+
+        .member-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .detail-item {
+            text-align: center;
+        }
+        .detail-item .label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .detail-item .value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s;
+            min-width: 60px;
+        }
+        .action-btn.edit { background: var(--info); color: white; }
+        .action-btn.points { background: var(--warning); color: black; }
+        .action-btn.salary { background: var(--success); color: white; }
+        .action-btn.role { background: var(--primary); color: white; }
+        .action-btn.delete { background: var(--danger); color: white; }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Meetings & Tasks list cards */
+        .item-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .item-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-soft);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        .item-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .item-meta {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid var(--primary);
+            animation: slideUp 0.3s ease;
+        }
+        .modal h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .quick-action {
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 12px 5px;
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-action:hover {
+            border-color: var(--primary);
+            transform: scale(0.95);
+        }
+        .quick-action i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        .quick-action span {
+            font-size: 0.65rem;
+            display: block;
+        }
+
+        /* Bottom Navigation */
+        .admin-nav {
+            background: var(--card-bg);
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 12px 12px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 3px;
+        }
+        .nav-item.active {
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 40px;
+            padding: 14px 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Logs */
+        .log-item {
+            background: var(--card-light);
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .member-actions {
+                flex-wrap: wrap;
+            }
+            .action-btn {
+                flex: auto;
+                width: calc(50% - 4px);
+            }
+        }
+
+        /* Image Upload Modal */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .upload-preview {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+        }
+        .upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>
+                <i class="fas fa-crown"></i>
+                Admin
+            </h1>
+            <div class="admin-badge" id="adminRoleBadge" onclick="openImageUploadModal()">
+                <img id="adminAvatarImg" src="" style="display: none;">
+                <i class="fas fa-shield-alt" id="adminAvatarIcon"></i>
+                <span id="adminRole">CEO</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main" id="adminMain">
+            <!-- Auth Section -->
+            <div id="authSection" class="auth-section">
+                <div class="auth-card">
+                    <h2><i class="fas fa-lock"></i> Admin Login</h2>
+                    
+                    <div class="input-field">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="far fa-envelope"></i>
+                            <input type="email" id="adminEmail" placeholder="admin@darkroot.com">
+                        </div>
+                    </div>
+
+                    <div class="input-field">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="adminPassword" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <button class="btn" id="adminLoginBtn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Access Control Panel
+                    </button>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: var(--primary-soft); border-radius: 16px;">
+                        <p style="color: var(--text-secondary); font-size: 0.8rem;">
+                            <i class="fas fa-info-circle"></i> 
+                            Only users with CEO/Manager role can log in.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel (hidden until logged in) -->
+            <div id="adminPanel" class="admin-panel">
+                <!-- Stats Overview -->
+                <div class="stats-grid" id="statsOverview">
+                    <div class="stat-card">
+                        <div class="label">Total Members</div>
+                        <div class="value" id="totalMembers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Active Now</div>
+                        <div class="value" id="activeMembers">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Total Payroll</div>
+                        <div class="value" id="totalPayroll">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Top Points</div>
+                        <div class="value" id="topPoints">0</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="showAddMemberModal()">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Member</span>
+                    </div>
+                    <div class="quick-action" onclick="bulkUpdatePoints()">
+                        <i class="fas fa-star"></i>
+                        <span>Bulk Points</span>
+                    </div>
+                    <div class="quick-action" onclick="resetLeaderboard()">
+                        <i class="fas fa-undo"></i>
+                        <span>Reset Points</span>
+                    </div>
+                    <div class="quick-action" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        <span>Export</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Content Area (changes with bottom nav) -->
+                <div id="dynamicContent">
+                    <!-- Members view is default -->
+                    <div id="membersView">
+                        <!-- Search & Filters -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-users-cog"></i> Member Management</h3>
+                                <span class="badge" id="memberCount">0</span>
+                            </div>
+
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="memberSearch" placeholder="Search by name, email, role...">
+                            </div>
+
+                            <div class="filter-tabs" id="roleFilters">
+                                <div class="filter-tab active" data-role="all">
+                                    <i class="fas fa-globe"></i> All
+                                </div>
+                                <div class="filter-tab" data-role="CEO">
+                                    <i class="fas fa-crown"></i> CEO
+                                </div>
+                                <div class="filter-tab" data-role="Manager">
+                                    <i class="fas fa-user-tie"></i> Manager
+                                </div>
+                                <div class="filter-tab" data-role="Senior">
+                                    <i class="fas fa-star"></i> Senior
+                                </div>
+                                <div class="filter-tab" data-role="Member">
+                                    <i class="fas fa-user"></i> Member
+                                </div>
+                            </div>
+
+                            <!-- Member List Container -->
+                            <div id="memberListContainer" class="member-list">
+                                <!-- Members will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Meetings View (hidden initially) -->
+                    <div id="meetingsView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-handshake"></i> Upcoming Meetings</h3>
+                                <button class="action-btn edit" onclick="openMeetingModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                            <div id="adminMeetingsList" class="member-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks View (hidden initially) -->
+                    <div id="tasksView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-tasks"></i> Available Tasks</h3>
+                                <button class="action-btn edit" onclick="openTaskModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                            <div id="adminTasksList" class="member-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Notices View (hidden initially) -->
+                    <div id="noticesView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-bullhorn"></i> Announcements</h3>
+                                <button class="action-btn edit" onclick="showAddNoticeModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> New
+                                </button>
+                            </div>
+                            
+                            <div class="input-field">
+                                <textarea id="noticeInput" placeholder="Write announcement..." rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
+                                <button class="btn btn-success" onclick="postNotice()" style="margin-top: 10px;">
+                                    <i class="fas fa-paper-plane"></i> Post
+                                </button>
+                            </div>
+
+                            <div id="noticesList" style="margin-top: 20px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Logs View (hidden initially) -->
+                    <div id="logsView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                                <button class="action-btn" onclick="clearLogs()" style="background: var(--warning);">
+                                    <i class="fas fa-trash"></i> Clear
+                                </button>
+                            </div>
+                            <div id="activityLogs"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="admin-nav" id="adminNav" style="display: none;">
+            <div class="nav-item active" data-view="members">
+                <i class="fas fa-users"></i>
+                <span>Members</span>
+            </div>
+            <div class="nav-item" data-view="meetings">
+                <i class="fas fa-handshake"></i>
+                <span>Meetings</span>
+            </div>
+            <div class="nav-item" data-view="tasks">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </div>
+            <div class="nav-item" data-view="notices">
+                <i class="fas fa-bullhorn"></i>
+                <span>Notices</span>
+            </div>
+            <div class="nav-item" data-view="logs">
+                <i class="fas fa-history"></i>
+                <span>Logs</span>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+            <span id="toastMessage">Notification</span>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="editMemberModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('editMemberModal')">&times;</span>
+            <h3><i class="fas fa-user-edit"></i> Edit Member</h3>
+            <div id="editMemberContent"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addMemberModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('addMemberModal')">&times;</span>
+            <h3><i class="fas fa-user-plus"></i> Add New Member</h3>
+            <div class="input-field">
+                <label>Full Name</label>
+                <input type="text" id="newMemberName" placeholder="John Doe" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Email (Gmail)</label>
+                <input type="email" id="newMemberEmail" placeholder="member@gmail.com" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Password</label>
+                <input type="password" id="newMemberPassword" placeholder="••••••••" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Role</label>
+                <select id="newMemberRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                    <option value="Member">Member</option>
+                    <option value="Senior">Senior</option>
+                    <option value="Manager">Manager</option>
+                    <option value="CEO">CEO</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label>Initial Points</label>
+                <input type="number" id="newMemberPoints" value="0" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Initial Salary ($)</label>
+                <input type="number" id="newMemberSalary" value="0" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <button class="btn" onclick="createNewMember()">
+                <i class="fas fa-check"></i> Create Member
+            </button>
+        </div>
+    </div>
+
+    <!-- Meeting Modal -->
+    <div class="modal-overlay" id="meetingModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('meetingModal')">&times;</span>
+            <h3 id="meetingModalTitle">Add Meeting</h3>
+            <input type="hidden" id="meetingId">
+            <div class="input-field">
+                <label>Title</label>
+                <input type="text" id="meetingTitle" placeholder="Meeting title" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Description</label>
+                <textarea id="meetingDescription" placeholder="Description" rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
+            </div>
+            <div class="input-field">
+                <label>Date</label>
+                <input type="date" id="meetingDate" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Time</label>
+                <input type="time" id="meetingTime" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Location / Link</label>
+                <input type="text" id="meetingLocation" placeholder="Location or video link" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <button class="btn" onclick="saveMeeting()">
+                <i class="fas fa-save"></i> Save Meeting
+            </button>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('taskModal')">&times;</span>
+            <h3 id="taskModalTitle">Add Task</h3>
+            <input type="hidden" id="taskId">
+            <div class="input-field">
+                <label>Title</label>
+                <input type="text" id="taskTitle" placeholder="Task title" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Description</label>
+                <textarea id="taskDescription" placeholder="Description" rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
+            </div>
+            <div class="input-field">
+                <label>Points</label>
+                <input type="number" id="taskPoints" placeholder="Points awarded" min="1" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <button class="btn" onclick="saveTask()">
+                <i class="fas fa-save"></i> Save Task
+            </button>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div class="modal-overlay" id="imageUploadModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('imageUploadModal')">&times;</span>
+            <h3><i class="fas fa-camera"></i> Update Profile Photo</h3>
+            <div class="upload-preview" id="uploadPreview">
+                <img src="" style="display: none;" id="previewImg">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--card-light);" id="previewPlaceholder">
+                    <i class="fas fa-user" style="font-size: 2rem; color: var(--text-muted);"></i>
+                </div>
+            </div>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Tap to select photo</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="flex:1;" onclick="closeModal('imageUploadModal')">Cancel</button>
+                <button class="btn" style="flex:1;" onclick="uploadImage()" id="uploadBtn">Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // ==================== FIREBASE CONFIG ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-OzgO_0ckjVoDG7nsbU0xxEn0H74goXI",
+            authDomain: "darkteam-f9ccb.firebaseapp.com",
+            databaseURL: "https://darkteam-f9ccb-default-rtdb.firebaseio.com",
+            projectId: "darkteam-f9ccb",
+            storageBucket: "darkteam-f9ccb.firebasestorage.app",
+            messagingSenderId: "273331149152",
+            appId: "1:273331149152:web:934bdaf47faa8c32b46605"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // ==================== GLOBAL VARIABLES ====================
+        let currentAdmin = null;
+        let allMembers = [];
+        let currentFilter = 'all';
+        let currentSearchTerm = '';
+        const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187'; // same as member panel
+        let selectedImageFile = null;
+
+        // ==================== UTILITY FUNCTIONS ====================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.style.borderColor = type === 'success' ? '#2ecc71' : '#e74c3c';
+            toast.querySelector('i').style.color = type === 'success' ? '#2ecc71' : '#e74c3c';
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function logActivity(action, details = '') {
+            db.ref('activity_logs').push({
+                action: action,
+                details: details,
+                admin: currentAdmin?.email,
+                timestamp: Date.now()
+            });
+        }
+
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Just now';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+            return date.toLocaleDateString();
+        }
+
+        // ==================== AUTH ====================
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const snapshot = await db.ref('members/' + user.uid).once('value');
+                const memberData = snapshot.val();
+                
+                // Allow only CEO or Manager
+                if (memberData && (memberData.role === 'CEO' || memberData.role === 'Manager')) {
+                    currentAdmin = user;
+                    document.getElementById('authSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    document.getElementById('adminNav').style.display = 'flex';
+                    document.getElementById('adminRole').textContent = memberData.role;
+                    
+                    // Update avatar if exists
+                    if (memberData.photoURL) {
+                        document.getElementById('adminAvatarIcon').style.display = 'none';
+                        const avatarImg = document.getElementById('adminAvatarImg');
+                        avatarImg.src = memberData.photoURL;
+                        avatarImg.style.display = 'inline';
+                    } else {
+                        document.getElementById('adminAvatarIcon').style.display = 'inline';
+                        document.getElementById('adminAvatarImg').style.display = 'none';
+                    }
+                    
+                    // Load all data
+                    loadDashboardStats();
+                    loadAllMembers();
+                    loadMeetings();
+                    loadTasks();
+                    loadNotices();
+                    loadActivityLogs();
+                    
+                    showToast(`Welcome back, ${memberData.name}`, 'success');
+                    logActivity('Admin logged in');
+                } else {
+                    alert('Access denied. CEO/Manager role required.');
+                    auth.signOut();
+                }
+            } else {
+                // Show login
+                document.getElementById('authSection').style.display = 'flex';
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('adminNav').style.display = 'none';
+            }
+        });
+
+        document.getElementById('adminLoginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // ==================== DASHBOARD STATS ====================
+        async function loadDashboardStats() {
+            const snapshot = await db.ref('members').once('value');
+            let total = 0;
+            let active = 0;
+            let payroll = 0;
+            let topPoints = 0;
+            
+            snapshot.forEach(child => {
+                const member = child.val();
+                total++;
+                if (member.status === 'Active') active++;
+                payroll += (member.salary || 0);
+                if ((member.points || 0) > topPoints) topPoints = member.points;
+            });
+            
+            document.getElementById('totalMembers').textContent = total;
+            document.getElementById('activeMembers').textContent = active;
+            document.getElementById('totalPayroll').textContent = '$' + payroll;
+            document.getElementById('topPoints').textContent = topPoints;
+            document.getElementById('memberCount').textContent = total + ' members';
+        }
+
+        // ==================== MEMBER MANAGEMENT ====================
+        async function loadAllMembers() {
+            const snapshot = await db.ref('members').once('value');
+            allMembers = [];
+            
+            snapshot.forEach(child => {
+                allMembers.push({
+                    uid: child.key,
+                    ...child.val()
+                });
+            });
+            
+            filterAndDisplayMembers();
+        }
+
+        function filterAndDisplayMembers() {
+            const searchTerm = document.getElementById('memberSearch')?.value.toLowerCase() || '';
+            
+            const filtered = allMembers.filter(member => {
+                if (currentFilter !== 'all' && member.role !== currentFilter) return false;
+                return (member.name && member.name.toLowerCase().includes(searchTerm)) ||
+                       (member.email && member.email.toLowerCase().includes(searchTerm)) ||
+                       (member.role && member.role.toLowerCase().includes(searchTerm));
+            });
+            
+            displayMembers(filtered);
+        }
+
+        function displayMembers(members) {
+            const container = document.getElementById('memberListContainer');
+            if (members.length === 0) {
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 10px;"></i><p>No members found</p></div>`;
+                return;
+            }
+            
+            container.innerHTML = '';
+            members.sort((a, b) => (b.points || 0) - (a.points || 0));
+            
+            members.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'member-card';
+                memberCard.id = `member-${member.uid}`;
+                
+                const initials = getInitials(member.name);
+                const roleClass = member.role ? member.role.toLowerCase() : 'member';
+                
+                memberCard.innerHTML = `
+                    <div class="member-card-header">
+                        <div class="member-avatar">
+                            ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">${member.name || 'Unnamed'}</div>
+                            <div class="member-email">
+                                <i class="fas fa-envelope"></i>
+                                ${member.email || 'No email'}
+                            </div>
+                        </div>
+                        <span class="member-role-badge role-${roleClass}">${member.role || 'Member'}</span>
+                    </div>
+                    
+                    <div class="member-details">
+                        <div class="detail-item">
+                            <div class="label">Points</div>
+                            <div class="value" id="points-${member.uid}">${member.points || 0}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Salary</div>
+                            <div class="value" id="salary-${member.uid}">$${member.salary || 0}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="label">Status</div>
+                            <div class="value" style="color: ${member.status === 'Active' ? '#2ecc71' : '#e74c3c'}">
+                                ${member.status || 'Active'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="member-actions">
+                        <button class="action-btn edit" onclick="editMember('${member.uid}', '${member.name}', '${member.email}')">
+                            <i class="fas fa-pen"></i> Edit
+                        </button>
+                        <button class="action-btn points" onclick="adjustPoints('${member.uid}')">
+                            <i class="fas fa-star"></i> Points
+                        </button>
+                        <button class="action-btn salary" onclick="adjustSalary('${member.uid}')">
+                            <i class="fas fa-coins"></i> Salary
+                        </button>
+                        <button class="action-btn role" onclick="changeRole('${member.uid}')">
+                            <i class="fas fa-user-tag"></i> Role
+                        </button>
+                        <button class="action-btn delete" onclick="deleteMember('${member.uid}')">
+                            <i class="fas fa-trash"></i> Del
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(memberCard);
+            });
+        }
+
+        window.editMember = function(uid, currentName, currentEmail) {
+            const modal = document.getElementById('editMemberModal');
+            const content = document.getElementById('editMemberContent');
+            
+            content.innerHTML = `
+                <div class="input-field">
+                    <label>Current Email</label>
+                    <div style="padding: 12px; background: var(--card-light); border-radius: 16px; color: var(--primary);">
+                        <i class="fas fa-envelope"></i> ${currentEmail}
+                    </div>
+                </div>
+                <div class="input-field">
+                    <label>New Name</label>
+                    <input type="text" id="editName" value="${currentName}" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                </div>
+                <button class="btn" onclick="updateMemberName('${uid}')">
+                    <i class="fas fa-save"></i> Update Name
+                </button>
+            `;
+            
+            modal.style.display = 'flex';
+        };
+
+        window.updateMemberName = async function(uid) {
+            const newName = document.getElementById('editName').value;
+            await db.ref('members/' + uid).update({ name: newName });
+            logActivity('Updated member name', `UID: ${uid}, New name: ${newName}`);
+            showToast('Name updated successfully');
+            closeModal('editMemberModal');
+            loadAllMembers();
+        };
+
+        window.adjustPoints = function(uid) {
+            const newPoints = prompt('Enter new points amount:');
+            if (newPoints !== null) {
+                db.ref('members/' + uid).update({ points: parseInt(newPoints) || 0 })
+                .then(() => {
+                    logActivity('Updated points', `UID: ${uid}, Points: ${newPoints}`);
+                    showToast('Points updated');
+                    loadAllMembers();
+                    loadDashboardStats();
+                });
+            }
+        };
+
+        window.adjustSalary = function(uid) {
+            const newSalary = prompt('Enter new salary amount ($):');
+            if (newSalary !== null) {
+                db.ref('members/' + uid).update({ salary: parseInt(newSalary) || 0 })
+                .then(() => {
+                    logActivity('Updated salary', `UID: ${uid}, Salary: $${newSalary}`);
+                    showToast('Salary updated');
+                    loadAllMembers();
+                    loadDashboardStats();
+                });
+            }
+        };
+
+        window.changeRole = function(uid) {
+            const roles = ['Member', 'Senior', 'Manager', 'CEO'];
+            const currentRole = allMembers.find(m => m.uid === uid)?.role || 'Member';
+            const currentIndex = roles.indexOf(currentRole);
+            const nextRole = roles[(currentIndex + 1) % roles.length];
+            
+            if (confirm(`Change role from ${currentRole} to ${nextRole}?`)) {
+                db.ref('members/' + uid).update({ role: nextRole })
+                .then(() => {
+                    logActivity('Changed role', `UID: ${uid}, New role: ${nextRole}`);
+                    showToast(`Role changed to ${nextRole}`);
+                    loadAllMembers();
+                });
+            }
+        };
+
+        window.deleteMember = function(uid) {
+            if (confirm('⚠️ Are you sure you want to delete this member? This action cannot be undone.')) {
+                db.ref('members/' + uid).remove().then(() => {
+                    logActivity('Deleted member', `UID: ${uid}`);
+                    showToast('Member deleted');
+                    loadAllMembers();
+                    loadDashboardStats();
+                });
+            }
+        };
+
+        window.showAddMemberModal = function() {
+            document.getElementById('addMemberModal').style.display = 'flex';
+        };
+
+        window.createNewMember = async function() {
+            const name = document.getElementById('newMemberName').value;
+            const email = document.getElementById('newMemberEmail').value;
+            const password = document.getElementById('newMemberPassword').value;
+            const role = document.getElementById('newMemberRole').value;
+            const points = parseInt(document.getElementById('newMemberPoints').value) || 0;
+            const salary = parseInt(document.getElementById('newMemberSalary').value) || 0;
+            
+            if (!name || !email || !password) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCredential.user.uid;
+                
+                await db.ref('members/' + uid).set({
+                    name: name,
+                    email: email,
+                    role: role,
+                    points: points,
+                    salary: salary,
+                    status: 'Active',
+                    joinDate: Date.now()
+                });
+                
+                logActivity('Created new member', `Name: ${name}, Email: ${email}, Role: ${role}`);
+                showToast('Member created successfully');
+                closeModal('addMemberModal');
+                loadAllMembers();
+                loadDashboardStats();
+                
+                document.getElementById('newMemberName').value = '';
+                document.getElementById('newMemberEmail').value = '';
+                document.getElementById('newMemberPassword').value = '';
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        };
+
+        window.bulkUpdatePoints = function() {
+            const points = prompt('Enter points to add to ALL members:');
+            if (points !== null) {
+                allMembers.forEach(member => {
+                    db.ref('members/' + member.uid).update({
+                        points: (member.points || 0) + parseInt(points)
+                    });
+                });
+                logActivity('Bulk points update', `Added ${points} points to all members`);
+                showToast(`Added ${points} points to all members`);
+                setTimeout(loadAllMembers, 1000);
+            }
+        };
+
+        window.resetLeaderboard = function() {
+            if (confirm('⚠️ Reset ALL member points to 0?')) {
+                allMembers.forEach(member => {
+                    db.ref('members/' + member.uid).update({ points: 0 });
+                });
+                logActivity('Reset leaderboard', 'All points set to 0');
+                showToast('Leaderboard reset');
+                setTimeout(loadAllMembers, 1000);
+            }
+        };
+
+        // ==================== MEETINGS MANAGEMENT ====================
+        async function loadMeetings() {
+            const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
+            const container = document.getElementById('adminMeetingsList');
+            container.innerHTML = '';
+            
+            const meetings = [];
+            snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
+            meetings.sort((a, b) => (a.dateTime || 0) - (b.dateTime || 0));
+            
+            if (meetings.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No meetings scheduled.</div>';
+                return;
+            }
+            
+            meetings.forEach(meeting => {
+                const dateStr = meeting.dateTime ? moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A') : 'TBD';
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-card-header">
+                        <div class="item-icon"><i class="fas fa-handshake"></i></div>
+                        <div>
+                            <div class="item-title">${meeting.title}</div>
+                            <div class="item-meta">${dateStr} · ${meeting.location || 'TBD'}</div>
+                        </div>
+                    </div>
+                    ${meeting.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:8px 0;">${meeting.description}</p>` : ''}
+                    <div class="item-actions">
+                        <button class="action-btn edit" onclick="openMeetingModal('${meeting.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete" onclick="deleteMeeting('${meeting.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.openMeetingModal = function(id = null) {
+            document.getElementById('meetingModalTitle').textContent = id ? 'Edit Meeting' : 'Add Meeting';
+            document.getElementById('meetingId').value = id || '';
+            if (id) {
+                db.ref('meetings/' + id).once('value', snap => {
+                    const m = snap.val();
+                    document.getElementById('meetingTitle').value = m.title || '';
+                    document.getElementById('meetingDescription').value = m.description || '';
+                    if (m.dateTime) {
+                        const d = new Date(m.dateTime);
+                        document.getElementById('meetingDate').value = moment(d).format('YYYY-MM-DD');
+                        document.getElementById('meetingTime').value = moment(d).format('HH:mm');
+                    } else {
+                        document.getElementById('meetingDate').value = '';
+                        document.getElementById('meetingTime').value = '';
+                    }
+                    document.getElementById('meetingLocation').value = m.location || '';
+                });
+            } else {
+                document.getElementById('meetingTitle').value = '';
+                document.getElementById('meetingDescription').value = '';
+                document.getElementById('meetingDate').value = '';
+                document.getElementById('meetingTime').value = '';
+                document.getElementById('meetingLocation').value = '';
+            }
+            document.getElementById('meetingModal').style.display = 'flex';
+        };
+
+        window.saveMeeting = async function() {
+            const id = document.getElementById('meetingId').value;
+            const title = document.getElementById('meetingTitle').value;
+            const description = document.getElementById('meetingDescription').value;
+            const date = document.getElementById('meetingDate').value;
+            const time = document.getElementById('meetingTime').value;
+            const location = document.getElementById('meetingLocation').value;
+            
+            if (!title || !date || !time) {
+                showToast('Title, date and time are required', 'error');
+                return;
+            }
+            
+            const dateTime = new Date(date + 'T' + time).getTime();
+            const meetingData = { 
+                title, description, location, dateTime, 
+                createdBy: currentAdmin?.uid, 
+                createdAt: Date.now() 
+            };
+            
+            try {
+                if (id) {
+                    await db.ref('meetings/' + id).update(meetingData);
+                } else {
+                    await db.ref('meetings').push(meetingData);
+                }
+                showToast('Meeting saved');
+                closeModal('meetingModal');
+                loadMeetings();
+            } catch (error) {
+                showToast('Error saving meeting', 'error');
+            }
+        };
+
+        window.deleteMeeting = async function(id) {
+            if (confirm('Delete this meeting?')) {
+                await db.ref('meetings/' + id).remove();
+                showToast('Meeting deleted');
+                loadMeetings();
+            }
+        };
+
+        // ==================== TASKS MANAGEMENT ====================
+        async function loadTasks() {
+            const snapshot = await db.ref('tasks').once('value');
+            const container = document.getElementById('adminTasksList');
+            container.innerHTML = '';
+            
+            const tasks = [];
+            snapshot.forEach(child => tasks.push({ id: child.key, ...child.val() }));
+            tasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            
+            if (tasks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No tasks created.</div>';
+                return;
+            }
+            
+            tasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-card-header">
+                        <div class="item-icon"><i class="fas fa-tasks"></i></div>
+                        <div>
+                            <div class="item-title">${task.title}</div>
+                            <div class="item-meta">${task.points} points</div>
+                        </div>
+                    </div>
+                    ${task.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:8px 0;">${task.description}</p>` : ''}
+                    <div class="item-actions">
+                        <button class="action-btn edit" onclick="openTaskModal('${task.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete" onclick="deleteTask('${task.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.openTaskModal = function(id = null) {
+            document.getElementById('taskModalTitle').textContent = id ? 'Edit Task' : 'Add Task';
+            document.getElementById('taskId').value = id || '';
+            if (id) {
+                db.ref('tasks/' + id).once('value', snap => {
+                    const t = snap.val();
+                    document.getElementById('taskTitle').value = t.title || '';
+                    document.getElementById('taskDescription').value = t.description || '';
+                    document.getElementById('taskPoints').value = t.points || '';
+                });
+            } else {
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('taskPoints').value = '';
+            }
+            document.getElementById('taskModal').style.display = 'flex';
+        };
+
+        window.saveTask = async function() {
+            const id = document.getElementById('taskId').value;
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const points = parseInt(document.getElementById('taskPoints').value) || 0;
+            
+            if (!title || points <= 0) {
+                showToast('Title and positive points required', 'error');
+                return;
+            }
+            
+            const taskData = { 
+                title, description, points, 
+                createdBy: currentAdmin?.uid, 
+                createdAt: Date.now() 
+            };
+            
+            try {
+                if (id) {
+                    await db.ref('tasks/' + id).update(taskData);
+                } else {
+                    await db.ref('tasks').push(taskData);
+                }
+                showToast('Task saved');
+                closeModal('taskModal');
+                loadTasks();
+            } catch (error) {
+                showToast('Error saving task', 'error');
+            }
+        };
+
+        window.deleteTask = async function(id) {
+            if (confirm('Delete this task? It will also remove all completions.')) {
+                const completionsSnap = await db.ref('task_completions').orderByKey().once('value');
+                completionsSnap.forEach(child => {
+                    if (child.key.includes('_' + id)) {
+                        db.ref('task_completions/' + child.key).remove();
+                    }
+                });
+                await db.ref('tasks/' + id).remove();
+                showToast('Task deleted');
+                loadTasks();
+            }
+        };
+
+        // ==================== NOTICE MANAGEMENT ====================
+        window.showAddNoticeModal = function() {
+            document.getElementById('noticeInput').focus();
+        };
+
+        window.postNotice = async function() {
+            const noticeText = document.getElementById('noticeInput').value;
+            if (!noticeText) {
+                showToast('Please enter notice text', 'error');
+                return;
+            }
+            
+            await db.ref('notices').push({
+                text: noticeText,
+                postedBy: currentAdmin?.email,
+                timestamp: Date.now()
+            });
+            
+            document.getElementById('noticeInput').value = '';
+            logActivity('Posted notice', noticeText);
+            showToast('Notice posted');
+            loadNotices();
+        };
+
+        async function loadNotices() {
+            const snapshot = await db.ref('notices').orderByChild('timestamp').limitToLast(5).once('value');
+            const container = document.getElementById('noticesList');
+            container.innerHTML = '';
+            
+            if (!snapshot.exists()) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No notices yet</p>';
+                return;
+            }
+            
+            const notices = [];
+            snapshot.forEach(child => notices.push({ id: child.key, ...child.val() }));
+            notices.reverse().forEach(notice => {
+                const noticeEl = document.createElement('div');
+                noticeEl.className = 'log-item';
+                noticeEl.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <i class="fas fa-bullhorn" style="color: var(--primary);"></i>
+                            <strong>${notice.text}</strong>
+                        </div>
+                        <button onclick="deleteNotice('${notice.id}')" style="background: none; border: none; color: var(--danger); cursor: pointer;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
+                        ${formatDate(notice.timestamp)} by ${notice.postedBy || 'Admin'}
+                    </div>
+                `;
+                container.appendChild(noticeEl);
+            });
+        }
+
+        window.deleteNotice = async function(noticeId) {
+            if (confirm('Delete this notice?')) {
+                await db.ref('notices/' + noticeId).remove();
+                logActivity('Deleted notice');
+                showToast('Notice deleted');
+                loadNotices();
+            }
+        };
+
+        // ==================== ACTIVITY LOGS ====================
+        async function loadActivityLogs() {
+            const snapshot = await db.ref('activity_logs').orderByChild('timestamp').limitToLast(20).once('value');
+            const container = document.getElementById('activityLogs');
+            container.innerHTML = '';
+            
+            if (!snapshot.exists()) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No activity logs</p>';
+                return;
+            }
+            
+            const logs = [];
+            snapshot.forEach(child => logs.push({ id: child.key, ...child.val() }));
+            logs.reverse().forEach(log => {
+                const logEl = document.createElement('div');
+                logEl.className = 'log-item';
+                logEl.innerHTML = `
+                    <div><i class="fas fa-circle" style="color: var(--primary); font-size: 0.5rem;"></i> ${log.action}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">
+                        ${formatDate(log.timestamp)} • ${log.admin || 'System'}
+                    </div>
+                `;
+                container.appendChild(logEl);
+            });
+        }
+
+        window.clearLogs = function() {
+            if (confirm('Clear all activity logs?')) {
+                db.ref('activity_logs').remove();
+                showToast('Logs cleared');
+                loadActivityLogs();
+            }
+        };
+
+        // ==================== EXPORT ====================
+        window.exportData = function() {
+            const dataStr = JSON.stringify(allMembers, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `darkroot_members_${new Date().toISOString().slice(0,10)}.json`;
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            logActivity('Exported member data');
+            showToast('Data exported');
+        };
+
+        // ==================== PROFILE PHOTO UPLOAD ====================
+        window.openImageUploadModal = function() {
+            document.getElementById('imageUploadModal').style.display = 'flex';
+        };
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            selectedImageFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('previewImg');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.getElementById('previewPlaceholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        window.uploadImage = async function() {
+            if (!selectedImageFile) {
+                showToast('Please select an image', 'error');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+            uploadBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('key', IMGBB_API_KEY);
+                formData.append('image', selectedImageFile);
+
+                const response = await fetch('https://api.imgbb.com/1/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const imageUrl = data.data.url;
+                    
+                    await db.ref('members/' + currentAdmin.uid).update({
+                        photoURL: imageUrl
+                    });
+                    
+                    // Update header avatar
+                    document.getElementById('adminAvatarIcon').style.display = 'none';
+                    const avatarImg = document.getElementById('adminAvatarImg');
+                    avatarImg.src = imageUrl;
+                    avatarImg.style.display = 'inline';
+                    
+                    showToast('Profile photo updated!');
+                    closeModal('imageUploadModal');
+                } else {
+                    throw new Error('Upload failed');
+                }
+            } catch (error) {
+                showToast('Upload failed', 'error');
+            } finally {
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+                selectedImageFile = null;
+                document.getElementById('fileInput').value = '';
+                document.getElementById('previewImg').style.display = 'none';
+                document.getElementById('previewPlaceholder').style.display = 'flex';
+            }
+        };
+
+        // ==================== MODAL CONTROLS ====================
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (modalId === 'imageUploadModal') {
+                selectedImageFile = null;
+                document.getElementById('fileInput').value = '';
+                document.getElementById('previewImg').style.display = 'none';
+                document.getElementById('previewPlaceholder').style.display = 'flex';
+            }
+        };
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('memberSearch').addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            filterAndDisplayMembers();
+        });
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.role;
+                filterAndDisplayMembers();
+            });
+        });
+
+        // Bottom navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                
+                const view = item.dataset.view;
+                document.getElementById('membersView').style.display = 'none';
+                document.getElementById('meetingsView').style.display = 'none';
+                document.getElementById('tasksView').style.display = 'none';
+                document.getElementById('noticesView').style.display = 'none';
+                document.getElementById('logsView').style.display = 'none';
+                
+                if (view === 'members') {
+                    document.getElementById('membersView').style.display = 'block';
+                    loadAllMembers();
+                } else if (view === 'meetings') {
+                    document.getElementById('meetingsView').style.display = 'block';
+                    loadMeetings();
+                } else if (view === 'tasks') {
+                    document.getElementById('tasksView').style.display = 'block';
+                    loadTasks();
+                } else if (view === 'notices') {
+                    document.getElementById('noticesView').style.display = 'block';
+                    loadNotices();
+                } else if (view === 'logs') {
+                    document.getElementById('logsView').style.display = 'block';
+                    loadActivityLogs();
+                }
+            });
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+            }
+        };
+
+        // ==================== INITIALIZATION ====================
+        // Real-time updates
+        db.ref('members').on('child_changed', () => {
+            if (document.getElementById('membersView').style.display !== 'none') loadAllMembers();
+            loadDashboardStats();
+        });
+        db.ref('meetings').on('child_added', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
+        db.ref('meetings').on('child_changed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
+        db.ref('meetings').on('child_removed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
+        db.ref('tasks').on('value', () => { if (document.getElementById('tasksView').style.display !== 'none') loadTasks(); });
+        db.ref('notices').on('child_added', () => { if (document.getElementById('noticesView').style.display !== 'none') loadNotices(); });
+        db.ref('activity_logs').on('child_added', () => { if (document.getElementById('logsView').style.display !== 'none') loadActivityLogs(); });
+    </script>
+</body>
+</html>
