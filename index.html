@@ -19,7 +19,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* Disable text selection globally */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -27,7 +26,6 @@
         }
 
         :root {
-            /* Redmi 15C Optimized Colors */
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --primary-light: #dbeafe;
@@ -39,7 +37,6 @@
             --danger: #dc2626;
             --danger-light: #fee2e2;
             
-            /* Neutral */
             --gray-900: #111827;
             --gray-800: #1f2937;
             --gray-700: #374151;
@@ -51,7 +48,6 @@
             --gray-100: #f3f4f6;
             --white: #ffffff;
             
-            /* Spacing */
             --space-2xs: 0.25rem;
             --space-xs: 0.5rem;
             --space-sm: 0.75rem;
@@ -60,22 +56,18 @@
             --space-xl: 1.5rem;
             --space-2xl: 2rem;
             
-            /* Touch Targets */
             --touch-target: 44px;
             
-            /* Border Radius */
             --radius-sm: 0.5rem;
             --radius-md: 0.75rem;
             --radius-lg: 1rem;
             --radius-xl: 1.25rem;
             --radius-full: 9999px;
             
-            /* Shadows */
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
             
-            /* Transitions */
             --transition: 200ms ease;
         }
 
@@ -87,7 +79,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ==================== LAYOUT ==================== */
         .app {
             min-height: 100vh;
             display: flex;
@@ -1440,7 +1431,7 @@
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- Sidebar (updated with new features, old options removed) -->
+        <!-- Sidebar (updated with Meetings & Tasks) -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
@@ -1480,7 +1471,7 @@
             </div>
 
             <nav class="nav-menu" id="sidebarNav">
-                <!-- New features: Analytics and Calendar -->
+                <!-- Existing views -->
                 <div class="nav-item active" data-view="analytics">
                     <i class="fas fa-chart-bar"></i>
                     <span>Analytics</span>
@@ -1488,6 +1479,15 @@
                 <div class="nav-item" data-view="calendar">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Calendar</span>
+                </div>
+                <!-- NEW: Meetings & Tasks -->
+                <div class="nav-item" data-view="meetings">
+                    <i class="fas fa-handshake"></i>
+                    <span>Meetings</span>
+                </div>
+                <div class="nav-item" data-view="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
                 </div>
                 <!-- Admin nav item (hidden by default) -->
                 <div class="nav-item" id="adminNavItem" data-view="admin" style="display: none;">
@@ -1499,14 +1499,9 @@
 
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Dashboard View (original) -->
+            <!-- Dashboard View -->
             <div id="dashboardView">
-                <!-- Stats Grid with skeleton -->
-                <div class="stats-grid" id="statsGrid">
-                    <!-- Will be populated by JS -->
-                </div>
-
-                <!-- AI Insights with skeleton -->
+                <div class="stats-grid" id="statsGrid"></div>
                 <div class="ai-panel" id="aiPanel">
                     <div class="ai-header">
                         <i class="fas fa-robot"></i>
@@ -1514,8 +1509,6 @@
                     </div>
                     <div id="aiInsights"></div>
                 </div>
-
-                <!-- Team Members with skeleton -->
                 <div class="section-header">
                     <h2><i class="fas fa-users" style="margin-right: var(--space-xs);"></i> Team</h2>
                     <span class="view-all" onclick="showView('members')">View All</span>
@@ -1529,7 +1522,6 @@
                     <div class="tab active" data-team-tab="members">Members</div>
                     <div class="tab" data-team-tab="leaderboard">Leaderboard</div>
                 </div>
-                <!-- Members tab content -->
                 <div id="teamMembersTab">
                     <div class="section-header" style="margin-top: var(--space-sm);">
                         <h2>Team Members</h2>
@@ -1543,7 +1535,6 @@
                     </div>
                     <div class="team-grid" id="membersGrid"></div>
                 </div>
-                <!-- Leaderboard tab content -->
                 <div id="teamLeaderboardTab" style="display: none;">
                     <div class="section-header">
                         <h2>Leaderboard</h2>
@@ -1571,7 +1562,6 @@
             <div id="noticesView" style="display: none;">
                 <div class="section-header">
                     <h2>Announcements</h2>
-                    <!-- Add button hidden by default, shown only for admin via JS -->
                     <button class="btn btn-primary" id="addNoticeBtn" style="width: auto; padding: var(--space-xs) var(--space-md); height: 36px; display: none;" onclick="openNoticeModal()">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -1590,7 +1580,6 @@
                         <h3 style="font-size: 1.3rem; margin-bottom: var(--space-xs);" id="profileName">John Doe</h3>
                         <span class="team-badge" id="profileRole">Member</span>
                     </div>
-
                     <div class="info-row" style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-200);">
                         <span>Email</span>
                         <span id="profileEmail">john@darkroot.com</span>
@@ -1611,75 +1600,96 @@
                         <span>Status</span>
                         <span style="color: var(--success);" id="profileStatus">Active</span>
                     </div>
-
-                    <!-- Edit Name Button -->
                     <button class="btn btn-outline" onclick="openEditNameModal()" style="margin-top: var(--space-md);">
                         <i class="fas fa-edit"></i> Edit Name
                     </button>
-
                     <button class="btn btn-outline" id="logoutBtn" style="margin-top: var(--space-md);">
                         <i class="fas fa-sign-out-alt"></i> Sign Out
                     </button>
                 </div>
             </div>
 
-            <!-- Admin View -->
+            <!-- Admin View (extended with Meetings & Tasks tabs) -->
             <div id="adminView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
                 </div>
-
-                <!-- Admin Stats -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-users"></i></div>
-                        <div class="stat-value" id="adminTotalMembers">0</div>
-                        <div class="stat-label">Total Members</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
-                        <div class="stat-value" id="adminNewToday">0</div>
-                        <div class="stat-label">New Today</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-star"></i></div>
-                        <div class="stat-value" id="adminTotalPoints">0</div>
-                        <div class="stat-label">Total Points</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                        <div class="stat-value" id="adminActiveNow">0</div>
-                        <div class="stat-label">Active Now</div>
-                    </div>
+                <!-- Admin sub‑tabs -->
+                <div class="tab-bar" style="margin-bottom: var(--space-lg);">
+                    <div class="tab active" data-admin-tab="overview">Overview</div>
+                    <div class="tab" data-admin-tab="meetings">Meetings</div>
+                    <div class="tab" data-admin-tab="tasks">Tasks</div>
                 </div>
 
-                <!-- Charts -->
-                <div class="chart-container">
-                    <canvas id="memberChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <canvas id="pointsChart"></canvas>
-                </div>
-
-                <!-- User Management -->
-                <div class="section-header">
-                    <h3>User Management</h3>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="adminUserSearch" placeholder="Search users...">
+                <!-- Overview tab (existing) -->
+                <div id="adminOverviewTab">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-value" id="adminTotalMembers">0</div>
+                            <div class="stat-label">Total Members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
+                            <div class="stat-value" id="adminNewToday">0</div>
+                            <div class="stat-label">New Today</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-star"></i></div>
+                            <div class="stat-value" id="adminTotalPoints">0</div>
+                            <div class="stat-label">Total Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                            <div class="stat-value" id="adminActiveNow">0</div>
+                            <div class="stat-label">Active Now</div>
+                        </div>
                     </div>
+                    <div class="chart-container">
+                        <canvas id="memberChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pointsChart"></canvas>
+                    </div>
+                    <div class="section-header">
+                        <h3>User Management</h3>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="adminUserSearch" placeholder="Search users...">
+                        </div>
+                    </div>
+                    <div id="adminUserList"></div>
+                    <div class="section-header" style="margin-top: var(--space-lg);">
+                        <h3>Recent Activity</h3>
+                        <span class="view-all" onclick="loadAdminActivities()">Refresh</span>
+                    </div>
+                    <div id="adminActivityList" class="activity-feed"></div>
                 </div>
-                <div id="adminUserList"></div>
 
-                <!-- Activity Logs -->
-                <div class="section-header" style="margin-top: var(--space-lg);">
-                    <h3>Recent Activity</h3>
-                    <span class="view-all" onclick="loadAdminActivities()">Refresh</span>
+                <!-- Meetings Management Tab (new) -->
+                <div id="adminMeetingsTab" style="display: none;">
+                    <div class="section-header">
+                        <h3>All Meetings</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openMeetingModal()">
+                            <i class="fas fa-plus"></i> New Meeting
+                        </button>
+                    </div>
+                    <div id="adminMeetingsList" class="activity-feed"></div>
                 </div>
-                <div id="adminActivityList" class="activity-feed"></div>
+
+                <!-- Tasks Management Tab (new) -->
+                <div id="adminTasksTab" style="display: none;">
+                    <div class="section-header">
+                        <h3>All Tasks</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openTaskModal()">
+                            <i class="fas fa-plus"></i> New Task
+                        </button>
+                    </div>
+                    <div id="adminTasksList" class="activity-feed"></div>
+                </div>
             </div>
 
-            <!-- New Analytics View (placeholder) -->
+            <!-- Analytics View (unchanged) -->
             <div id="analyticsView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-chart-bar"></i> Analytics</h2>
@@ -1711,7 +1721,7 @@
                 </div>
             </div>
 
-            <!-- New Calendar View (placeholder) -->
+            <!-- Calendar View (unchanged) -->
             <div id="calendarView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-calendar-alt"></i> Calendar</h2>
@@ -1720,17 +1730,33 @@
                     <p style="margin-bottom: var(--space-md);">📅 Upcoming events</p>
                     <div class="activity-item" style="justify-content: space-between;">
                         <span>Team meeting</span>
-                        <span class="badge">Today 3pm</span>
+                        <span class="badge">Coming Soon...</span>
                     </div>
                     <div class="activity-item" style="justify-content: space-between;">
                         <span>Project deadline</span>
-                        <span class="badge">Tomorrow</span>
+                        <span class="badge">Coming Soon...</span>
                     </div>
                     <div class="activity-item" style="justify-content: space-between;">
                         <span>Client call</span>
-                        <span class="badge">Fri 10am</span>
+                        <span class="badge">Coming Soon...</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- NEW: Meetings View (for all members) -->
+            <div id="meetingsView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-handshake"></i> Upcoming Meetings</h2>
+                </div>
+                <div id="meetingsList" class="activity-feed"></div>
+            </div>
+
+            <!-- NEW: Tasks View (for members to earn points) -->
+            <div id="tasksView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> Available Tasks</h2>
+                </div>
+                <div id="tasksList" class="activity-feed"></div>
             </div>
         </main>
 
@@ -1756,7 +1782,6 @@
                 <i class="fas fa-user"></i>
                 <span>Me</span>
             </div>
-            <!-- Admin bottom nav (hidden by default) -->
             <div class="nav-item-bottom" id="adminBottomNav" data-view="admin" style="display: none;">
                 <i class="fas fa-shield-alt"></i>
                 <span>Admin</span>
@@ -1861,6 +1886,46 @@
         </div>
     </div>
 
+    <!-- NEW: Meeting Modal (Admin) -->
+    <div class="modal-overlay" id="meetingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="meetingModalTitle">Add Meeting</h3>
+                <div class="modal-close" onclick="closeModal('meetingModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <input type="hidden" id="meetingId">
+                <input type="text" id="meetingTitle" class="chat-input" placeholder="Meeting title">
+                <textarea id="meetingDescription" class="chat-input" style="height: 80px;" placeholder="Description"></textarea>
+                <input type="date" id="meetingDate" class="chat-input">
+                <input type="time" id="meetingTime" class="chat-input">
+                <input type="text" id="meetingLocation" class="chat-input" placeholder="Location / link">
+                <button class="btn btn-primary" onclick="saveMeeting()">Save Meeting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Task Modal (Admin) -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="taskModalTitle">Add Task</h3>
+                <div class="modal-close" onclick="closeModal('taskModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <input type="hidden" id="taskId">
+                <input type="text" id="taskTitle" class="chat-input" placeholder="Task title">
+                <textarea id="taskDescription" class="chat-input" style="height: 80px;" placeholder="Description"></textarea>
+                <input type="number" id="taskPoints" class="chat-input" placeholder="Points awarded" min="1">
+                <button class="btn btn-primary" onclick="saveTask()">Save Task</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Welcome Popup Modal -->
     <div class="modal-overlay" id="welcomeModal">
         <div class="modal">
@@ -1941,6 +2006,8 @@
         const adminView = document.getElementById('adminView');
         const analyticsView = document.getElementById('analyticsView');
         const calendarView = document.getElementById('calendarView');
+        const meetingsView = document.getElementById('meetingsView');
+        const tasksView = document.getElementById('tasksView');
 
         // Login/Signup elements
         const loginCard = document.getElementById('loginCard');
@@ -1988,7 +2055,6 @@
 
         // ==================== SKELETON LOADING ====================
         function showSkeletons() {
-            // Stats grid
             const statsGrid = document.getElementById('statsGrid');
             statsGrid.innerHTML = `
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
@@ -1997,7 +2063,6 @@
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
             `;
 
-            // AI Insights
             const aiInsights = document.getElementById('aiInsights');
             aiInsights.innerHTML = `
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
@@ -2006,7 +2071,6 @@
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
             `;
 
-            // Team grid
             const teamGrid = document.getElementById('teamGrid');
             teamGrid.innerHTML = `
                 <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
@@ -2033,7 +2097,6 @@
                 showToast('Name cannot be empty', 'error');
                 return;
             }
-
             try {
                 await db.ref('members/' + currentUser.uid).update({ name: newName });
                 currentMemberData.name = newName;
@@ -2056,7 +2119,6 @@
 
         // ==================== VIEW MANAGEMENT ====================
         function showView(viewName) {
-            // Hide all views
             dashboardView.style.display = 'none';
             membersView.style.display = 'none';
             chatView.style.display = 'none';
@@ -2065,8 +2127,9 @@
             adminView.style.display = 'none';
             analyticsView.style.display = 'none';
             calendarView.style.display = 'none';
+            meetingsView.style.display = 'none';
+            tasksView.style.display = 'none';
 
-            // Show selected view
             if (viewName === 'members') {
                 membersView.style.display = 'block';
                 showTeamTab('members');
@@ -2075,12 +2138,19 @@
                 loadChatMessages();
             } else if (viewName === 'admin') {
                 adminView.style.display = 'block';
+                showAdminTab('overview');
                 loadAdminData();
             } else if (viewName === 'analytics') {
                 analyticsView.style.display = 'block';
                 initAnalyticsChart();
             } else if (viewName === 'calendar') {
                 calendarView.style.display = 'block';
+            } else if (viewName === 'meetings') {
+                meetingsView.style.display = 'block';
+                loadMeetings();
+            } else if (viewName === 'tasks') {
+                tasksView.style.display = 'block';
+                loadTasks();
             } else {
                 document.getElementById(viewName + 'View').style.display = 'block';
                 if (viewName === 'dashboard') {
@@ -2088,7 +2158,6 @@
                 }
             }
 
-            // Update navigation in sidebar and bottom nav
             document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.view === viewName) {
@@ -2096,22 +2165,17 @@
                 }
             });
 
-            // Close sidebar on mobile
             if (window.innerWidth <= 768) {
                 sidebar.classList.remove('open');
                 sidebarOverlay.style.display = 'none';
             }
 
-            // Load data based on view
             switch(viewName) {
                 case 'members':
                     loadMembers();
                     break;
                 case 'notices':
                     loadNotices();
-                    break;
-                case 'admin':
-                    // already called loadAdminData
                     break;
             }
         }
@@ -2146,6 +2210,41 @@
             });
         });
 
+        // Admin sub‑tabs
+        function showAdminTab(tabName) {
+            const overviewTab = document.getElementById('adminOverviewTab');
+            const meetingsTab = document.getElementById('adminMeetingsTab');
+            const tasksTab = document.getElementById('adminTasksTab');
+            const tabs = document.querySelectorAll('[data-admin-tab]');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.adminTab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            overviewTab.style.display = 'none';
+            meetingsTab.style.display = 'none';
+            tasksTab.style.display = 'none';
+
+            if (tabName === 'overview') {
+                overviewTab.style.display = 'block';
+            } else if (tabName === 'meetings') {
+                meetingsTab.style.display = 'block';
+                loadAdminMeetings();
+            } else if (tabName === 'tasks') {
+                tasksTab.style.display = 'block';
+                loadAdminTasks();
+            }
+        }
+
+        document.querySelectorAll('[data-admin-tab]').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                showAdminTab(e.target.dataset.adminTab);
+            });
+        });
+
         // Navigation event listeners
         document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
             item.addEventListener('click', () => {
@@ -2156,12 +2255,10 @@
         });
 
         // ==================== AUTH - EMAIL/PASSWORD ====================
-        // Show splash initially
         splashScreen.style.display = 'flex';
         authSection.style.display = 'none';
         dashboardSection.style.display = 'none';
 
-        // Switch between login and signup cards
         showSignupBtn.addEventListener('click', () => {
             loginCard.style.display = 'none';
             signupCard.style.display = 'block';
@@ -2172,7 +2269,6 @@
             loginCard.style.display = 'block';
         });
 
-        // Login
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -2183,7 +2279,7 @@
             }
 
             try {
-                splashScreen.style.display = 'flex'; // show loading
+                splashScreen.style.display = 'flex';
                 await auth.signInWithEmailAndPassword(email, password);
                 isNewLogin = true;
             } catch (error) {
@@ -2192,7 +2288,6 @@
             }
         });
 
-        // Signup
         signupBtn.addEventListener('click', async () => {
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
@@ -2218,20 +2313,17 @@
                 splashScreen.style.display = 'flex';
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 await userCredential.user.updateProfile({ displayName: name });
-                // Member record will be created in onAuthStateChanged
             } catch (error) {
                 splashScreen.style.display = 'none';
                 showToast(error.message, 'error');
             }
         });
 
-        // Logout
         logoutBtn.addEventListener('click', () => {
             auth.signOut();
             showToast('Signed out');
         });
 
-        // Auth state observer
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 try {
@@ -2241,18 +2333,15 @@
                     if (snapshot.exists()) {
                         currentMemberData = snapshot.val();
                         
-                        // Update last active
                         await db.ref('members/' + user.uid).update({
                             lastActive: Date.now()
                         });
                         
-                        // Update photoURL if changed (not applicable for email/password, but kept for future)
                         if (user.photoURL && currentMemberData.photoURL !== user.photoURL) {
                             await db.ref('members/' + user.uid).update({ photoURL: user.photoURL });
                             currentMemberData.photoURL = user.photoURL;
                         }
                         
-                        // Check if admin and show admin nav
                         if (currentMemberData.role === 'admin') {
                             adminNavItem.style.display = 'flex';
                             adminBottomNav.style.display = 'flex';
@@ -2263,21 +2352,14 @@
                             if (addNoticeBtn) addNoticeBtn.style.display = 'none';
                         }
                         
-                        // Update UI
                         updateUIWithMemberData();
                         
-                        // Hide splash, show dashboard
                         splashScreen.style.display = 'none';
                         authSection.style.display = 'none';
                         dashboardSection.style.display = 'block';
                         
-                        // Show skeletons while loading data
                         showSkeletons();
-                        
-                        // Load data
                         loadDashboardData();
-                        
-                        // Show dashboard view
                         showView('dashboard');
 
                         if (isNewLogin) {
@@ -2287,23 +2369,20 @@
                         
                         showToast('Welcome back, ' + (currentMemberData.name || 'Member'));
                     } else {
-                        // New user after signup – create member record
                         await createMemberRecord(user);
-                        isNewLogin = true; // will show welcome popup
+                        isNewLogin = true;
                     }
                 } catch (error) {
                     splashScreen.style.display = 'none';
                     showToast('Error loading profile', 'error');
                 }
             } else {
-                // Not logged in – show auth, hide splash and dashboard
                 splashScreen.style.display = 'none';
                 authSection.style.display = 'flex';
                 dashboardSection.style.display = 'none';
             }
         });
 
-        // Timeout to hide splash in case of error
         setTimeout(() => {
             if (splashScreen.style.display === 'flex' && !auth.currentUser) {
                 splashScreen.style.display = 'none';
@@ -2333,7 +2412,7 @@
             
             currentMemberData = memberData;
             updateUIWithMemberData();
-            showWelcomePopup(); // immediate for new signup
+            showWelcomePopup();
         }
 
         function updateUIWithMemberData() {
@@ -2848,7 +2927,303 @@
             }
         }
 
-        // ==================== ADMIN ====================
+        // ==================== MEETINGS (Member view) ====================
+        async function loadMeetings() {
+            const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
+            const meetings = [];
+            snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
+            // Show upcoming (dateTime >= now)
+            const now = Date.now();
+            const upcoming = meetings.filter(m => (m.dateTime || 0) >= now).sort((a,b) => a.dateTime - b.dateTime);
+            
+            const container = document.getElementById('meetingsList');
+            container.innerHTML = '';
+            if (upcoming.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No upcoming meetings</div>';
+                return;
+            }
+            upcoming.forEach(meeting => {
+                const dateStr = moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A');
+                container.innerHTML += `
+                    <div class="activity-item">
+                        <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-handshake" style="color: var(--primary);"></i></div>
+                        <div class="activity-content">
+                            <div class="activity-title">${meeting.title}</div>
+                            <div class="activity-meta">${dateStr} · ${meeting.location || 'TBD'}</div>
+                            <div style="font-size: 0.8rem; margin-top: var(--space-xs);">${meeting.description || ''}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==================== TASKS (Member view) ====================
+        async function loadTasks() {
+            const tasksSnap = await db.ref('tasks').once('value');
+            const tasks = [];
+            tasksSnap.forEach(child => tasks.push({ id: child.key, ...child.val() }));
+
+            // Get completions for current user
+            const completionsSnap = await db.ref('task_completions').orderByKey().once('value');
+            const completed = new Set();
+            completionsSnap.forEach(child => {
+                if (child.key.startsWith(currentUser.uid + '_')) {
+                    completed.add(child.key.split('_')[1]);
+                }
+            });
+
+            const container = document.getElementById('tasksList');
+            container.innerHTML = '';
+            if (tasks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>';
+                return;
+            }
+
+            tasks.sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
+            tasks.forEach(task => {
+                const isCompleted = completed.has(task.id);
+                container.innerHTML += `
+                    <div class="activity-item" style="flex-wrap: wrap;">
+                        <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-tasks" style="color: var(--primary);"></i></div>
+                        <div class="activity-content" style="flex:1;">
+                            <div class="activity-title">${task.title}</div>
+                            <div class="activity-meta">${task.points} points</div>
+                            <div style="font-size: 0.8rem; margin-top: var(--space-xs);">${task.description || ''}</div>
+                        </div>
+                        ${!isCompleted ? 
+                            `<button class="btn btn-primary btn-sm" onclick="completeTask('${task.id}', ${task.points})" style="width: auto; height: 36px;">Complete</button>` : 
+                            `<span class="team-badge" style="background: var(--success-light); color: var(--success);"><i class="fas fa-check"></i> Done</span>`
+                        }
+                    </div>
+                `;
+            });
+        }
+
+        window.completeTask = async function(taskId, points) {
+            try {
+                // Record completion
+                await db.ref('task_completions/' + currentUser.uid + '_' + taskId).set({
+                    userId: currentUser.uid,
+                    taskId: taskId,
+                    completedAt: Date.now()
+                });
+                // Add points to member
+                const newPoints = (currentMemberData.points || 0) + points;
+                await db.ref('members/' + currentUser.uid).update({ points: newPoints });
+                currentMemberData.points = newPoints;
+                updateUIWithMemberData();
+                showToast(`You earned ${points} points!`, 'success');
+                // Refresh tasks view
+                loadTasks();
+                // Also refresh leaderboard if visible
+                if (membersView.style.display !== 'none' && document.getElementById('teamLeaderboardTab').style.display !== 'none') {
+                    loadLeaderboard();
+                }
+            } catch (error) {
+                showToast('Failed to complete task', 'error');
+            }
+        };
+
+        // ==================== ADMIN: MEETINGS ====================
+        window.openMeetingModal = function(meetingId = null) {
+            document.getElementById('meetingModalTitle').textContent = meetingId ? 'Edit Meeting' : 'Add Meeting';
+            document.getElementById('meetingId').value = meetingId || '';
+            if (meetingId) {
+                // Load existing data
+                db.ref('meetings/' + meetingId).once('value', snap => {
+                    const m = snap.val();
+                    document.getElementById('meetingTitle').value = m.title || '';
+                    document.getElementById('meetingDescription').value = m.description || '';
+                    if (m.dateTime) {
+                        const d = new Date(m.dateTime);
+                        document.getElementById('meetingDate').value = moment(d).format('YYYY-MM-DD');
+                        document.getElementById('meetingTime').value = moment(d).format('HH:mm');
+                    } else {
+                        document.getElementById('meetingDate').value = '';
+                        document.getElementById('meetingTime').value = '';
+                    }
+                    document.getElementById('meetingLocation').value = m.location || '';
+                });
+            } else {
+                document.getElementById('meetingTitle').value = '';
+                document.getElementById('meetingDescription').value = '';
+                document.getElementById('meetingDate').value = '';
+                document.getElementById('meetingTime').value = '';
+                document.getElementById('meetingLocation').value = '';
+            }
+            document.getElementById('meetingModal').style.display = 'flex';
+        };
+
+        window.saveMeeting = async function() {
+            const id = document.getElementById('meetingId').value;
+            const title = document.getElementById('meetingTitle').value;
+            const description = document.getElementById('meetingDescription').value;
+            const date = document.getElementById('meetingDate').value;
+            const time = document.getElementById('meetingTime').value;
+            const location = document.getElementById('meetingLocation').value;
+            if (!title || !date || !time) {
+                showToast('Title, date and time are required', 'error');
+                return;
+            }
+            const dateTime = new Date(date + 'T' + time).getTime();
+            const meetingData = {
+                title, description, location,
+                dateTime: dateTime,
+                createdBy: currentUser.uid,
+                createdAt: Date.now()
+            };
+            try {
+                if (id) {
+                    await db.ref('meetings/' + id).update(meetingData);
+                } else {
+                    await db.ref('meetings').push(meetingData);
+                }
+                showToast('Meeting saved');
+                closeModal('meetingModal');
+                // Refresh admin list if visible
+                if (adminView.style.display !== 'none' && document.getElementById('adminMeetingsTab').style.display !== 'block') {
+                    loadAdminMeetings();
+                }
+                // Also refresh member view if visible
+                if (meetingsView.style.display !== 'none') loadMeetings();
+            } catch (error) {
+                showToast('Error saving meeting', 'error');
+            }
+        };
+
+        window.deleteMeeting = async function(meetingId) {
+            if (!confirm('Delete this meeting?')) return;
+            await db.ref('meetings/' + meetingId).remove();
+            showToast('Meeting deleted');
+            loadAdminMeetings();
+            if (meetingsView.style.display !== 'none') loadMeetings();
+        };
+
+        async function loadAdminMeetings() {
+            const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
+            const meetings = [];
+            snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
+            meetings.sort((a,b) => (a.dateTime || 0) - (b.dateTime || 0));
+            
+            const container = document.getElementById('adminMeetingsList');
+            container.innerHTML = '';
+            if (meetings.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: var(--space-xl);">No meetings yet</div>';
+                return;
+            }
+            meetings.forEach(meeting => {
+                const dateStr = meeting.dateTime ? moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A') : 'TBD';
+                container.innerHTML += `
+                    <div class="activity-item" style="flex-wrap: wrap;">
+                        <div class="activity-avatar"><i class="fas fa-handshake"></i></div>
+                        <div class="activity-content" style="flex:1;">
+                            <div class="activity-title">${meeting.title}</div>
+                            <div class="activity-meta">${dateStr} · ${meeting.location || 'TBD'}</div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-xs);">
+                            <button class="btn btn-sm btn-outline" onclick="openMeetingModal('${meeting.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteMeeting('${meeting.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==================== ADMIN: TASKS ====================
+        window.openTaskModal = function(taskId = null) {
+            document.getElementById('taskModalTitle').textContent = taskId ? 'Edit Task' : 'Add Task';
+            document.getElementById('taskId').value = taskId || '';
+            if (taskId) {
+                db.ref('tasks/' + taskId).once('value', snap => {
+                    const t = snap.val();
+                    document.getElementById('taskTitle').value = t.title || '';
+                    document.getElementById('taskDescription').value = t.description || '';
+                    document.getElementById('taskPoints').value = t.points || '';
+                });
+            } else {
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('taskPoints').value = '';
+            }
+            document.getElementById('taskModal').style.display = 'flex';
+        };
+
+        window.saveTask = async function() {
+            const id = document.getElementById('taskId').value;
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const points = parseInt(document.getElementById('taskPoints').value) || 0;
+            if (!title || points <= 0) {
+                showToast('Title and positive points required', 'error');
+                return;
+            }
+            const taskData = {
+                title, description, points,
+                createdBy: currentUser.uid,
+                createdAt: Date.now()
+            };
+            try {
+                if (id) {
+                    await db.ref('tasks/' + id).update(taskData);
+                } else {
+                    await db.ref('tasks').push(taskData);
+                }
+                showToast('Task saved');
+                closeModal('taskModal');
+                if (adminView.style.display !== 'none' && document.getElementById('adminTasksTab').style.display !== 'block') {
+                    loadAdminTasks();
+                }
+                if (tasksView.style.display !== 'none') loadTasks();
+            } catch (error) {
+                showToast('Error saving task', 'error');
+            }
+        };
+
+        window.deleteTask = async function(taskId) {
+            if (!confirm('Delete this task? It will also remove all completions.')) return;
+            // Remove completions related to this task
+            const completionsSnap = await db.ref('task_completions').orderByKey().once('value');
+            completionsSnap.forEach(child => {
+                if (child.key.includes('_' + taskId)) {
+                    db.ref('task_completions/' + child.key).remove();
+                }
+            });
+            await db.ref('tasks/' + taskId).remove();
+            showToast('Task deleted');
+            loadAdminTasks();
+            if (tasksView.style.display !== 'none') loadTasks();
+        };
+
+        async function loadAdminTasks() {
+            const snapshot = await db.ref('tasks').once('value');
+            const tasks = [];
+            snapshot.forEach(child => tasks.push({ id: child.key, ...child.val() }));
+            tasks.sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
+            
+            const container = document.getElementById('adminTasksList');
+            container.innerHTML = '';
+            if (tasks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: var(--space-xl);">No tasks yet</div>';
+                return;
+            }
+            tasks.forEach(task => {
+                container.innerHTML += `
+                    <div class="activity-item" style="flex-wrap: wrap;">
+                        <div class="activity-avatar"><i class="fas fa-tasks"></i></div>
+                        <div class="activity-content" style="flex:1;">
+                            <div class="activity-title">${task.title}</div>
+                            <div class="activity-meta">${task.points} points</div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-xs);">
+                            <button class="btn btn-sm btn-outline" onclick="openTaskModal('${task.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteTask('${task.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==================== ADMIN: OVERVIEW (unchanged but we add task_completions to stats if desired) ====================
         async function loadAdminData() {
             loadAdminStats();
             loadAdminUsers();
@@ -3062,7 +3437,7 @@
             });
         }
 
-        // ==================== INITIALIZATION ====================
+        // ==================== REAL-TIME UPDATES ====================
         db.ref('members').on('child_changed', () => {
             if (currentUser) {
                 calculateRank();
@@ -3082,7 +3457,15 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        console.log('DarkRoot - Email/Password Auth with skeleton & new sidebar features');
+        // Listen for task completions to refresh tasks view if open
+        db.ref('task_completions').on('child_added', () => {
+            if (tasksView.style.display !== 'none') loadTasks();
+            if (membersView.style.display !== 'none' && document.getElementById('teamLeaderboardTab').style.display !== 'none') {
+                loadLeaderboard();
+            }
+        });
+
+        console.log('DarkRoot - Meetings & Tasks integrated');
     </script>
 </body>
 </html>
