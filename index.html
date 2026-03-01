@@ -1315,16 +1315,27 @@
             outline: none;
         }
 
-        /* Task description truncation (new) */
+        /* Task description truncation (updated for better UX) */
         .task-description.truncated {
             max-height: 60px;
             overflow: hidden;
         }
         .task-description {
             transition: max-height 0.2s ease;
-            cursor: pointer;
             margin-top: var(--space-xs);
             font-size: 0.8rem;
+            word-break: break-word;
+        }
+        .toggle-description {
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .toggle-description:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -3099,97 +3110,108 @@
 
         // ==================== TASKS (Member view with submission workflow and expandable description) ====================
         async function loadTasks() {
-    try {
-        // Fetch all tasks from Firebase
-        const tasksSnap = await db.ref('tasks').once('value');
-        allTasks = [];
-        tasksSnap.forEach(child => {
-            allTasks.push({ id: child.key, ...child.val() });
-        });
-        console.log('Tasks fetched:', allTasks.length); // Debug: should match database count
+            try {
+                // Fetch all tasks from Firebase
+                const tasksSnap = await db.ref('tasks').once('value');
+                allTasks = [];
+                tasksSnap.forEach(child => {
+                    allTasks.push({ id: child.key, ...child.val() });
+                });
+                console.log('Tasks fetched:', allTasks.length); // Debug: should match database count
 
-        // Get submissions for the current user (to show status)
-        const submissionsSnap = await db.ref('task_submissions')
-            .orderByChild('userId')
-            .equalTo(currentUser.uid)
-            .once('value');
-        const submissions = {};
-        submissionsSnap.forEach(child => {
-            const sub = child.val();
-            submissions[sub.taskId] = sub;
-        });
+                // Get submissions for the current user (to show status)
+                const submissionsSnap = await db.ref('task_submissions')
+                    .orderByChild('userId')
+                    .equalTo(currentUser.uid)
+                    .once('value');
+                const submissions = {};
+                submissionsSnap.forEach(child => {
+                    const sub = child.val();
+                    submissions[sub.taskId] = sub;
+                });
 
-        const container = document.getElementById('tasksList');
-        container.innerHTML = '';
+                const container = document.getElementById('tasksList');
+                container.innerHTML = '';
 
-        if (allTasks.length === 0) {
-            container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>';
-            return;
+                if (allTasks.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>';
+                    return;
+                }
+
+                // Sort tasks by creation date (oldest first)
+                allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+                allTasks.forEach(task => {
+                    // Skip invalid tasks (optional safety)
+                    if (!task.title || task.points === undefined) {
+                        console.warn('Skipping invalid task:', task);
+                        return;
+                    }
+
+                    const submission = submissions[task.id];
+                    let actionHtml = '';
+                    let statusHtml = '';
+
+                    if (submission) {
+                        // Task already submitted – show status
+                        const status = submission.status;
+                        let statusColor = '';
+                        let statusText = '';
+                        if (status === 'pending_manager') {
+                            statusColor = 'var(--warning)';
+                            statusText = 'Pending Manager';
+                        } else if (status === 'pending_ceo') {
+                            statusColor = 'var(--warning)';
+                            statusText = 'Pending CEO';
+                        } else if (status === 'approved') {
+                            statusColor = 'var(--success)';
+                            statusText = 'Approved';
+                        } else if (status === 'rejected') {
+                            statusColor = 'var(--danger)';
+                            statusText = 'Rejected';
+                        }
+                        statusHtml = `<span class="team-badge" style="background: ${statusColor}20; color: ${statusColor};">${statusText}</span>`;
+                        if (status === 'rejected' && submission.rejectionReason) {
+                            statusHtml += `<div style="font-size: 0.7rem; color: var(--danger); margin-top: 4px;">Reason: ${submission.rejectionReason}</div>`;
+                        }
+                    } else {
+                        // Not submitted – show submit button (escape title to prevent quote issues)
+                        const safeTitle = task.title.replace(/'/g, "\\'");
+                        actionHtml = `<button class="btn btn-primary btn-sm" onclick="openTaskSubmissionModal('${task.id}', '${safeTitle}', ${task.points})" style="width: auto; height: 36px;">Submit</button>`;
+                    }
+
+                    // Build the task card with expandable description
+                    let descriptionHtml = '';
+                    if (task.description) {
+                        // Use a unique ID for each description to toggle
+                        const descId = `desc-${task.id}`;
+                        descriptionHtml = `
+                            <div id="${descId}" class="task-description truncated">${task.description}</div>
+                            <span class="toggle-description" onclick="document.getElementById('${descId}').classList.toggle('truncated'); this.innerText = this.innerText === 'Read more' ? 'Show less' : 'Read more';">Read more</span>
+                        `;
+                    }
+
+                    container.innerHTML += `
+                        <div class="activity-item" style="flex-wrap: wrap;">
+                            <div class="activity-avatar" style="background: var(--primary-light);">
+                                <i class="fas fa-tasks" style="color: var(--primary);"></i>
+                            </div>
+                            <div class="activity-content" style="flex:1;">
+                                <div class="activity-title">${task.title}</div>
+                                <div class="activity-meta">${task.points} points</div>
+                                ${descriptionHtml}
+                                ${statusHtml}
+                            </div>
+                            ${actionHtml}
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error in loadTasks:', error);
+                showToast('Failed to load tasks', 'error');
+            }
         }
 
-        // Sort tasks by creation date (oldest first)
-        allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-
-        allTasks.forEach(task => {
-            // Skip invalid tasks (optional safety)
-            if (!task.title || task.points === undefined) {
-                console.warn('Skipping invalid task:', task);
-                return;
-            }
-
-            const submission = submissions[task.id];
-            let actionHtml = '';
-            let statusHtml = '';
-
-            if (submission) {
-                // Task already submitted – show status
-                const status = submission.status;
-                let statusColor = '';
-                let statusText = '';
-                if (status === 'pending_manager') {
-                    statusColor = 'var(--warning)';
-                    statusText = 'Pending Manager';
-                } else if (status === 'pending_ceo') {
-                    statusColor = 'var(--warning)';
-                    statusText = 'Pending CEO';
-                } else if (status === 'approved') {
-                    statusColor = 'var(--success)';
-                    statusText = 'Approved';
-                } else if (status === 'rejected') {
-                    statusColor = 'var(--danger)';
-                    statusText = 'Rejected';
-                }
-                statusHtml = `<span class="team-badge" style="background: ${statusColor}20; color: ${statusColor};">${statusText}</span>`;
-                if (status === 'rejected' && submission.rejectionReason) {
-                    statusHtml += `<div style="font-size: 0.7rem; color: var(--danger); margin-top: 4px;">Reason: ${submission.rejectionReason}</div>`;
-                }
-            } else {
-                // Not submitted – show submit button (escape title to prevent quote issues)
-                const safeTitle = task.title.replace(/'/g, "\\'");
-                actionHtml = `<button class="btn btn-primary btn-sm" onclick="openTaskSubmissionModal('${task.id}', '${safeTitle}', ${task.points})" style="width: auto; height: 36px;">Submit</button>`;
-            }
-
-            // Build the task card
-            container.innerHTML += `
-                <div class="activity-item" style="flex-wrap: wrap;">
-                    <div class="activity-avatar" style="background: var(--primary-light);">
-                        <i class="fas fa-tasks" style="color: var(--primary);"></i>
-                    </div>
-                    <div class="activity-content" style="flex:1;">
-                        <div class="activity-title">${task.title}</div>
-                        <div class="activity-meta">${task.points} points</div>
-                        ${task.description ? `<div class="task-description truncated" onclick="this.classList.toggle('truncated')">${task.description}</div>` : ''}
-                        ${statusHtml}
-                    </div>
-                    ${actionHtml}
-                </div>
-            `;
-        });
-    } catch (error) {
-        console.error('Error in loadTasks:', error);
-        showToast('Failed to load tasks', 'error');
-    }
-}
         // ==================== ADMIN: MEETINGS ====================
         window.openMeetingModal = function(meetingId = null) {
             document.getElementById('meetingModalTitle').textContent = meetingId ? 'Edit Meeting' : 'Add Meeting';
@@ -3623,7 +3645,7 @@
             if (tasksView.style.display !== 'none') loadTasks();
         });
 
-        console.log('DarkRoot - Member Panel with expandable task descriptions');
+        console.log('DarkRoot - Member Panel with expandable task descriptions (improved UX)');
     </script>
 </body>
 </html>
