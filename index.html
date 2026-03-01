@@ -2404,7 +2404,7 @@ a[href^="https://"]:hover::after {
                         }
                         
                         // Check if admin (CEO or Manager) to show admin nav
-                        if (currentMemberData.role === 'CEO' || currentMemberData.role === 'Manager') {
+                        if (currentMemberData.role === 'CEO') {
                             adminNavItem.style.display = 'flex';
                             adminBottomNav.style.display = 'flex';
                             if (addNoticeBtn) addNoticeBtn.style.display = 'inline-flex';
