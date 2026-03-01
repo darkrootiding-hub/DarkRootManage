@@ -1314,6 +1314,18 @@
         .search-box input:focus {
             outline: none;
         }
+
+        /* Task description truncation (new) */
+        .task-description.truncated {
+            max-height: 60px;
+            overflow: hidden;
+        }
+        .task-description {
+            transition: max-height 0.2s ease;
+            cursor: pointer;
+            margin-top: var(--space-xs);
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -1483,7 +1495,7 @@
             </div>
 
             <nav class="nav-menu" id="sidebarNav">
-                <div class="nav-item active" data-view="analytics">
+                <div class="nav-item active" data-view="dashboard">
                     <i class="fas fa-chart-bar"></i>
                     <span>Analytics</span>
                 </div>
@@ -1756,7 +1768,7 @@
                 <div id="meetingsList" class="activity-feed"></div>
             </div>
 
-            <!-- Tasks View (updated with submission workflow) -->
+            <!-- Tasks View (updated with submission workflow and expandable description) -->
             <div id="tasksView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-tasks"></i> Available Tasks</h2>
@@ -2382,7 +2394,7 @@
                         }
                         
                         // Check if admin (CEO or Manager) to show admin nav
-                        if (currentMemberData.role === 'CEO' || currentMemberData.role === 'CEO') {
+                        if (currentMemberData.role === 'CEO' || currentMemberData.role === 'Manager') {
                             adminNavItem.style.display = 'flex';
                             adminBottomNav.style.display = 'flex';
                             if (addNoticeBtn) addNoticeBtn.style.display = 'inline-flex';
@@ -3085,7 +3097,7 @@
             });
         }
 
-        // ==================== TASKS (Member view with submission workflow) ====================
+        // ==================== TASKS (Member view with submission workflow and expandable description) ====================
         async function loadTasks() {
             const tasksSnap = await db.ref('tasks').once('value');
             allTasks = [];
@@ -3147,7 +3159,7 @@
                         <div class="activity-content" style="flex:1;">
                             <div class="activity-title">${task.title}</div>
                             <div class="activity-meta">${task.points} points</div>
-                            <div style="font-size: 0.8rem; margin-top: var(--space-xs);">${task.description || ''}</div>
+                            ${task.description ? `<div class="task-description truncated" onclick="this.classList.toggle('truncated')">${task.description}</div>` : ''}
                             ${statusHtml}
                         </div>
                         ${actionHtml}
@@ -3589,7 +3601,7 @@
             if (tasksView.style.display !== 'none') loadTasks();
         });
 
-        console.log('DarkRoot - Member Panel with Task Approval Workflow');
+        console.log('DarkRoot - Member Panel with expandable task descriptions');
     </script>
 </body>
 </html>
