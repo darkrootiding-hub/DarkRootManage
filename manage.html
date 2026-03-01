@@ -472,6 +472,8 @@
         .action-btn.salary { background: var(--success); color: white; }
         .action-btn.role { background: var(--primary); color: white; }
         .action-btn.delete { background: var(--danger); color: white; }
+        .action-btn.approve { background: var(--success); color: white; }
+        .action-btn.reject { background: var(--danger); color: white; }
         .action-btn:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
@@ -516,6 +518,68 @@
             gap: 8px;
             margin-top: 10px;
             justify-content: flex-end;
+        }
+
+        /* Submission card for approvals */
+        .submission-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .submission-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .submission-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-soft);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+        .submission-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .submission-info {
+            flex: 1;
+        }
+        .submission-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .submission-meta {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+        }
+        .submission-screenshot {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .submission-screenshot img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .submission-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         /* Modal */
@@ -683,6 +747,13 @@
             height: 100%;
             object-fit: cover;
         }
+
+        /* Image view modal */
+        .image-view-modal img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 16px;
+        }
     </style>
 </head>
 <body>
@@ -818,9 +889,20 @@
                                 <!-- Members will be loaded here -->
                             </div>
                         </div>
+
+                        <!-- Activity Logs moved here from bottom nav -->
+                        <div class="card" id="logsCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                                <button class="action-btn" onclick="clearLogs()" style="background: var(--warning);">
+                                    <i class="fas fa-trash"></i> Clear
+                                </button>
+                            </div>
+                            <div id="activityLogs"></div>
+                        </div>
                     </div>
 
-                    <!-- Meetings View (hidden initially) -->
+                    <!-- Meetings View -->
                     <div id="meetingsView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -833,7 +915,7 @@
                         </div>
                     </div>
 
-                    <!-- Tasks View (hidden initially) -->
+                    <!-- Tasks View -->
                     <div id="tasksView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -846,7 +928,22 @@
                         </div>
                     </div>
 
-                    <!-- Notices View (hidden initially) -->
+                    <!-- Approvals View (NEW) -->
+                    <div id="approvalsView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-check-double"></i> Task Approvals</h3>
+                            </div>
+                            <div class="filter-tabs" id="approvalFilters" style="margin-bottom: 15px;">
+                                <div class="filter-tab active" data-approval-status="pending">Pending</div>
+                                <div class="filter-tab" data-approval-status="approved">Approved</div>
+                                <div class="filter-tab" data-approval-status="rejected">Rejected</div>
+                            </div>
+                            <div id="approvalsList" class="member-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Notices View -->
                     <div id="noticesView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -866,24 +963,11 @@
                             <div id="noticesList" style="margin-top: 20px;"></div>
                         </div>
                     </div>
-
-                    <!-- Logs View (hidden initially) -->
-                    <div id="logsView" style="display: none;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-history"></i> Recent Activity</h3>
-                                <button class="action-btn" onclick="clearLogs()" style="background: var(--warning);">
-                                    <i class="fas fa-trash"></i> Clear
-                                </button>
-                            </div>
-                            <div id="activityLogs"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
+        <!-- Bottom Navigation (updated: Approvals replaces Logs) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
             <div class="nav-item active" data-view="members">
                 <i class="fas fa-users"></i>
@@ -897,13 +981,13 @@
                 <i class="fas fa-tasks"></i>
                 <span>Tasks</span>
             </div>
+            <div class="nav-item" data-view="approvals">
+                <i class="fas fa-check-double"></i>
+                <span>Approvals</span>
+            </div>
             <div class="nav-item" data-view="notices">
                 <i class="fas fa-bullhorn"></i>
                 <span>Notices</span>
-            </div>
-            <div class="nav-item" data-view="logs">
-                <i class="fas fa-history"></i>
-                <span>Logs</span>
             </div>
         </div>
 
@@ -1064,10 +1148,13 @@
 
         // ==================== GLOBAL VARIABLES ====================
         let currentAdmin = null;
+        let currentAdminData = null;
         let allMembers = [];
+        let allTasks = [];
         let currentFilter = 'all';
         let currentSearchTerm = '';
-        const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187'; // same as member panel
+        let currentApprovalFilter = 'pending';
+        const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
         let selectedImageFile = null;
 
         // ==================== UTILITY FUNCTIONS ====================
@@ -1118,6 +1205,7 @@
                 // Allow only CEO or Manager
                 if (memberData && (memberData.role === 'CEO' || memberData.role === 'Manager')) {
                     currentAdmin = user;
+                    currentAdminData = memberData;
                     document.getElementById('authSection').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'block';
                     document.getElementById('adminNav').style.display = 'flex';
@@ -1559,16 +1647,18 @@
             const container = document.getElementById('adminTasksList');
             container.innerHTML = '';
             
-            const tasks = [];
-            snapshot.forEach(child => tasks.push({ id: child.key, ...child.val() }));
-            tasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            allTasks = [];
+            snapshot.forEach(child => {
+                allTasks.push({ id: child.key, ...child.val() });
+            });
+            allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
             
-            if (tasks.length === 0) {
+            if (allTasks.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No tasks created.</div>';
                 return;
             }
             
-            tasks.forEach(task => {
+            allTasks.forEach(task => {
                 const card = document.createElement('div');
                 card.className = 'item-card';
                 card.innerHTML = `
@@ -1640,16 +1730,155 @@
 
         window.deleteTask = async function(id) {
             if (confirm('Delete this task? It will also remove all completions.')) {
-                const completionsSnap = await db.ref('task_completions').orderByKey().once('value');
-                completionsSnap.forEach(child => {
-                    if (child.key.includes('_' + id)) {
-                        db.ref('task_completions/' + child.key).remove();
-                    }
-                });
+                // Remove all submissions for this task
+                const submissionsSnap = await db.ref('task_submissions').orderByChild('taskId').equalTo(id).once('value');
+                submissionsSnap.forEach(child => child.ref.remove());
+                
                 await db.ref('tasks/' + id).remove();
                 showToast('Task deleted');
                 loadTasks();
             }
+        };
+
+        // ==================== APPROVALS MANAGEMENT (NEW) ====================
+        async function loadApprovals() {
+            const container = document.getElementById('approvalsList');
+            container.innerHTML = '';
+
+            const submissionsSnap = await db.ref('task_submissions').once('value');
+            if (!submissionsSnap.exists()) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No submissions yet.</div>';
+                return;
+            }
+
+            const submissions = [];
+            submissionsSnap.forEach(child => {
+                submissions.push({ id: child.key, ...child.val() });
+            });
+
+            // Filter by status based on selected filter tab
+            let filtered = submissions;
+            if (currentApprovalFilter !== 'all') {
+                filtered = submissions.filter(s => s.status === currentApprovalFilter);
+            }
+
+            // Further filter by role: Manager sees pending_manager, CEO sees pending_ceo (and optionally all if they want)
+            // For simplicity, we show both pending types but with appropriate actions
+            // We'll implement role-based action buttons later
+            const role = currentAdminData?.role;
+
+            // Sort by submission date (newest first)
+            filtered.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No submissions match the filter.</div>';
+                return;
+            }
+
+            // Fetch member names and task titles for display
+            for (const sub of filtered) {
+                const member = allMembers.find(m => m.uid === sub.userId) || { name: 'Unknown', photoURL: null };
+                const task = allTasks.find(t => t.id === sub.taskId) || { title: 'Unknown task', points: 0 };
+                
+                const card = document.createElement('div');
+                card.className = 'submission-card';
+                card.id = `sub-${sub.id}`;
+
+                const statusColor = sub.status === 'approved' ? '#2ecc71' : 
+                                   sub.status === 'rejected' ? '#e74c3c' : 
+                                   sub.status === 'pending_ceo' ? '#f39c12' : '#3498db';
+                const statusText = sub.status === 'pending_manager' ? 'Pending Manager' :
+                                  sub.status === 'pending_ceo' ? 'Pending CEO' :
+                                  sub.status.charAt(0).toUpperCase() + sub.status.slice(1);
+
+                let actionButtons = '';
+                if (sub.status === 'pending_manager' && role === 'Manager') {
+                    actionButtons = `
+                        <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                        <button class="action-btn reject" onclick="handleApproval('${sub.id}', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                    `;
+                } else if (sub.status === 'pending_ceo' && role === 'CEO') {
+                    actionButtons = `
+                        <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                        <button class="action-btn reject" onclick="handleApproval('${sub.id}', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="submission-header">
+                        <div class="submission-avatar">
+                            ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
+                        </div>
+                        <div class="submission-info">
+                            <div class="submission-title">${task.title}</div>
+                            <div class="submission-meta">
+                                <span><i class="fas fa-user"></i> ${member.name}</span>
+                                <span><i class="fas fa-clock"></i> ${formatDate(sub.submittedAt)}</span>
+                                <span style="color: ${statusColor};">● ${statusText}</span>
+                            </div>
+                        </div>
+                    </div>
+                    ${sub.screenshotUrl ? `
+                        <div class="submission-screenshot">
+                            <img src="${sub.screenshotUrl}" alt="Screenshot" onclick="window.open('${sub.screenshotUrl}', '_blank')">
+                        </div>
+                    ` : ''}
+                    ${sub.rejectionReason ? `<p style="color: var(--danger); font-size:0.8rem; margin-top:8px;">Reason: ${sub.rejectionReason}</p>` : ''}
+                    <div class="submission-actions">
+                        ${actionButtons}
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        window.handleApproval = async function(submissionId, action) {
+            const subRef = db.ref('task_submissions/' + submissionId);
+            const subSnap = await subRef.once('value');
+            const sub = subSnap.val();
+            if (!sub) return;
+
+            const role = currentAdminData?.role;
+
+            if (action === 'reject') {
+                const reason = prompt('Enter rejection reason (optional):');
+                await subRef.update({
+                    status: 'rejected',
+                    rejectedBy: currentAdmin.uid,
+                    rejectedAt: Date.now(),
+                    rejectionReason: reason || ''
+                });
+                logActivity('Rejected task submission', `Submission ID: ${submissionId}`);
+                showToast('Submission rejected');
+            } else if (action === 'approve') {
+                if (sub.status === 'pending_manager' && role === 'Manager') {
+                    await subRef.update({
+                        status: 'pending_ceo',
+                        approvedByManager: currentAdmin.uid,
+                        approvedAtManager: Date.now()
+                    });
+                    logActivity('Approved by Manager, moved to CEO pending', `Submission ID: ${submissionId}`);
+                    showToast('Approved, now pending CEO');
+                } else if (sub.status === 'pending_ceo' && role === 'CEO') {
+                    // Final approval: add points to member
+                    const task = allTasks.find(t => t.id === sub.taskId);
+                    if (task) {
+                        const memberRef = db.ref('members/' + sub.userId);
+                        const memberSnap = await memberRef.once('value');
+                        const member = memberSnap.val();
+                        const newPoints = (member.points || 0) + task.points;
+                        await memberRef.update({ points: newPoints });
+                    }
+                    await subRef.update({
+                        status: 'approved',
+                        approvedByCEO: currentAdmin.uid,
+                        approvedAt: Date.now()
+                    });
+                    logActivity('Final approved by CEO, points awarded', `Submission ID: ${submissionId}`);
+                    showToast('Task approved, points awarded');
+                }
+            }
+            loadApprovals();
         };
 
         // ==================== NOTICE MANAGEMENT ====================
@@ -1864,6 +2093,16 @@
             });
         });
 
+        // Approval filter tabs
+        document.querySelectorAll('[data-approval-status]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('[data-approval-status]').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentApprovalFilter = tab.dataset.approvalStatus;
+                loadApprovals();
+            });
+        });
+
         // Bottom navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -1874,8 +2113,8 @@
                 document.getElementById('membersView').style.display = 'none';
                 document.getElementById('meetingsView').style.display = 'none';
                 document.getElementById('tasksView').style.display = 'none';
+                document.getElementById('approvalsView').style.display = 'none';
                 document.getElementById('noticesView').style.display = 'none';
-                document.getElementById('logsView').style.display = 'none';
                 
                 if (view === 'members') {
                     document.getElementById('membersView').style.display = 'block';
@@ -1886,12 +2125,12 @@
                 } else if (view === 'tasks') {
                     document.getElementById('tasksView').style.display = 'block';
                     loadTasks();
+                } else if (view === 'approvals') {
+                    document.getElementById('approvalsView').style.display = 'block';
+                    loadApprovals();
                 } else if (view === 'notices') {
                     document.getElementById('noticesView').style.display = 'block';
                     loadNotices();
-                } else if (view === 'logs') {
-                    document.getElementById('logsView').style.display = 'block';
-                    loadActivityLogs();
                 }
             });
         });
@@ -1912,9 +2151,15 @@
         db.ref('meetings').on('child_added', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
         db.ref('meetings').on('child_changed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
         db.ref('meetings').on('child_removed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
-        db.ref('tasks').on('value', () => { if (document.getElementById('tasksView').style.display !== 'none') loadTasks(); });
+        db.ref('tasks').on('value', () => { 
+            if (document.getElementById('tasksView').style.display !== 'none') loadTasks(); 
+            if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
+        });
         db.ref('notices').on('child_added', () => { if (document.getElementById('noticesView').style.display !== 'none') loadNotices(); });
-        db.ref('activity_logs').on('child_added', () => { if (document.getElementById('logsView').style.display !== 'none') loadActivityLogs(); });
+        db.ref('activity_logs').on('child_added', () => { if (document.getElementById('membersView').style.display !== 'none') loadActivityLogs(); });
+        db.ref('task_submissions').on('value', () => { 
+            if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
+        });
     </script>
 </body>
 </html>
