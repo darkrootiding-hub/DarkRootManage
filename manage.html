@@ -11,7 +11,7 @@
     <!-- Moment.js -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <style>
-        /* (Keep all existing styles, unchanged) */
+        /* (All existing styles remain unchanged) */
         * {
             margin: 0;
             padding: 0;
@@ -928,17 +928,14 @@
                         </div>
                     </div>
 
-                    <!-- Approvals View (NEW) -->
+                    <!-- Approvals View (UPDATED: dynamic filter tabs) -->
                     <div id="approvalsView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h3><i class="fas fa-check-double"></i> Task Approvals</h3>
                             </div>
-                            <div class="filter-tabs" id="approvalFilters" style="margin-bottom: 15px;">
-                                <div class="filter-tab active" data-approval-status="pending_ceo">Pending</div>
-                                <div class="filter-tab" data-approval-status="approved">Approved</div>
-                                <div class="filter-tab" data-approval-status="rejected">Rejected</div>
-                            </div>
+                            <!-- Filter tabs will be generated dynamically based on role -->
+                            <div class="filter-tabs" id="approvalFilters" style="margin-bottom: 15px;"></div>
                             <div id="approvalsList" class="member-list"></div>
                         </div>
                     </div>
@@ -967,7 +964,7 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation (updated: Approvals replaces Logs) -->
+        <!-- Bottom Navigation (Approvals replaces Logs) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
             <div class="nav-item active" data-view="members">
                 <i class="fas fa-users"></i>
@@ -998,7 +995,7 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals (unchanged) -->
     <div class="modal-overlay" id="editMemberModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('editMemberModal')">&times;</span>
@@ -1153,7 +1150,7 @@
         let allTasks = [];
         let currentFilter = 'all';
         let currentSearchTerm = '';
-        let currentApprovalFilter = 'pending_manager';
+        let currentApprovalFilter = 'pending_manager'; // will be updated based on role
         const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
         let selectedImageFile = null;
 
@@ -1210,6 +1207,13 @@
                     document.getElementById('adminPanel').style.display = 'block';
                     document.getElementById('adminNav').style.display = 'flex';
                     document.getElementById('adminRole').textContent = memberData.role;
+                    
+                    // Set initial approval filter based on role
+                    if (memberData.role === 'Manager') {
+                        currentApprovalFilter = 'pending_manager';
+                    } else if (memberData.role === 'CEO') {
+                        currentApprovalFilter = 'pending_ceo';
+                    }
                     
                     // Update avatar if exists
                     if (memberData.photoURL) {
@@ -1740,9 +1744,63 @@
             }
         };
 
-        // ==================== APPROVALS MANAGEMENT (NEW) ====================
+        // ==================== APPROVALS MANAGEMENT (UPDATED) ====================
+        // Render filter tabs based on role
+        function renderApprovalFilters() {
+            const container = document.getElementById('approvalFilters');
+            if (!container) return;
+            const role = currentAdminData?.role;
+            let tabsHtml = '';
+            
+            if (role === 'Manager') {
+                tabsHtml = `
+                    <div class="filter-tab ${currentApprovalFilter === 'pending_manager' ? 'active' : ''}" data-approval-status="pending_manager">
+                        <i class="fas fa-clock"></i> Pending (Manager)
+                    </div>
+                    <div class="filter-tab ${currentApprovalFilter === 'approved' ? 'active' : ''}" data-approval-status="approved">
+                        <i class="fas fa-check-circle"></i> Approved
+                    </div>
+                    <div class="filter-tab ${currentApprovalFilter === 'rejected' ? 'active' : ''}" data-approval-status="rejected">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </div>
+                `;
+            } else if (role === 'CEO') {
+                tabsHtml = `
+                    <div class="filter-tab ${currentApprovalFilter === 'pending_ceo' ? 'active' : ''}" data-approval-status="pending_ceo">
+                        <i class="fas fa-clock"></i> Pending (CEO)
+                    </div>
+                    <div class="filter-tab ${currentApprovalFilter === 'approved' ? 'active' : ''}" data-approval-status="approved">
+                        <i class="fas fa-check-circle"></i> Approved
+                    </div>
+                    <div class="filter-tab ${currentApprovalFilter === 'rejected' ? 'active' : ''}" data-approval-status="rejected">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </div>
+                `;
+            } else {
+                // fallback (should not happen)
+                tabsHtml = `
+                    <div class="filter-tab active" data-approval-status="pending_manager">Pending</div>
+                    <div class="filter-tab" data-approval-status="approved">Approved</div>
+                    <div class="filter-tab" data-approval-status="rejected">Rejected</div>
+                `;
+            }
+            
+            container.innerHTML = tabsHtml;
+            
+            // Attach event listeners to new tabs
+            document.querySelectorAll('#approvalFilters .filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('#approvalFilters .filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentApprovalFilter = tab.dataset.approvalStatus;
+                    loadApprovals();
+                });
+            });
+        }
+
         async function loadApprovals() {
             const container = document.getElementById('approvalsList');
+            if (!container) return;
             container.innerHTML = '';
 
             const submissionsSnap = await db.ref('task_submissions').once('value');
@@ -1756,16 +1814,11 @@
                 submissions.push({ id: child.key, ...child.val() });
             });
 
-            // Filter by status based on selected filter tab
+            // Filter by selected status
             let filtered = submissions;
             if (currentApprovalFilter !== 'all') {
                 filtered = submissions.filter(s => s.status === currentApprovalFilter);
             }
-
-            // Further filter by role: Manager sees pending_manager, CEO sees pending_ceo (and optionally all if they want)
-            // For simplicity, we show both pending types but with appropriate actions
-            // We'll implement role-based action buttons later
-            const role = currentAdminData?.role;
 
             // Sort by submission date (newest first)
             filtered.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
@@ -1774,6 +1827,8 @@
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No submissions match the filter.</div>';
                 return;
             }
+
+            const role = currentAdminData?.role;
 
             // Fetch member names and task titles for display
             for (const sub of filtered) {
@@ -2084,22 +2139,12 @@
             filterAndDisplayMembers();
         });
 
-        document.querySelectorAll('.filter-tab').forEach(tab => {
+        document.querySelectorAll('#roleFilters .filter-tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('#roleFilters .filter-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 currentFilter = tab.dataset.role;
                 filterAndDisplayMembers();
-            });
-        });
-
-        // Approval filter tabs
-        document.querySelectorAll('[data-approval-status]').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('[data-approval-status]').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                currentApprovalFilter = tab.dataset.approvalStatus;
-                loadApprovals();
             });
         });
 
@@ -2127,6 +2172,7 @@
                     loadTasks();
                 } else if (view === 'approvals') {
                     document.getElementById('approvalsView').style.display = 'block';
+                    renderApprovalFilters(); // ensure tabs are role-specific
                     loadApprovals();
                 } else if (view === 'notices') {
                     document.getElementById('noticesView').style.display = 'block';
