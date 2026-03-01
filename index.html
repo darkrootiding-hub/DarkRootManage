@@ -1337,6 +1337,34 @@
         .toggle-description:hover {
             text-decoration: underline;
         }
+a[href^="https://"] {
+  color: aqua;
+  font-weight: 900;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Animated underline */
+a[href^="https://"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #7c5cff, #00f2ff);
+  transition: width 0.3s ease;
+}
+
+/* Hover effect */
+a[href^="https://"]:hover {
+  color: #ffffff;
+}
+
+a[href^="https://"]:hover::after {
+  width: 100%;
+}
     </style>
 </head>
 <body>
@@ -1510,10 +1538,7 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Analytics</span>
                 </div>
-                <div class="nav-item" data-view="calendar">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Calendar</span>
-                </div>
+                <!-- Calendar removed -->
                 <div class="nav-item" data-view="meetings">
                     <i class="fas fa-handshake"></i>
                     <span>Meetings</span>
@@ -1570,7 +1595,7 @@
                 <div id="teamLeaderboardTab" style="display: none;">
                     <div class="section-header">
                         <h2>Leaderboard</h2>
-                        <span class="badge">Top 20</span>
+                        <span class="badge">All Members</span>
                     </div>
                     <div id="leaderboardList"></div>
                 </div>
@@ -1749,28 +1774,6 @@
                 </div>
             </div>
 
-            <!-- Calendar View -->
-            <div id="calendarView" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-calendar-alt"></i> Calendar</h2>
-                </div>
-                <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); text-align: center;">
-                    <p style="margin-bottom: var(--space-md);">📅 Upcoming events</p>
-                    <div class="activity-item" style="justify-content: space-between;">
-                        <span>Team meeting</span>
-                        <span class="badge">Coming Soon...</span>
-                    </div>
-                    <div class="activity-item" style="justify-content: space-between;">
-                        <span>Project deadline</span>
-                        <span class="badge">Coming Soon...</span>
-                    </div>
-                    <div class="activity-item" style="justify-content: space-between;">
-                        <span>Client call</span>
-                        <span class="badge">Coming Soon...</span>
-                    </div>
-                </div>
-            </div>
-
             <!-- Meetings View -->
             <div id="meetingsView" style="display: none;">
                 <div class="section-header">
@@ -1779,7 +1782,7 @@
                 <div id="meetingsList" class="activity-feed"></div>
             </div>
 
-            <!-- Tasks View (updated with submission workflow and expandable description) -->
+            <!-- Tasks View -->
             <div id="tasksView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-tasks"></i> Available Tasks</h2>
@@ -1846,7 +1849,7 @@
         </div>
     </div>
 
-    <!-- Task Submission Modal (NEW) -->
+    <!-- Task Submission Modal -->
     <div class="modal-overlay" id="taskSubmissionModal">
         <div class="modal">
             <div class="modal-header">
@@ -2067,7 +2070,6 @@
         const chatView = document.getElementById('chatView');
         const adminView = document.getElementById('adminView');
         const analyticsView = document.getElementById('analyticsView');
-        const calendarView = document.getElementById('calendarView');
         const meetingsView = document.getElementById('meetingsView');
         const tasksView = document.getElementById('tasksView');
 
@@ -2188,7 +2190,6 @@
             profileView.style.display = 'none';
             adminView.style.display = 'none';
             analyticsView.style.display = 'none';
-            calendarView.style.display = 'none';
             meetingsView.style.display = 'none';
             tasksView.style.display = 'none';
 
@@ -2205,8 +2206,6 @@
             } else if (viewName === 'analytics') {
                 analyticsView.style.display = 'block';
                 initAnalyticsChart();
-            } else if (viewName === 'calendar') {
-                calendarView.style.display = 'block';
             } else if (viewName === 'meetings') {
                 meetingsView.style.display = 'block';
                 loadMeetings();
@@ -2405,7 +2404,7 @@
                         }
                         
                         // Check if admin (CEO or Manager) to show admin nav
-                        if (currentMemberData.role === 'CEO') {
+                        if (currentMemberData.role === 'CEO' || currentMemberData.role === 'Manager') {
                             adminNavItem.style.display = 'flex';
                             adminBottomNav.style.display = 'flex';
                             if (addNoticeBtn) addNoticeBtn.style.display = 'inline-flex';
@@ -2628,8 +2627,7 @@
             }
         };
 
-        // ==================== TASK SUBMISSION (NEW) ====================
-        // Open submission modal for a task
+        // ==================== TASK SUBMISSION ====================
         window.openTaskSubmissionModal = function(taskId, taskTitle, taskPoints) {
             document.getElementById('submissionTaskId').value = taskId;
             document.getElementById('submissionTaskPoints').value = taskPoints;
@@ -2666,7 +2664,6 @@
             submitBtn.disabled = true;
 
             try {
-                // Upload screenshot to ImgBB
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedSubmissionFile);
@@ -2683,19 +2680,17 @@
                     const taskId = document.getElementById('submissionTaskId').value;
                     const taskPoints = parseInt(document.getElementById('submissionTaskPoints').value);
                     
-                    // Create submission record
                     await db.ref('task_submissions').push({
                         userId: currentUser.uid,
                         taskId: taskId,
                         screenshotUrl: screenshotUrl,
-                        status: 'pending_manager', // initial status
+                        status: 'pending_manager',
                         submittedAt: Date.now(),
-                        taskPoints: taskPoints // store for reference
+                        taskPoints: taskPoints
                     });
                     
                     showToast('Task submitted for approval!', 'success');
                     closeModal('taskSubmissionModal');
-                    // Refresh tasks view to show pending status
                     loadTasks();
                 } else {
                     throw new Error('Upload failed');
@@ -2848,7 +2843,7 @@
             document.getElementById('date').textContent = moment().format('dddd, MMMM D');
         }
 
-        // ==================== MEMBERS ====================
+        // ==================== MEMBERS (sorted by role: CEO > Manager > Senior > Member, then by points) ====================
         async function loadMembers() {
             const snapshot = await db.ref('members').once('value');
             allMembers = [];
@@ -2869,13 +2864,20 @@
                 if (roleFilter !== 'all' && member.role !== roleFilter) return false;
                 return true;
             });
+            // Sort by role hierarchy and then by points descending
+            const roleOrder = { 'CEO': 1, 'Manager': 2, 'Senior': 3, 'Member': 4 };
+            filtered.sort((a, b) => {
+                const roleA = roleOrder[a.role] || 5;
+                const roleB = roleOrder[b.role] || 5;
+                if (roleA !== roleB) return roleA - roleB;
+                return (b.points || 0) - (a.points || 0);
+            });
             displayMembersGrid(filtered);
         }
 
         function displayMembersGrid(members) {
             const grid = document.getElementById('membersGrid');
             grid.innerHTML = '';
-            members.sort((a, b) => (b.points || 0) - (a.points || 0));
             
             members.forEach(member => {
                 const initials = getInitials(member.name);
@@ -2934,7 +2936,7 @@
             document.body.appendChild(modal);
         };
 
-        // ==================== LEADERBOARD ====================
+        // ==================== LEADERBOARD (all members sorted by points) ====================
         async function loadLeaderboard() {
             const snapshot = await db.ref('members').orderByChild('points').once('value');
             const members = [];
@@ -2943,7 +2945,7 @@
             
             const container = document.getElementById('leaderboardList');
             container.innerHTML = '';
-            members.slice(0, 20).forEach((member, index) => {
+            members.forEach((member, index) => {
                 container.innerHTML += `
                     <div class="activity-item" onclick="showMemberProfile('${member.uid}')" style="cursor: pointer;">
                         <div style="width: 36px; height: 36px; background: ${index < 3 ? 'var(--primary)' : 'var(--gray-200)'}; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-weight: 700; color: ${index < 3 ? 'white' : 'var(--gray-700)'};">${index + 1}</div>
@@ -3078,7 +3080,7 @@
             }
         }
 
-        // ==================== MEETINGS (Member view) ====================
+        // ==================== MEETINGS (Member view with clickable links) ====================
         async function loadMeetings() {
             const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
             const meetings = [];
@@ -3095,12 +3097,17 @@
             }
             upcoming.forEach(meeting => {
                 const dateStr = moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A');
+                // Check if location is a URL
+                let locationHtml = meeting.location || 'TBD';
+                if (meeting.location && (meeting.location.startsWith('http://') || meeting.location.startsWith('https://'))) {
+                    locationHtml = `<a href="${meeting.location}" target="_blank" style="color: var(--primary); text-decoration: underline;">${meeting.location}</a>`;
+                }
                 container.innerHTML += `
                     <div class="activity-item">
                         <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-handshake" style="color: var(--primary);"></i></div>
                         <div class="activity-content">
                             <div class="activity-title">${meeting.title}</div>
-                            <div class="activity-meta">${dateStr} · ${meeting.location || 'TBD'}</div>
+                            <div class="activity-meta">${dateStr} · ${locationHtml}</div>
                             <div style="font-size: 0.8rem; margin-top: var(--space-xs);">${meeting.description || ''}</div>
                         </div>
                     </div>
@@ -3111,15 +3118,13 @@
         // ==================== TASKS (Member view with submission workflow and expandable description) ====================
         async function loadTasks() {
             try {
-                // Fetch all tasks from Firebase
                 const tasksSnap = await db.ref('tasks').once('value');
                 allTasks = [];
                 tasksSnap.forEach(child => {
                     allTasks.push({ id: child.key, ...child.val() });
                 });
-                console.log('Tasks fetched:', allTasks.length); // Debug: should match database count
+                console.log('Tasks fetched:', allTasks.length);
 
-                // Get submissions for the current user (to show status)
                 const submissionsSnap = await db.ref('task_submissions')
                     .orderByChild('userId')
                     .equalTo(currentUser.uid)
@@ -3138,11 +3143,9 @@
                     return;
                 }
 
-                // Sort tasks by creation date (oldest first)
                 allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
 
                 allTasks.forEach(task => {
-                    // Skip invalid tasks (optional safety)
                     if (!task.title || task.points === undefined) {
                         console.warn('Skipping invalid task:', task);
                         return;
@@ -3153,7 +3156,6 @@
                     let statusHtml = '';
 
                     if (submission) {
-                        // Task already submitted – show status
                         const status = submission.status;
                         let statusColor = '';
                         let statusText = '';
@@ -3175,15 +3177,12 @@
                             statusHtml += `<div style="font-size: 0.7rem; color: var(--danger); margin-top: 4px;">Reason: ${submission.rejectionReason}</div>`;
                         }
                     } else {
-                        // Not submitted – show submit button (escape title to prevent quote issues)
                         const safeTitle = task.title.replace(/'/g, "\\'");
                         actionHtml = `<button class="btn btn-primary btn-sm" onclick="openTaskSubmissionModal('${task.id}', '${safeTitle}', ${task.points})" style="width: auto; height: 36px;">Submit</button>`;
                     }
 
-                    // Build the task card with expandable description
                     let descriptionHtml = '';
                     if (task.description) {
-                        // Use a unique ID for each description to toggle
                         const descId = `desc-${task.id}`;
                         descriptionHtml = `
                             <div id="${descId}" class="task-description truncated">${task.description}</div>
@@ -3637,7 +3636,6 @@
             if (noticesView.style.display !== 'none') loadNotices();
         });
 
-        // Listen for task submissions to refresh tasks view
         db.ref('task_submissions').on('child_added', () => {
             if (tasksView.style.display !== 'none') loadTasks();
         });
@@ -3645,7 +3643,7 @@
             if (tasksView.style.display !== 'none') loadTasks();
         });
 
-        console.log('DarkRoot - Member Panel with expandable task descriptions (improved UX)');
+        console.log('DarkRoot - Member Panel with role-based sorting, all-member leaderboard, clickable meeting links, and calendar removed');
     </script>
 </body>
 </html>
