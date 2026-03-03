@@ -424,6 +424,10 @@
         .role-manager { background: #3498db30; color: #3498db; }
         .role-senior { background: #e67e2230; color: #e67e22; }
         .role-member { background: #2ecc7130; color: #2ecc71; }
+        .role-web-developer { background: #9b59b630; color: #9b59b6; }
+        .role-cyber-security { background: #e67e2230; color: #e67e22; }
+        .role-designer { background: #1abc9c30; color: #1abc9c; }
+        .role-content-writer { background: #f39c1230; color: #f39c12; }
 
         .member-details {
             display: grid;
@@ -754,6 +758,37 @@
             max-height: 70vh;
             border-radius: 16px;
         }
+
+        /* Rank input */
+        .rank-input {
+            width: 60px;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card-light);
+            color: white;
+            text-align: center;
+        }
+        .rank-save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .rank-reset-btn {
+            background: var(--warning);
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -882,6 +917,18 @@
                                 <div class="filter-tab" data-role="Member">
                                     <i class="fas fa-user"></i> Member
                                 </div>
+                                <div class="filter-tab" data-role="Web Developer">
+                                    <i class="fas fa-code"></i> Web Dev
+                                </div>
+                                <div class="filter-tab" data-role="Cyber Security">
+                                    <i class="fas fa-shield-halved"></i> Cyber Sec
+                                </div>
+                                <div class="filter-tab" data-role="Designer">
+                                    <i class="fas fa-paint-brush"></i> Designer
+                                </div>
+                                <div class="filter-tab" data-role="Content Writer">
+                                    <i class="fas fa-pen"></i> Writer
+                                </div>
                             </div>
 
                             <!-- Member List Container -->
@@ -960,15 +1007,34 @@
                             <div id="noticesList" style="margin-top: 20px;"></div>
                         </div>
                     </div>
+
+                    <!-- Leaderboard Management View (NEW) -->
+                    <div id="leaderboardView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-trophy"></i> Leaderboard Positions</h3>
+                                <button class="action-btn edit" onclick="resetAllRanks()" style="background: var(--warning); width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-undo"></i> Reset to Points
+                                </button>
+                            </div>
+                            <p style="color: var(--text-secondary); margin-bottom: 15px;">Set custom rank for each member (1 = highest). Leave blank to use points order.</p>
+                            <div id="rankList" class="member-list"></div>
+                            <button class="rank-save-btn" onclick="saveAllRanks()">Save All Ranks</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation (Approvals replaces Logs) -->
+        <!-- Bottom Navigation (added Leaderboard) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
             <div class="nav-item active" data-view="members">
                 <i class="fas fa-users"></i>
                 <span>Members</span>
+            </div>
+            <div class="nav-item" data-view="leaderboard">
+                <i class="fas fa-trophy"></i>
+                <span>Ranking</span>
             </div>
             <div class="nav-item" data-view="meetings">
                 <i class="fas fa-handshake"></i>
@@ -995,7 +1061,7 @@
         </div>
     </div>
 
-    <!-- Modals (unchanged) -->
+    <!-- Modals -->
     <div class="modal-overlay" id="editMemberModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('editMemberModal')">&times;</span>
@@ -1027,6 +1093,10 @@
                     <option value="Senior">Senior</option>
                     <option value="Manager">Manager</option>
                     <option value="CEO">CEO</option>
+                    <option value="Web Developer">Web Developer</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Designer">Designer</option>
+                    <option value="Content Writer">Content Writer</option>
                 </select>
             </div>
             <div class="input-field">
@@ -1153,6 +1223,10 @@
         let currentApprovalFilter = 'pending_manager'; // will be updated based on role
         const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
         let selectedImageFile = null;
+        let customRanks = {}; // uid -> rank number
+
+        // All available roles (extended)
+        const allRoles = ['Member', 'Senior', 'Manager', 'CEO', 'Web Developer', 'Cyber Security', 'Designer', 'Content Writer'];
 
         // ==================== UTILITY FUNCTIONS ====================
         function showToast(message, type = 'success') {
@@ -1191,6 +1265,11 @@
             if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
             if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
             return date.toLocaleDateString();
+        }
+
+        function getRoleClass(role) {
+            if (!role) return 'member';
+            return role.toLowerCase().replace(/ /g, '-');
         }
 
         // ==================== AUTH ====================
@@ -1233,6 +1312,7 @@
                     loadTasks();
                     loadNotices();
                     loadActivityLogs();
+                    loadCustomRanks();
                     
                     showToast(`Welcome back, ${memberData.name}`, 'success');
                     logActivity('Admin logged in');
@@ -1326,7 +1406,7 @@
                 memberCard.id = `member-${member.uid}`;
                 
                 const initials = getInitials(member.name);
-                const roleClass = member.role ? member.role.toLowerCase() : 'member';
+                const roleClass = getRoleClass(member.role);
                 
                 memberCard.innerHTML = `
                     <div class="member-card-header">
@@ -1361,7 +1441,7 @@
                     </div>
                     
                     <div class="member-actions">
-                        <button class="action-btn edit" onclick="editMember('${member.uid}', '${member.name}', '${member.email}')">
+                        <button class="action-btn edit" onclick="editMember('${member.uid}', '${member.name}', '${member.email}', '${member.role}')">
                             <i class="fas fa-pen"></i> Edit
                         </button>
                         <button class="action-btn points" onclick="adjustPoints('${member.uid}')">
@@ -1370,7 +1450,7 @@
                         <button class="action-btn salary" onclick="adjustSalary('${member.uid}')">
                             <i class="fas fa-coins"></i> Salary
                         </button>
-                        <button class="action-btn role" onclick="changeRole('${member.uid}')">
+                        <button class="action-btn role" onclick="changeRoleWithDropdown('${member.uid}')">
                             <i class="fas fa-user-tag"></i> Role
                         </button>
                         <button class="action-btn delete" onclick="deleteMember('${member.uid}')">
@@ -1383,13 +1463,20 @@
             });
         }
 
-        window.editMember = function(uid, currentName, currentEmail) {
+        // Fixed editMember function: now accepts currentRole
+        window.editMember = function(uid, currentName, currentEmail, currentRole) {
             const modal = document.getElementById('editMemberModal');
             const content = document.getElementById('editMemberContent');
             
+            // Build role dropdown with allRoles, pre‑select currentRole
+            let roleOptions = '';
+            allRoles.forEach(role => {
+                roleOptions += `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`;
+            });
+            
             content.innerHTML = `
                 <div class="input-field">
-                    <label>Current Email</label>
+                    <label>Email</label>
                     <div style="padding: 12px; background: var(--card-light); border-radius: 16px; color: var(--primary);">
                         <i class="fas fa-envelope"></i> ${currentEmail}
                     </div>
@@ -1398,19 +1485,26 @@
                     <label>New Name</label>
                     <input type="text" id="editName" value="${currentName}" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                 </div>
-                <button class="btn" onclick="updateMemberName('${uid}')">
-                    <i class="fas fa-save"></i> Update Name
+                <div class="input-field">
+                    <label>Role</label>
+                    <select id="editRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                        ${roleOptions}
+                    </select>
+                </div>
+                <button class="btn" onclick="updateMemberDetails('${uid}')">
+                    <i class="fas fa-save"></i> Update
                 </button>
             `;
             
             modal.style.display = 'flex';
         };
 
-        window.updateMemberName = async function(uid) {
+        window.updateMemberDetails = async function(uid) {
             const newName = document.getElementById('editName').value;
-            await db.ref('members/' + uid).update({ name: newName });
-            logActivity('Updated member name', `UID: ${uid}, New name: ${newName}`);
-            showToast('Name updated successfully');
+            const newRole = document.getElementById('editRole').value;
+            await db.ref('members/' + uid).update({ name: newName, role: newRole });
+            logActivity('Updated member', `UID: ${uid}, Name: ${newName}, Role: ${newRole}`);
+            showToast('Member updated successfully');
             closeModal('editMemberModal');
             loadAllMembers();
         };
@@ -1441,20 +1535,11 @@
             }
         };
 
-        window.changeRole = function(uid) {
-            const roles = ['Member', 'Senior', 'Manager', 'CEO'];
-            const currentRole = allMembers.find(m => m.uid === uid)?.role || 'Member';
-            const currentIndex = roles.indexOf(currentRole);
-            const nextRole = roles[(currentIndex + 1) % roles.length];
-            
-            if (confirm(`Change role from ${currentRole} to ${nextRole}?`)) {
-                db.ref('members/' + uid).update({ role: nextRole })
-                .then(() => {
-                    logActivity('Changed role', `UID: ${uid}, New role: ${nextRole}`);
-                    showToast(`Role changed to ${nextRole}`);
-                    loadAllMembers();
-                });
-            }
+        window.changeRoleWithDropdown = function(uid) {
+            const member = allMembers.find(m => m.uid === uid);
+            if (!member) return;
+            // Reuse editMember with the member's current role
+            editMember(uid, member.name, member.email, member.role);
         };
 
         window.deleteMember = function(uid) {
@@ -1535,6 +1620,83 @@
                 logActivity('Reset leaderboard', 'All points set to 0');
                 showToast('Leaderboard reset');
                 setTimeout(loadAllMembers, 1000);
+            }
+        };
+
+        // ==================== LEADERBOARD RANK MANAGEMENT ====================
+        async function loadCustomRanks() {
+            const snapshot = await db.ref('settings/ranks').once('value');
+            if (snapshot.exists()) {
+                customRanks = snapshot.val();
+            } else {
+                customRanks = {};
+            }
+        }
+
+        function renderRankList() {
+            const container = document.getElementById('rankList');
+            if (!container) return;
+            
+            // Sort members by current rank (if set) or points
+            const membersWithRank = allMembers.map(m => ({
+                ...m,
+                rank: customRanks[m.uid] || null
+            }));
+            
+            // Separate ranked and unranked, then sort ranked by rank, unranked by points
+            const ranked = membersWithRank.filter(m => m.rank !== null).sort((a, b) => a.rank - b.rank);
+            const unranked = membersWithRank.filter(m => m.rank === null).sort((a, b) => (b.points || 0) - (a.points || 0));
+            const sorted = [...ranked, ...unranked];
+            
+            container.innerHTML = '';
+            sorted.forEach(member => {
+                const memberDiv = document.createElement('div');
+                memberDiv.className = 'member-card';
+                memberDiv.innerHTML = `
+                    <div class="member-card-header">
+                        <div class="member-avatar">${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}</div>
+                        <div class="member-info">
+                            <div class="member-name">${member.name}</div>
+                            <div class="member-email">${member.email}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                        <label style="color: var(--text-secondary);">Rank:</label>
+                        <input type="number" id="rank-${member.uid}" class="rank-input" value="${member.rank || ''}" placeholder="Auto" min="1" max="${allMembers.length}">
+                        <span style="color: var(--text-secondary); font-size:0.8rem;">(1 = highest)</span>
+                    </div>
+                `;
+                container.appendChild(memberDiv);
+            });
+        }
+
+        window.saveAllRanks = async function() {
+            const newRanks = {};
+            allMembers.forEach(member => {
+                const input = document.getElementById(`rank-${member.uid}`);
+                if (input && input.value) {
+                    newRanks[member.uid] = parseInt(input.value);
+                }
+            });
+            // Validate no duplicates
+            const rankValues = Object.values(newRanks);
+            const uniqueRanks = new Set(rankValues);
+            if (rankValues.length !== uniqueRanks.size) {
+                showToast('Duplicate ranks are not allowed', 'error');
+                return;
+            }
+            await db.ref('settings/ranks').set(newRanks);
+            customRanks = newRanks;
+            showToast('Ranks saved successfully');
+            logActivity('Updated custom ranks');
+        };
+
+        window.resetAllRanks = async function() {
+            if (confirm('Reset all custom ranks? Members will be ordered by points.')) {
+                await db.ref('settings/ranks').remove();
+                customRanks = {};
+                renderRankList();
+                showToast('Ranks reset');
             }
         };
 
@@ -1745,7 +1907,6 @@
         };
 
         // ==================== APPROVALS MANAGEMENT (UPDATED) ====================
-        // Render filter tabs based on role
         function renderApprovalFilters() {
             const container = document.getElementById('approvalFilters');
             if (!container) return;
@@ -1777,7 +1938,6 @@
                     </div>
                 `;
             } else {
-                // fallback (should not happen)
                 tabsHtml = `
                     <div class="filter-tab active" data-approval-status="pending_manager">Pending</div>
                     <div class="filter-tab" data-approval-status="approved">Approved</div>
@@ -1787,7 +1947,6 @@
             
             container.innerHTML = tabsHtml;
             
-            // Attach event listeners to new tabs
             document.querySelectorAll('#approvalFilters .filter-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('#approvalFilters .filter-tab').forEach(t => t.classList.remove('active'));
@@ -1814,13 +1973,11 @@
                 submissions.push({ id: child.key, ...child.val() });
             });
 
-            // Filter by selected status
             let filtered = submissions;
             if (currentApprovalFilter !== 'all') {
                 filtered = submissions.filter(s => s.status === currentApprovalFilter);
             }
 
-            // Sort by submission date (newest first)
             filtered.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
 
             if (filtered.length === 0) {
@@ -1830,7 +1987,6 @@
 
             const role = currentAdminData?.role;
 
-            // Fetch member names and task titles for display
             for (const sub of filtered) {
                 const member = allMembers.find(m => m.uid === sub.userId) || { name: 'Unknown', photoURL: null };
                 const task = allTasks.find(t => t.id === sub.taskId) || { title: 'Unknown task', points: 0 };
@@ -1915,7 +2071,6 @@
                     logActivity('Approved by Manager, moved to CEO pending', `Submission ID: ${submissionId}`);
                     showToast('Approved, now pending CEO');
                 } else if (sub.status === 'pending_ceo' && role === 'CEO') {
-                    // Final approval: add points to member
                     const task = allTasks.find(t => t.id === sub.taskId);
                     if (task) {
                         const memberRef = db.ref('members/' + sub.userId);
@@ -2099,7 +2254,6 @@
                         photoURL: imageUrl
                     });
                     
-                    // Update header avatar
                     document.getElementById('adminAvatarIcon').style.display = 'none';
                     const avatarImg = document.getElementById('adminAvatarImg');
                     avatarImg.src = imageUrl;
@@ -2160,10 +2314,14 @@
                 document.getElementById('tasksView').style.display = 'none';
                 document.getElementById('approvalsView').style.display = 'none';
                 document.getElementById('noticesView').style.display = 'none';
+                document.getElementById('leaderboardView').style.display = 'none';
                 
                 if (view === 'members') {
                     document.getElementById('membersView').style.display = 'block';
                     loadAllMembers();
+                } else if (view === 'leaderboard') {
+                    document.getElementById('leaderboardView').style.display = 'block';
+                    renderRankList();
                 } else if (view === 'meetings') {
                     document.getElementById('meetingsView').style.display = 'block';
                     loadMeetings();
@@ -2172,7 +2330,7 @@
                     loadTasks();
                 } else if (view === 'approvals') {
                     document.getElementById('approvalsView').style.display = 'block';
-                    renderApprovalFilters(); // ensure tabs are role-specific
+                    renderApprovalFilters();
                     loadApprovals();
                 } else if (view === 'notices') {
                     document.getElementById('noticesView').style.display = 'block';
@@ -2189,7 +2347,6 @@
         };
 
         // ==================== INITIALIZATION ====================
-        // Real-time updates
         db.ref('members').on('child_changed', () => {
             if (document.getElementById('membersView').style.display !== 'none') loadAllMembers();
             loadDashboardStats();
