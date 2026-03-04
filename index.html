@@ -1779,6 +1779,23 @@
             color: white;
             margin-bottom: var(--space-md);
         }
+
+        /* Payment method in profile */
+        .payment-info {
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+        }
+        .payment-info .label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+        .payment-info .value {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1952,7 +1969,6 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Analytics</span>
                 </div>
-                <!-- Calendar removed -->
                 <div class="nav-item" data-view="meetings">
                     <i class="fas fa-handshake"></i>
                     <span>Meetings</span>
@@ -1961,7 +1977,16 @@
                     <i class="fas fa-tasks"></i>
                     <span>Tasks</span>
                 </div>
-                <!-- Admin nav item removed -->
+                <!-- New About section -->
+                <div class="nav-item" data-view="about">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </div>
+                <!-- Admin nav item (shown only to CEOs/Managers) -->
+                <div class="nav-item" data-view="admin" id="adminNavItem" style="display: none;">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Admin</span>
+                </div>
             </nav>
         </div>
 
@@ -2089,8 +2114,16 @@
                         <span>Status</span>
                         <span style="color: var(--success);" id="profileStatus">Active</span>
                     </div>
+                    <!-- Payment Method Display -->
+                    <div class="payment-info" id="paymentInfoDisplay">
+                        <div class="label">Payment Method</div>
+                        <div class="value" id="paymentMethodDisplay">Cash</div>
+                    </div>
                     <button class="btn btn-outline" onclick="openEditNameModal()" style="margin-top: var(--space-md);">
                         <i class="fas fa-edit"></i> Edit Name
+                    </button>
+                    <button class="btn btn-outline" onclick="openPaymentModal()" style="margin-top: var(--space-md);">
+                        <i class="fas fa-wallet"></i> Edit Payment Info
                     </button>
                     <button class="btn btn-outline" id="logoutBtn" style="margin-top: var(--space-md);">
                         <i class="fas fa-sign-out-alt"></i> Sign Out
@@ -2174,7 +2207,74 @@
                     <div id="adminUserList"></div>
                 </div>
             </div>
-        </main>
+
+            <!-- New About View -->
+            <!-- New About View -->
+<div id="aboutView" style="display: none;">
+    <div class="section-header">
+        <h2><i class="fas fa-info-circle"></i> About DarkRoot</h2>
+    </div>
+
+    <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+        <h3>Our Team</h3>
+        <p style="margin: var(--space-md) 0;">
+            DarkRoot is a collaborative platform for our team to manage tasks, share ideas, and communicate effectively. We are dedicated to innovation and excellence.
+        </p>
+    </div>
+
+    <!-- Salary System Section -->
+    <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+        <h3>Salary Distribution System</h3>
+        
+        <p style="margin: var(--space-md) 0;">
+            Our salary system is divided into two categories to ensure fairness and accountability.
+        </p>
+
+        <h4 style="margin-top: var(--space-md);">🔹 Fixed Monthly Salary</h4>
+        <p>
+            The following roles receive a constant salary due to their responsibility and operational work:
+        </p>
+        <ul style="margin: var(--space-md) 0; padding-left: 20px;">
+            <li>CEO</li>
+            <li>Manager</li>
+            <li>Content Writer</li>
+        </ul>
+
+        <h4 style="margin-top: var(--space-md);">🔹 Performance-Based Salary</h4>
+        <p>
+            All other team members receive salary based on approved task performance.
+        </p>
+
+        <p style="margin: var(--space-md) 0; font-weight: 600;">
+            Salary = 0.50 Rs × Total Approved Points
+        </p>
+
+        <p>
+            Only approved task points are counted. Rejected tasks will not be included in salary calculation.
+        </p>
+    </div>
+
+    <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg);">
+        <h3>How to Set Up eSewa</h3>
+        <p style="margin: var(--space-md) 0;">
+            Follow these steps to create an eSewa account for salary payments:
+        </p>
+        <ol style="padding-left: 20px; margin-bottom: var(--space-md);">
+            <li>Download the eSewa app from Google Play Store or Apple App Store.</li>
+            <li>Open the app and tap on "Create New Account".</li>
+            <li>Enter your mobile number (registered with your bank) and verify via OTP.</li>
+            <li>Fill in your personal details (name, email, etc.) and set a secure MPIN.</li>
+            <li>Link your bank account by going to "Bank Account" and following the instructions.</li>
+            <li>Once your account is active, you can add funds or receive payments.</li>
+        </ol>
+        <p>
+            For more details, visit the official eSewa website:
+            <a href="https://esewa.com.np" target="_blank" style="color: var(--primary);">
+                https://esewa.com.np
+            </a>
+        </p>
+    </div>
+</div>
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav" id="bottomNav">
@@ -2265,7 +2365,7 @@
                 
                 <!-- New message field -->
                 <div style="margin: var(--space-md) 0;">
-                    <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--space-sm); resize: vertical;" placeholder="Add a message (optional)"></textarea>
+                    <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--space-sm); resize: vertical; width: 100%;" placeholder="Add a message (optional)"></textarea>
                 </div>
 
                 <!-- WhatsApp button -->
@@ -2311,6 +2411,33 @@
             <div style="display: flex; flex-direction: column; gap: var(--space-md);">
                 <input type="text" id="editNameInput" class="chat-input" placeholder="New name" value="">
                 <button class="btn btn-primary" onclick="updateName()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Payment Modal (eSewa/Cash) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Payment Method</h3>
+                <div class="modal-close" onclick="closeModal('paymentModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <div style="display: flex; gap: var(--space-lg); align-items: center;">
+                    <label>
+                        <input type="radio" name="paymentType" value="cash" checked> Cash
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="esewa"> eSewa
+                    </label>
+                </div>
+                <div id="esewaIdField" style="display: none;">
+                    <label class="input-label">eSewa ID (mobile number)</label>
+                    <input type="text" id="esewaIdInput" class="chat-input" placeholder="98XXXXXXXX">
+                </div>
+                <button class="btn btn-primary" onclick="savePaymentInfo()">Save</button>
             </div>
         </div>
     </div>
@@ -2457,6 +2584,7 @@
         const deleteConfirmModal = document.getElementById('deleteConfirmModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const adminBottomNav = document.getElementById('adminBottomNav');
+        const adminNavItem = document.getElementById('adminNavItem');
         const imageViewModal = document.getElementById('imageViewModal');
         const imageViewSrc = document.getElementById('imageViewSrc');
 
@@ -2471,13 +2599,11 @@
         const meetingsView = document.getElementById('meetingsView');
         const tasksView = document.getElementById('tasksView');
         const adminView = document.getElementById('adminView');
+        const aboutView = document.getElementById('aboutView');
 
         // Admin sub-tabs
         const adminLeaderboardTab = document.getElementById('adminLeaderboardTab');
         const adminUsersTab = document.getElementById('adminUsersTab');
-        const adminFirstPlace = document.getElementById('adminFirstPlace');
-        const adminSecondPlace = document.getElementById('adminSecondPlace');
-        const adminThirdPlace = document.getElementById('adminThirdPlace');
         const adminUserSearch = document.getElementById('adminUserSearch');
 
         // Login/Signup elements
@@ -2585,6 +2711,47 @@
             }
         };
 
+        // ==================== PAYMENT METHOD ====================
+        window.openPaymentModal = function() {
+            const payment = currentMemberData.paymentMethod || { type: 'cash', esewaId: '' };
+            document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+                if (radio.value === payment.type) radio.checked = true;
+            });
+            document.getElementById('esewaIdInput').value = payment.esewaId || '';
+            toggleEsewaField();
+            document.getElementById('paymentModal').style.display = 'flex';
+        };
+
+        function toggleEsewaField() {
+            const isEsewa = document.querySelector('input[name="paymentType"]:checked').value === 'esewa';
+            document.getElementById('esewaIdField').style.display = isEsewa ? 'block' : 'none';
+        }
+
+        document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+            radio.addEventListener('change', toggleEsewaField);
+        });
+
+        window.savePaymentInfo = async function() {
+            const type = document.querySelector('input[name="paymentType"]:checked').value;
+            const esewaId = type === 'esewa' ? document.getElementById('esewaIdInput').value.trim() : '';
+            if (type === 'esewa' && !esewaId) {
+                showToast('Please enter eSewa ID', 'error');
+                return;
+            }
+            const paymentMethod = { type, esewaId };
+            await db.ref('members/' + currentUser.uid).update({ paymentMethod });
+            currentMemberData.paymentMethod = paymentMethod;
+            updatePaymentDisplay();
+            closeModal('paymentModal');
+            showToast('Payment info updated');
+        };
+
+        function updatePaymentDisplay() {
+            const payment = currentMemberData.paymentMethod || { type: 'cash' };
+            const display = payment.type === 'esewa' ? `eSewa: ${payment.esewaId}` : 'Cash';
+            document.getElementById('paymentMethodDisplay').textContent = display;
+        }
+
         // ==================== SIDEBAR ====================
         function toggleSidebar() {
             sidebar.classList.toggle('open');
@@ -2606,6 +2773,7 @@
             meetingsView.style.display = 'none';
             tasksView.style.display = 'none';
             adminView.style.display = 'none';
+            aboutView.style.display = 'none';
 
             if (viewName === 'members') {
                 membersView.style.display = 'block';
@@ -2620,7 +2788,7 @@
                 adminView.style.display = 'block';
                 showAdminTab('leaderboard');
                 loadAdminUsers();
-                renderRankList(); // Admin panel still uses custom ranks
+                renderRankList();
             } else if (viewName === 'analytics') {
                 analyticsView.style.display = 'block';
                 initAnalyticsChart();
@@ -2630,6 +2798,8 @@
             } else if (viewName === 'tasks') {
                 tasksView.style.display = 'block';
                 loadTasks();
+            } else if (viewName === 'about') {
+                aboutView.style.display = 'block';
             } else {
                 document.getElementById(viewName + 'View').style.display = 'block';
                 if (viewName === 'dashboard') {
@@ -2679,7 +2849,7 @@
             } else {
                 membersTab.style.display = 'none';
                 leaderboardTab.style.display = 'block';
-                loadLeaderboard(); // new simple leaderboard
+                loadLeaderboard();
             }
         }
 
@@ -2854,16 +3024,18 @@
                         // Load blocked users
                         await loadBlockedUsers();
                         
-                        // Load custom ranks (still used in admin panel)
+                        // Load custom ranks
                         await loadCustomRanks();
                         
                         // Notice button only for admins (CEO/Manager)
                         if (currentMemberData.role === 'CEO') {
                             if (addNoticeBtn) addNoticeBtn.style.display = 'inline-flex';
                             adminBottomNav.style.display = 'flex';
+                            adminNavItem.style.display = 'flex';
                         } else {
                             if (addNoticeBtn) addNoticeBtn.style.display = 'none';
                             adminBottomNav.style.display = 'none';
+                            adminNavItem.style.display = 'none';
                         }
                         
                         updateUIWithMemberData();
@@ -2914,7 +3086,8 @@
                 salary: 0,
                 status: 'Active',
                 joinDate: Date.now(),
-                lastActive: Date.now()
+                lastActive: Date.now(),
+                paymentMethod: { type: 'cash', esewaId: '' } // default payment method
             };
             
             await db.ref('members/' + user.uid).set(memberData);
@@ -2958,6 +3131,7 @@
                 updateProfilePicture(currentUser.photoURL);
             }
             
+            updatePaymentDisplay();
             calculateRank();
         }
 
@@ -3017,7 +3191,7 @@
             document.getElementById('submissionPreviewImg').style.display = 'none';
             document.getElementById('submissionPreviewPlaceholder').innerHTML = '<i class="fas fa-camera" style="font-size: 2rem; color: var(--gray-400);"></i>';
             document.getElementById('submissionPreviewPlaceholder').style.display = 'flex';
-            document.getElementById('submissionMessage').value = ''; // clear message
+            document.getElementById('submissionMessage').value = '';
         }
 
         document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -4182,7 +4356,7 @@
             }
         });
 
-        console.log('DarkRoot - New simple leaderboard, enhanced chat, and image modal');
+        console.log('DarkRoot - New simple leaderboard, enhanced chat, image modal, payment & about');
     </script>
 </body>
 </html>
