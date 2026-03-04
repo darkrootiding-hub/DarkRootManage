@@ -11,7 +11,7 @@
     <!-- Moment.js -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <style>
-        /* (All existing styles remain unchanged) */
+        /* ---------- RESET & VARIABLES ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -475,9 +475,11 @@
         .action-btn.points { background: var(--warning); color: black; }
         .action-btn.salary { background: var(--success); color: white; }
         .action-btn.role { background: var(--primary); color: white; }
+        .action-btn.payment { background: var(--primary); color: white; }
         .action-btn.delete { background: var(--danger); color: white; }
         .action-btn.approve { background: var(--success); color: white; }
         .action-btn.reject { background: var(--danger); color: white; }
+        .action-btn.copy { background: var(--info); color: white; padding: 5px 8px; font-size: 0.65rem; min-width: auto; }
         .action-btn:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
@@ -651,28 +653,30 @@
             display: block;
         }
 
-        /* Bottom Navigation */
+        /* Bottom Navigation - now 7 items (Payments replaces Payroll) */
         .admin-nav {
             background: var(--card-bg);
             border-top: 2px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 8px 12px 12px;
+            padding: 8px 4px 12px;
+            gap: 2px;
         }
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             color: var(--text-secondary);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             cursor: pointer;
-            padding: 6px 12px;
+            padding: 4px 8px;
             border-radius: 40px;
             transition: all 0.2s;
+            flex: 1;
         }
         .nav-item i {
-            font-size: 1.3rem;
-            margin-bottom: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
         }
         .nav-item.active {
             color: var(--primary);
@@ -712,6 +716,39 @@
             font-size: 0.8rem;
             border-left: 3px solid var(--primary);
         }
+
+        /* Role Management */
+        .role-chip {
+            background: var(--card-light);
+            border-radius: 40px;
+            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 5px 5px 0;
+            border: 1px solid var(--border);
+        }
+        .role-chip i {
+            color: var(--danger);
+            cursor: pointer;
+        }
+        .role-chip i:hover {
+            color: var(--primary);
+        }
+
+        /* Payment badge */
+        .payment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            border: 1px solid var(--border);
+        }
+        .payment-cash { color: var(--success); }
+        .payment-esewa { color: var(--info); }
 
         /* Responsive */
         @media (max-width: 380px) {
@@ -902,33 +939,7 @@
                             </div>
 
                             <div class="filter-tabs" id="roleFilters">
-                                <div class="filter-tab active" data-role="all">
-                                    <i class="fas fa-globe"></i> All
-                                </div>
-                                <div class="filter-tab" data-role="CEO">
-                                    <i class="fas fa-crown"></i> CEO
-                                </div>
-                                <div class="filter-tab" data-role="Manager">
-                                    <i class="fas fa-user-tie"></i> Manager
-                                </div>
-                                <div class="filter-tab" data-role="Senior">
-                                    <i class="fas fa-star"></i> Senior
-                                </div>
-                                <div class="filter-tab" data-role="Member">
-                                    <i class="fas fa-user"></i> Member
-                                </div>
-                                <div class="filter-tab" data-role="Web Developer">
-                                    <i class="fas fa-code"></i> Web Dev
-                                </div>
-                                <div class="filter-tab" data-role="Cyber Security">
-                                    <i class="fas fa-shield-halved"></i> Cyber Sec
-                                </div>
-                                <div class="filter-tab" data-role="Designer">
-                                    <i class="fas fa-paint-brush"></i> Designer
-                                </div>
-                                <div class="filter-tab" data-role="Content Writer">
-                                    <i class="fas fa-pen"></i> Writer
-                                </div>
+                                <!-- Dynamic role filters will be inserted here -->
                             </div>
 
                             <!-- Member List Container -->
@@ -937,7 +948,27 @@
                             </div>
                         </div>
 
-                        <!-- Activity Logs moved here from bottom nav -->
+                        <!-- Role Management Card (NEW) -->
+                        <div class="card" id="roleManagementCard">
+                            <div class="card-header">
+                                <h3><i class="fas fa-tags"></i> Role Management</h3>
+                                <button class="action-btn edit" onclick="showAddRoleModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> New Role
+                                </button>
+                            </div>
+                            <div id="roleList" style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px;">
+                                <!-- Roles will appear here -->
+                            </div>
+                            <div class="input-field" style="display: none;" id="addRoleInput">
+                                <input type="text" id="newRoleName" placeholder="Enter role name (e.g., 'QA Tester')" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <button class="btn btn-success" onclick="saveNewRole()" style="flex:1;">Save</button>
+                                    <button class="btn btn-outline" onclick="hideAddRole()" style="flex:1;">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Logs -->
                         <div class="card" id="logsCard">
                             <div class="card-header">
                                 <h3><i class="fas fa-history"></i> Recent Activity</h3>
@@ -975,13 +1006,12 @@
                         </div>
                     </div>
 
-                    <!-- Approvals View (UPDATED: dynamic filter tabs) -->
+                    <!-- Approvals View -->
                     <div id="approvalsView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
                                 <h3><i class="fas fa-check-double"></i> Task Approvals</h3>
                             </div>
-                            <!-- Filter tabs will be generated dynamically based on role -->
                             <div class="filter-tabs" id="approvalFilters" style="margin-bottom: 15px;"></div>
                             <div id="approvalsList" class="member-list"></div>
                         </div>
@@ -1008,7 +1038,7 @@
                         </div>
                     </div>
 
-                    <!-- Leaderboard Management View (NEW) -->
+                    <!-- Leaderboard Management View -->
                     <div id="leaderboardView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -1022,20 +1052,32 @@
                             <button class="rank-save-btn" onclick="saveAllRanks()">Save All Ranks</button>
                         </div>
                     </div>
+
+                    <!-- NEW: Payments View (replaces Payroll) -->
+                    <div id="paymentsView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-credit-card"></i> Payment Methods</h3>
+                                <select id="paymentTypeFilter" style="background: var(--card-light); border: 1px solid var(--border); border-radius: 20px; padding: 5px 10px; color: white;">
+                                    <option value="all">All types</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="esewa">eSewa</option>
+                                </select>
+                            </div>
+                            <div id="paymentsList" class="member-list"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation (added Leaderboard) -->
+        <!-- Bottom Navigation (Payments replaces Payroll) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
             <div class="nav-item active" data-view="members">
                 <i class="fas fa-users"></i>
                 <span>Members</span>
             </div>
-            <div class="nav-item" data-view="leaderboard">
-                <i class="fas fa-trophy"></i>
-                <span>Ranking</span>
-            </div>
+        
             <div class="nav-item" data-view="meetings">
                 <i class="fas fa-handshake"></i>
                 <span>Meetings</span>
@@ -1047,6 +1089,10 @@
             <div class="nav-item" data-view="approvals">
                 <i class="fas fa-check-double"></i>
                 <span>Approvals</span>
+            </div>
+            <div class="nav-item" data-view="payments">
+                <i class="fas fa-credit-card"></i>
+                <span>Payments</span>
             </div>
             <div class="nav-item" data-view="notices">
                 <i class="fas fa-bullhorn"></i>
@@ -1088,16 +1134,7 @@
             </div>
             <div class="input-field">
                 <label>Role</label>
-                <select id="newMemberRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
-                    <option value="Member">Member</option>
-                    <option value="Senior">Senior</option>
-                    <option value="Manager">Manager</option>
-                    <option value="CEO">CEO</option>
-                    <option value="Web Developer">Web Developer</option>
-                    <option value="Cyber Security">Cyber Security</option>
-                    <option value="Designer">Designer</option>
-                    <option value="Content Writer">Content Writer</option>
-                </select>
+                <select id="newMemberRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></select>
             </div>
             <div class="input-field">
                 <label>Initial Points</label>
@@ -1107,13 +1144,40 @@
                 <label>Initial Salary ($)</label>
                 <input type="number" id="newMemberSalary" value="0" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
+            <!-- Payment method fields -->
+            <div class="input-field">
+                <label>Payment Method</label>
+                <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                    <label><input type="radio" name="newPaymentType" value="cash" checked> Cash</label>
+                    <label><input type="radio" name="newPaymentType" value="esewa"> eSewa</label>
+                </div>
+                <input type="text" id="newEsewaId" placeholder="eSewa ID (if eSewa)" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white; display: none;">
+            </div>
             <button class="btn" onclick="createNewMember()">
                 <i class="fas fa-check"></i> Create Member
             </button>
         </div>
     </div>
 
-    <!-- Meeting Modal -->
+    <!-- Edit Payment Modal -->
+    <div class="modal-overlay" id="editPaymentModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('editPaymentModal')">&times;</span>
+            <h3><i class="fas fa-credit-card"></i> Edit Payment Method</h3>
+            <input type="hidden" id="editPaymentUid">
+            <div class="input-field">
+                <label>Payment Method</label>
+                <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                    <label><input type="radio" name="editPaymentType" value="cash"> Cash</label>
+                    <label><input type="radio" name="editPaymentType" value="esewa"> eSewa</label>
+                </div>
+                <input type="text" id="editEsewaId" placeholder="eSewa ID" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <button class="btn" onclick="savePaymentMethod()">Save</button>
+        </div>
+    </div>
+
+    <!-- Meeting Modal (unchanged) -->
     <div class="modal-overlay" id="meetingModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('meetingModal')">&times;</span>
@@ -1145,7 +1209,7 @@
         </div>
     </div>
 
-    <!-- Task Modal -->
+    <!-- Task Modal (unchanged) -->
     <div class="modal-overlay" id="taskModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('taskModal')">&times;</span>
@@ -1169,7 +1233,7 @@
         </div>
     </div>
 
-    <!-- Image Upload Modal -->
+    <!-- Image Upload Modal (unchanged) -->
     <div class="modal-overlay" id="imageUploadModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('imageUploadModal')">&times;</span>
@@ -1220,13 +1284,11 @@
         let allTasks = [];
         let currentFilter = 'all';
         let currentSearchTerm = '';
-        let currentApprovalFilter = 'pending_manager'; // will be updated based on role
+        let currentApprovalFilter = 'pending_manager';
         const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
         let selectedImageFile = null;
-        let customRanks = {}; // uid -> rank number
-
-        // All available roles (extended)
-        const allRoles = ['Member', 'Senior', 'Manager', 'CEO', 'Web Developer', 'Cyber Security', 'Designer', 'Content Writer'];
+        let customRanks = {};
+        let allRoles = [];
 
         // ==================== UTILITY FUNCTIONS ====================
         function showToast(message, type = 'success') {
@@ -1236,9 +1298,7 @@
             toast.style.borderColor = type === 'success' ? '#2ecc71' : '#e74c3c';
             toast.querySelector('i').style.color = type === 'success' ? '#2ecc71' : '#e74c3c';
             toast.style.display = 'flex';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
         function logActivity(action, details = '') {
@@ -1257,55 +1317,126 @@
 
         function formatDate(timestamp) {
             if (!timestamp) return 'Just now';
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            
+            const diff = Date.now() - timestamp;
             if (diff < 60000) return 'Just now';
             if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
             if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-            return date.toLocaleDateString();
+            return new Date(timestamp).toLocaleDateString();
         }
 
         function getRoleClass(role) {
-            if (!role) return 'member';
-            return role.toLowerCase().replace(/ /g, '-');
+            return role ? role.toLowerCase().replace(/ /g, '-') : 'member';
         }
+
+        // ==================== ROLE MANAGEMENT ====================
+        async function loadRoles() {
+            const snap = await db.ref('settings/roles').once('value');
+            if (snap.exists()) {
+                allRoles = snap.val();
+            } else {
+                allRoles = ['Member', 'Senior', 'Manager', 'CEO', 'Web Developer', 'Cyber Security', 'Designer', 'Content Writer'];
+                await db.ref('settings/roles').set(allRoles);
+            }
+            renderRoleFilters();
+            renderRoleList();
+            updateRoleDropdowns();
+        }
+
+        function renderRoleFilters() {
+            const container = document.getElementById('roleFilters');
+            if (!container) return;
+            let html = '<div class="filter-tab active" data-role="all"><i class="fas fa-globe"></i> All</div>';
+            allRoles.forEach(r => {
+                html += `<div class="filter-tab" data-role="${r}"><i class="fas fa-tag"></i> ${r}</div>`;
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('#roleFilters .filter-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('#roleFilters .filter-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.role;
+                    filterAndDisplayMembers();
+                });
+            });
+        }
+
+        function renderRoleList() {
+            const container = document.getElementById('roleList');
+            if (!container) return;
+            container.innerHTML = '';
+            allRoles.forEach(role => {
+                const chip = document.createElement('span');
+                chip.className = 'role-chip';
+                chip.innerHTML = `${role} <i class="fas fa-times" onclick="deleteRole('${role}')"></i>`;
+                container.appendChild(chip);
+            });
+        }
+
+        function updateRoleDropdowns() {
+            const newRoleSelect = document.getElementById('newMemberRole');
+            if (newRoleSelect) {
+                newRoleSelect.innerHTML = allRoles.map(r => `<option value="${r}">${r}</option>`).join('');
+            }
+        }
+
+        window.showAddRoleModal = function() {
+            document.getElementById('addRoleInput').style.display = 'block';
+        };
+
+        window.hideAddRole = function() {
+            document.getElementById('addRoleInput').style.display = 'none';
+            document.getElementById('newRoleName').value = '';
+        };
+
+        window.saveNewRole = async function() {
+            const newRole = document.getElementById('newRoleName').value.trim();
+            if (!newRole) return showToast('Role name cannot be empty', 'error');
+            if (allRoles.includes(newRole)) return showToast('Role already exists', 'error');
+            allRoles.push(newRole);
+            await db.ref('settings/roles').set(allRoles);
+            renderRoleFilters();
+            renderRoleList();
+            updateRoleDropdowns();
+            hideAddRole();
+            showToast('Role added successfully');
+        };
+
+        window.deleteRole = async function(role) {
+            if (!confirm(`Delete role "${role}"? Members with this role will be reassigned to "Member".`)) return;
+            allRoles = allRoles.filter(r => r !== role);
+            await db.ref('settings/roles').set(allRoles);
+            const updates = {};
+            allMembers.forEach(m => { if (m.role === role) updates[`members/${m.uid}/role`] = 'Member'; });
+            if (Object.keys(updates).length) await db.ref().update(updates);
+            renderRoleFilters();
+            renderRoleList();
+            updateRoleDropdowns();
+            showToast('Role deleted');
+        };
 
         // ==================== AUTH ====================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                const snapshot = await db.ref('members/' + user.uid).once('value');
-                const memberData = snapshot.val();
-                
-                // Allow only CEO or Manager
-                if (memberData && (memberData.role === 'CEO' || memberData.role === 'Manager')) {
+                const snap = await db.ref('members/' + user.uid).once('value');
+                const data = snap.val();
+                if (data && (data.role === 'CEO' || data.role === 'Manager')) {
                     currentAdmin = user;
-                    currentAdminData = memberData;
+                    currentAdminData = data;
                     document.getElementById('authSection').style.display = 'none';
                     document.getElementById('adminPanel').style.display = 'block';
                     document.getElementById('adminNav').style.display = 'flex';
-                    document.getElementById('adminRole').textContent = memberData.role;
-                    
-                    // Set initial approval filter based on role
-                    if (memberData.role === 'Manager') {
+                    document.getElementById('adminRole').textContent = data.role;
+                    if (data.role === 'Manager') {
                         currentApprovalFilter = 'pending_manager';
-                    } else if (memberData.role === 'CEO') {
+                    } else {
                         currentApprovalFilter = 'pending_ceo';
                     }
-                    
-                    // Update avatar if exists
-                    if (memberData.photoURL) {
+                    if (data.photoURL) {
                         document.getElementById('adminAvatarIcon').style.display = 'none';
-                        const avatarImg = document.getElementById('adminAvatarImg');
-                        avatarImg.src = memberData.photoURL;
-                        avatarImg.style.display = 'inline';
-                    } else {
-                        document.getElementById('adminAvatarIcon').style.display = 'inline';
-                        document.getElementById('adminAvatarImg').style.display = 'none';
+                        document.getElementById('adminAvatarImg').src = data.photoURL;
+                        document.getElementById('adminAvatarImg').style.display = 'inline';
                     }
-                    
-                    // Load all data
+                    await loadRoles();
                     loadDashboardStats();
                     loadAllMembers();
                     loadMeetings();
@@ -1313,15 +1444,13 @@
                     loadNotices();
                     loadActivityLogs();
                     loadCustomRanks();
-                    
-                    showToast(`Welcome back, ${memberData.name}`, 'success');
+                    showToast(`Welcome back, ${data.name}`, 'success');
                     logActivity('Admin logged in');
                 } else {
                     alert('Access denied. CEO/Manager role required.');
                     auth.signOut();
                 }
             } else {
-                // Show login
                 document.getElementById('authSection').style.display = 'flex';
                 document.getElementById('adminPanel').style.display = 'none';
                 document.getElementById('adminNav').style.display = 'none';
@@ -1330,31 +1459,25 @@
 
         document.getElementById('adminLoginBtn').addEventListener('click', async () => {
             const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            
+            const pwd = document.getElementById('adminPassword').value;
             try {
-                await auth.signInWithEmailAndPassword(email, password);
-            } catch (error) {
-                showToast(error.message, 'error');
+                await auth.signInWithEmailAndPassword(email, pwd);
+            } catch (e) {
+                showToast(e.message, 'error');
             }
         });
 
         // ==================== DASHBOARD STATS ====================
         async function loadDashboardStats() {
-            const snapshot = await db.ref('members').once('value');
-            let total = 0;
-            let active = 0;
-            let payroll = 0;
-            let topPoints = 0;
-            
-            snapshot.forEach(child => {
-                const member = child.val();
+            const snap = await db.ref('members').once('value');
+            let total = 0, active = 0, payroll = 0, topPoints = 0;
+            snap.forEach(c => {
+                const m = c.val();
                 total++;
-                if (member.status === 'Active') active++;
-                payroll += (member.salary || 0);
-                if ((member.points || 0) > topPoints) topPoints = member.points;
+                if (m.status === 'Active') active++;
+                payroll += (m.salary || 0);
+                if ((m.points || 0) > topPoints) topPoints = m.points;
             });
-            
             document.getElementById('totalMembers').textContent = total;
             document.getElementById('activeMembers').textContent = active;
             document.getElementById('totalPayroll').textContent = '$' + payroll;
@@ -1453,6 +1576,9 @@
                         <button class="action-btn role" onclick="changeRoleWithDropdown('${member.uid}')">
                             <i class="fas fa-user-tag"></i> Role
                         </button>
+                        <button class="action-btn payment" onclick="openEditPaymentModal('${member.uid}')">
+                            <i class="fas fa-credit-card"></i> Payment
+                        </button>
                         <button class="action-btn delete" onclick="deleteMember('${member.uid}')">
                             <i class="fas fa-trash"></i> Del
                         </button>
@@ -1463,12 +1589,11 @@
             });
         }
 
-        // Fixed editMember function: now accepts currentRole
         window.editMember = function(uid, currentName, currentEmail, currentRole) {
             const modal = document.getElementById('editMemberModal');
             const content = document.getElementById('editMemberContent');
             
-            // Build role dropdown with allRoles, pre‑select currentRole
+            // Build role dropdown with allRoles
             let roleOptions = '';
             allRoles.forEach(role => {
                 roleOptions += `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`;
@@ -1538,7 +1663,6 @@
         window.changeRoleWithDropdown = function(uid) {
             const member = allMembers.find(m => m.uid === uid);
             if (!member) return;
-            // Reuse editMember with the member's current role
             editMember(uid, member.name, member.email, member.role);
         };
 
@@ -1557,80 +1681,114 @@
             document.getElementById('addMemberModal').style.display = 'flex';
         };
 
+        // Payment method toggle in add modal
+        document.querySelectorAll('input[name="newPaymentType"]').forEach(r => {
+            r.addEventListener('change', function() {
+                document.getElementById('newEsewaId').style.display = this.value === 'esewa' ? 'block' : 'none';
+            });
+        });
+
         window.createNewMember = async function() {
             const name = document.getElementById('newMemberName').value;
             const email = document.getElementById('newMemberEmail').value;
-            const password = document.getElementById('newMemberPassword').value;
+            const pass = document.getElementById('newMemberPassword').value;
             const role = document.getElementById('newMemberRole').value;
             const points = parseInt(document.getElementById('newMemberPoints').value) || 0;
             const salary = parseInt(document.getElementById('newMemberSalary').value) || 0;
-            
-            if (!name || !email || !password) {
-                showToast('Please fill all required fields', 'error');
-                return;
-            }
-            
+            const payType = document.querySelector('input[name="newPaymentType"]:checked').value;
+            const esewaId = payType === 'esewa' ? document.getElementById('newEsewaId').value : '';
+            if (!name || !email || !pass) return showToast('Please fill all required fields', 'error');
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                const uid = userCredential.user.uid;
-                
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                const uid = cred.user.uid;
                 await db.ref('members/' + uid).set({
-                    name: name,
-                    email: email,
-                    role: role,
-                    points: points,
-                    salary: salary,
-                    status: 'Active',
-                    joinDate: Date.now()
+                    name, email, role, points, salary, status: 'Active', joinDate: Date.now(),
+                    paymentMethod: { type: payType, esewaId }
                 });
-                
-                logActivity('Created new member', `Name: ${name}, Email: ${email}, Role: ${role}`);
-                showToast('Member created successfully');
+                logActivity('Created member', `Name:${name}, Email:${email}, Role:${role}`);
+                showToast('Member created');
                 closeModal('addMemberModal');
-                loadAllMembers();
-                loadDashboardStats();
-                
+                loadAllMembers(); loadDashboardStats();
                 document.getElementById('newMemberName').value = '';
                 document.getElementById('newMemberEmail').value = '';
                 document.getElementById('newMemberPassword').value = '';
-            } catch (error) {
-                showToast(error.message, 'error');
+                document.getElementById('newEsewaId').value = '';
+            } catch (e) {
+                showToast(e.message, 'error');
             }
         };
 
-        window.bulkUpdatePoints = function() {
-            const points = prompt('Enter points to add to ALL members:');
-            if (points !== null) {
-                allMembers.forEach(member => {
-                    db.ref('members/' + member.uid).update({
-                        points: (member.points || 0) + parseInt(points)
-                    });
-                });
-                logActivity('Bulk points update', `Added ${points} points to all members`);
-                showToast(`Added ${points} points to all members`);
-                setTimeout(loadAllMembers, 1000);
-            }
+        // Payment editing
+        window.openEditPaymentModal = function(uid) {
+            const member = allMembers.find(m => m.uid === uid);
+            if (!member) return;
+            const pay = member.paymentMethod || { type: 'cash', esewaId: '' };
+            document.getElementById('editPaymentUid').value = uid;
+            document.querySelectorAll('input[name="editPaymentType"]').forEach(r => r.checked = r.value === pay.type);
+            document.getElementById('editEsewaId').value = pay.esewaId || '';
+            document.getElementById('editEsewaId').style.display = pay.type === 'esewa' ? 'block' : 'none';
+            document.getElementById('editPaymentModal').style.display = 'flex';
         };
 
-        window.resetLeaderboard = function() {
-            if (confirm('⚠️ Reset ALL member points to 0?')) {
-                allMembers.forEach(member => {
-                    db.ref('members/' + member.uid).update({ points: 0 });
-                });
-                logActivity('Reset leaderboard', 'All points set to 0');
-                showToast('Leaderboard reset');
-                setTimeout(loadAllMembers, 1000);
-            }
+        document.querySelectorAll('input[name="editPaymentType"]').forEach(r => {
+            r.addEventListener('change', function() {
+                document.getElementById('editEsewaId').style.display = this.value === 'esewa' ? 'block' : 'none';
+            });
+        });
+
+        window.savePaymentMethod = async function() {
+            const uid = document.getElementById('editPaymentUid').value;
+            const type = document.querySelector('input[name="editPaymentType"]:checked').value;
+            const esewaId = type === 'esewa' ? document.getElementById('editEsewaId').value : '';
+            await db.ref('members/' + uid).update({ paymentMethod: { type, esewaId } });
+            logActivity('Updated payment', `UID:${uid}, Type:${type}`);
+            showToast('Payment method updated');
+            closeModal('editPaymentModal');
+            loadAllMembers();
+        };
+
+        // ==================== PAYMENTS VIEW ====================
+        function loadPaymentsView() {
+            const container = document.getElementById('paymentsList');
+            if (!container) return;
+            const filter = document.getElementById('paymentTypeFilter').value;
+            let filtered = allMembers;
+            if (filter !== 'all') filtered = allMembers.filter(m => (m.paymentMethod?.type || 'cash') === filter);
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+            container.innerHTML = '';
+            filtered.forEach(m => {
+                const pay = m.paymentMethod || { type: 'cash', esewaId: '' };
+                const card = document.createElement('div');
+                card.className = 'member-card';
+                card.innerHTML = `
+                    <div class="member-card-header">
+                        <div class="member-avatar">${m.photoURL ? `<img src="${m.photoURL}">` : getInitials(m.name)}</div>
+                        <div class="member-info">
+                            <div class="member-name">${m.name}</div>
+                            <div class="member-email">${m.email}</div>
+                        </div>
+                        <span class="payment-badge ${pay.type === 'esewa' ? 'payment-esewa' : 'payment-cash'}">
+                            <i class="fas ${pay.type === 'esewa' ? 'fa-mobile-alt' : 'fa-money-bill-wave'}"></i> ${pay.type === 'esewa' ? 'eSewa' : 'Cash'}
+                        </span>
+                    </div>
+                    ${pay.type === 'esewa' ? `
+                        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                            <span><i class="fas fa-id-card"></i> ${pay.esewaId}</span>
+                            <button class="action-btn copy" onclick="copyToClipboard('${pay.esewaId}')"><i class="fas fa-copy"></i> Copy</button>
+                        </div>` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => showToast('eSewa ID copied!'));
         };
 
         // ==================== LEADERBOARD RANK MANAGEMENT ====================
         async function loadCustomRanks() {
-            const snapshot = await db.ref('settings/ranks').once('value');
-            if (snapshot.exists()) {
-                customRanks = snapshot.val();
-            } else {
-                customRanks = {};
-            }
+            const snap = await db.ref('settings/ranks').once('value');
+            customRanks = snap.exists() ? snap.val() : {};
         }
 
         function renderRankList() {
@@ -1906,7 +2064,7 @@
             }
         };
 
-        // ==================== APPROVALS MANAGEMENT (UPDATED) ====================
+        // ==================== APPROVALS MANAGEMENT (FIXED: now shows fileUrl or screenshotUrl) ====================
         function renderApprovalFilters() {
             const container = document.getElementById('approvalFilters');
             if (!container) return;
@@ -2015,6 +2173,9 @@
                     `;
                 }
 
+                // Use fileUrl or screenshotUrl (fallback)
+                const imageUrl = sub.fileUrl || sub.screenshotUrl || '';
+
                 card.innerHTML = `
                     <div class="submission-header">
                         <div class="submission-avatar">
@@ -2029,9 +2190,9 @@
                             </div>
                         </div>
                     </div>
-                    ${sub.screenshotUrl ? `
+                    ${imageUrl ? `
                         <div class="submission-screenshot">
-                            <img src="${sub.screenshotUrl}" alt="Screenshot" onclick="window.open('${sub.screenshotUrl}', '_blank')">
+                            <img src="${imageUrl}" alt="Screenshot" onclick="window.open('${imageUrl}', '_blank')">
                         </div>
                     ` : ''}
                     ${sub.rejectionReason ? `<p style="color: var(--danger); font-size:0.8rem; margin-top:8px;">Reason: ${sub.rejectionReason}</p>` : ''}
@@ -2213,58 +2374,37 @@
             const file = e.target.files[0];
             if (!file) return;
             selectedImageFile = file;
-            
             const reader = new FileReader();
             reader.onload = function(e) {
-                const preview = document.getElementById('previewImg');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('previewImg').style.display = 'block';
                 document.getElementById('previewPlaceholder').style.display = 'none';
             };
             reader.readAsDataURL(file);
         });
 
         window.uploadImage = async function() {
-            if (!selectedImageFile) {
-                showToast('Please select an image', 'error');
-                return;
-            }
-
+            if (!selectedImageFile) return showToast('Please select an image', 'error');
             const uploadBtn = document.getElementById('uploadBtn');
             const originalText = uploadBtn.innerHTML;
             uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
             uploadBtn.disabled = true;
-
             try {
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedImageFile);
-
-                const response = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
+                const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+                const data = await res.json();
                 if (data.success) {
-                    const imageUrl = data.data.url;
-                    
-                    await db.ref('members/' + currentAdmin.uid).update({
-                        photoURL: imageUrl
-                    });
-                    
+                    const url = data.data.url;
+                    await db.ref('members/' + currentAdmin.uid).update({ photoURL: url });
                     document.getElementById('adminAvatarIcon').style.display = 'none';
-                    const avatarImg = document.getElementById('adminAvatarImg');
-                    avatarImg.src = imageUrl;
-                    avatarImg.style.display = 'inline';
-                    
+                    document.getElementById('adminAvatarImg').src = url;
+                    document.getElementById('adminAvatarImg').style.display = 'inline';
                     showToast('Profile photo updated!');
                     closeModal('imageUploadModal');
-                } else {
-                    throw new Error('Upload failed');
-                }
-            } catch (error) {
+                } else throw new Error('Upload failed');
+            } catch (e) {
                 showToast('Upload failed', 'error');
             } finally {
                 uploadBtn.innerHTML = originalText;
@@ -2293,21 +2433,13 @@
             filterAndDisplayMembers();
         });
 
-        document.querySelectorAll('#roleFilters .filter-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('#roleFilters .filter-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                currentFilter = tab.dataset.role;
-                filterAndDisplayMembers();
-            });
-        });
+        document.getElementById('paymentTypeFilter')?.addEventListener('change', loadPaymentsView);
 
         // Bottom navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 item.classList.add('active');
-                
                 const view = item.dataset.view;
                 document.getElementById('membersView').style.display = 'none';
                 document.getElementById('meetingsView').style.display = 'none';
@@ -2315,54 +2447,35 @@
                 document.getElementById('approvalsView').style.display = 'none';
                 document.getElementById('noticesView').style.display = 'none';
                 document.getElementById('leaderboardView').style.display = 'none';
-                
-                if (view === 'members') {
-                    document.getElementById('membersView').style.display = 'block';
-                    loadAllMembers();
-                } else if (view === 'leaderboard') {
-                    document.getElementById('leaderboardView').style.display = 'block';
-                    renderRankList();
-                } else if (view === 'meetings') {
-                    document.getElementById('meetingsView').style.display = 'block';
-                    loadMeetings();
-                } else if (view === 'tasks') {
-                    document.getElementById('tasksView').style.display = 'block';
-                    loadTasks();
-                } else if (view === 'approvals') {
-                    document.getElementById('approvalsView').style.display = 'block';
-                    renderApprovalFilters();
-                    loadApprovals();
-                } else if (view === 'notices') {
-                    document.getElementById('noticesView').style.display = 'block';
-                    loadNotices();
-                }
+                document.getElementById('paymentsView').style.display = 'none';
+                if (view === 'members') { document.getElementById('membersView').style.display = 'block'; loadAllMembers(); }
+                else if (view === 'leaderboard') { document.getElementById('leaderboardView').style.display = 'block'; renderRankList(); }
+                else if (view === 'meetings') { document.getElementById('meetingsView').style.display = 'block'; loadMeetings(); }
+                else if (view === 'tasks') { document.getElementById('tasksView').style.display = 'block'; loadTasks(); }
+                else if (view === 'approvals') { document.getElementById('approvalsView').style.display = 'block'; renderApprovalFilters(); loadApprovals(); }
+                else if (view === 'payments') { document.getElementById('paymentsView').style.display = 'block'; loadPaymentsView(); }
+                else if (view === 'notices') { document.getElementById('noticesView').style.display = 'block'; loadNotices(); }
             });
         });
 
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                event.target.style.display = 'none';
-            }
-        };
+        window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none'; };
 
         // ==================== INITIALIZATION ====================
         db.ref('members').on('child_changed', () => {
             if (document.getElementById('membersView').style.display !== 'none') loadAllMembers();
             loadDashboardStats();
         });
-        db.ref('meetings').on('child_added', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
-        db.ref('meetings').on('child_changed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
-        db.ref('meetings').on('child_removed', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
+        db.ref('meetings').on('value', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
         db.ref('tasks').on('value', () => { 
             if (document.getElementById('tasksView').style.display !== 'none') loadTasks(); 
             if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
         });
         db.ref('notices').on('child_added', () => { if (document.getElementById('noticesView').style.display !== 'none') loadNotices(); });
-        db.ref('activity_logs').on('child_added', () => { if (document.getElementById('membersView').style.display !== 'none') loadActivityLogs(); });
+        db.ref('activity_logs').on('value', () => { if (document.getElementById('membersView').style.display !== 'none') loadActivityLogs(); });
         db.ref('task_submissions').on('value', () => { 
             if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
         });
+        db.ref('settings/roles').on('value', () => { if (currentAdmin) loadRoles(); });
     </script>
 </body>
 </html>
