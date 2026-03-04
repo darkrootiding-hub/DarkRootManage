@@ -2246,6 +2246,8 @@
         </p>
     </div>
 </div>
+        </main>
+
         <!-- Bottom Navigation -->
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item-bottom active" data-view="dashboard">
@@ -3437,8 +3439,14 @@
             }
         };
 
-        // ==================== IDEAS ====================
+        // ==================== IDEAS (with block check) ====================
         window.postIdea = async function() {
+            // Check if user is blocked
+            if (blockedUsers.has(currentUser.uid)) {
+                showToast('You are blocked from posting ideas', 'error');
+                return;
+            }
+
             const text = document.getElementById('ideaInput').value.trim();
             if (!text) {
                 showToast('Please enter your idea', 'error');
