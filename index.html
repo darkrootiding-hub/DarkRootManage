@@ -4195,16 +4195,25 @@
 
         // Helper function to extract YouTube video ID from URL
         function getYouTubeVideoId(url) {
+            if (!url) return null;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // ==================== LEARNING MANAGEMENT ====================
+        // ==================== LEARNING MANAGEMENT (FIXED: now shows all resources) ====================
         async function loadLearningResources() {
             const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
             const resources = [];
-            snapshot.forEach(child => resources.push({ id: child.key, ...child.val() }));
+            snapshot.forEach(child => {
+                const val = child.val();
+                // Ensure each resource has a valid URL, otherwise skip
+                if (val && val.url) {
+                    resources.push({ id: child.key, ...val });
+                } else {
+                    console.warn('Skipping learning resource without URL:', child.key);
+                }
+            });
             resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             const container = document.getElementById('learningList');
             if (!container) return;
@@ -4243,7 +4252,7 @@
                     <div class="learning-title">${res.title}</div>
                     <div class="learning-description">${res.description || ''}</div>
                     <div class="learning-meta">
-                        <span class="learning-type">${res.type}</span>
+                        <span class="learning-type">${res.type || 'resource'}</span>
                         <span><i class="far fa-clock"></i> ${formatDate(res.createdAt)}</span>
                     </div>
                 `;
@@ -4254,7 +4263,12 @@
         async function loadAdminLearning() {
             const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
             const resources = [];
-            snapshot.forEach(child => resources.push({ id: child.key, ...child.val() }));
+            snapshot.forEach(child => {
+                const val = child.val();
+                if (val && val.url) {
+                    resources.push({ id: child.key, ...val });
+                }
+            });
             resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
             const container = document.getElementById('adminLearningList');
             if (!container) return;
@@ -4271,7 +4285,7 @@
                         <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div>
                         <div class="member-info">
                             <div class="member-name">${res.title}</div>
-                            <div class="member-email">${res.type} · ${formatDate(res.createdAt)}</div>
+                            <div class="member-email">${res.type || 'resource'} · ${formatDate(res.createdAt)}</div>
                         </div>
                     </div>
                     <div class="admin-learning-actions">
