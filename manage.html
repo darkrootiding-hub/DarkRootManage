@@ -795,6 +795,20 @@
             max-height: 70vh;
             border-radius: 16px;
         }
+
+        /* Learning card enhancements */
+        .learning-resource-link {
+            color: var(--info);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 5px;
+        }
+        .learning-resource-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -1022,7 +1036,7 @@
                         </div>
                     </div>
 
-                    <!-- Learning View (Admin) -->
+                    <!-- Learning View (Admin) - Now shows all resources -->
                     <div id="adminLearningView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -1333,9 +1347,6 @@
         const adminRoleSpan = document.getElementById('adminRole');
         const adminAvatarIcon = document.getElementById('adminAvatarIcon');
         const adminAvatarImg = document.getElementById('adminAvatarImg');
-        const addNoticeBtn = document.getElementById('addNoticeBtn');
-        const adminBottomNav = document.getElementById('adminBottomNav');
-        const adminNavItem = document.getElementById('adminNavItem');
         const imageViewModal = document.getElementById('imageViewModal');
         const imageViewSrc = document.getElementById('imageViewSrc');
 
@@ -1351,18 +1362,8 @@
         // Admin sub-tabs (not used anymore, we use bottom nav)
         const adminUserSearch = document.getElementById('adminUserSearch');
 
-        // Login/Signup elements
-        const loginCard = document.getElementById('loginCard');
-        const signupCard = document.getElementById('signupCard');
-        const showSignupBtn = document.getElementById('showSignupBtn');
-        const backToLoginBtn = document.getElementById('backToLoginBtn');
-        const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-
         // ==================== UTILITY FUNCTIONS ====================
         function showToast(message, type = 'success') {
-            // Get fresh references each time to avoid null issues
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
             const toastIcon = document.getElementById('toastIcon');
@@ -1379,7 +1380,6 @@
             else if (type === 'error') toastIcon.className = 'fas fa-exclamation-circle';
             else toastIcon.className = 'fas fa-info-circle';
             
-            // Ensure it hides after 3 seconds
             setTimeout(() => { 
                 if (toast.style.display === 'flex') {
                     toast.style.display = 'none'; 
@@ -2555,13 +2555,17 @@
             }
         };
 
-        // ==================== LEARNING MANAGEMENT ====================
+        // ==================== LEARNING MANAGEMENT (FULL LIST) ====================
         function loadAdminLearning() {
             const container = document.getElementById('adminLearningList');
             if (!container) return;
             db.ref('learning').orderByChild('createdAt').once('value', (snap) => {
                 const resources = [];
-                snap.forEach(child => resources.push({ id: child.key, ...child.val() }));
+                snap.forEach(child => {
+                    const val = child.val();
+                    // Include all resources, even if URL missing (but show placeholder)
+                    resources.push({ id: child.key, ...val });
+                });
                 resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 container.innerHTML = '';
                 if (resources.length === 0) {
@@ -2571,17 +2575,32 @@
                 resources.forEach(res => {
                     const card = document.createElement('div');
                     card.className = 'member-card';
+                    // Determine icon based on type
+                    let iconClass = 'fa-book';
+                    if (res.type === 'video') iconClass = 'fa-video';
+                    else if (res.type === 'article') iconClass = 'fa-file-alt';
+                    else if (res.type === 'course') iconClass = 'fa-layer-group';
+                    
+                    // Show link if URL exists
+                    const linkHtml = res.url ? 
+                        `<a href="${res.url}" target="_blank" class="learning-resource-link"><i class="fas fa-external-link-alt"></i> View</a>` : 
+                        '<span class="learning-resource-link" style="color: var(--text-muted);">No URL</span>';
+                    
                     card.innerHTML = `
                         <div class="member-card-header">
-                            <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div>
+                            <div class="member-avatar"><i class="fas ${iconClass}"></i></div>
                             <div class="member-info">
-                                <div class="member-name">${res.title}</div>
-                                <div class="member-email">${res.type} · ${formatDate(res.createdAt)}</div>
+                                <div class="member-name">${res.title || 'Untitled'}</div>
+                                <div class="member-email">${res.type || 'resource'} · ${formatDate(res.createdAt)}</div>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 8px; margin-top: 10px;">
-                            <button class="action-btn edit" onclick="editLearningResource('${res.id}')"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')"><i class="fas fa-trash"></i> Delete</button>
+                        ${res.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:5px 0;">${res.description}</p>` : ''}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                            ${linkHtml}
+                            <div style="display: flex; gap: 5px;">
+                                <button class="action-btn edit" onclick="editLearningResource('${res.id}')" style="padding:5px 10px;"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')" style="padding:5px 10px;"><i class="fas fa-trash"></i> Del</button>
+                            </div>
                         </div>
                     `;
                     container.appendChild(card);
@@ -2618,7 +2637,7 @@
             const type = document.getElementById('learningType').value;
             const url = document.getElementById('learningUrl').value.trim();
             const thumbnail = document.getElementById('learningThumbnail').value.trim();
-            if (!title || !url) { showToast('Title and URL are required', 'error'); return; }
+            if (!title) { showToast('Title is required', 'error'); return; }
             const data = { title, description, type, url, thumbnail, createdAt: Date.now(), createdBy: currentAdmin?.uid };
             try {
                 if (id) await db.ref('learning/' + id).update(data);
