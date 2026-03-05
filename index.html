@@ -1211,20 +1211,40 @@
             opacity: 1;
         }
 
-        /* Typing indicator */
+        /* Typing indicator - enhanced with avatars */
         .typing-indicator {
             padding: var(--space-xs) var(--space-md);
             display: none;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             background: var(--gray-100);
             border-top: 1px solid var(--gray-200);
             font-size: 0.8rem;
             color: var(--gray-600);
         }
-        .typing-indicator span {
-            display: inline-flex;
+        .typing-avatars {
+            display: flex;
             align-items: center;
+            gap: 4px;
+        }
+        .typing-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--primary);
+            overflow: hidden;
+            border: 2px solid var(--white);
+        }
+        .typing-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .typing-dots {
             display: inline-flex;
@@ -1360,7 +1380,7 @@
             color: var(--primary);
         }
 
-        /* Bottom Navigation */
+        /* Bottom Navigation - now 7 items (Learn replaces Notices) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1796,6 +1816,96 @@
             font-size: 1rem;
             margin-top: 4px;
         }
+
+        /* Learning Cards */
+        .learning-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-md);
+        }
+        .learning-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            transition: var(--transition);
+        }
+        .learning-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .learning-thumbnail {
+            width: 100%;
+            height: 160px;
+            border-radius: var(--radius-md);
+            background: var(--gray-200);
+            overflow: hidden;
+            position: relative;
+        }
+        .learning-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .learning-thumbnail i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .learning-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: var(--space-xs);
+        }
+        .learning-description {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .learning-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: var(--space-xs);
+        }
+        .learning-type {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
+        .learning-link {
+            margin-top: var(--space-sm);
+        }
+        .learning-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .learning-link a:hover {
+            text-decoration: underline;
+        }
+        .admin-learning-actions {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
+        }
     </style>
 </head>
 <body>
@@ -1977,10 +2087,20 @@
                     <i class="fas fa-tasks"></i>
                     <span>Tasks</span>
                 </div>
-                <!-- New About section -->
+                <!-- New Learning section -->
+                <div class="nav-item" data-view="learning">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Learning</span>
+                </div>
+                <!-- About section -->
                 <div class="nav-item" data-view="about">
                     <i class="fas fa-info-circle"></i>
                     <span>About</span>
+                </div>
+                <!-- Notices (still accessible via sidebar) -->
+                <div class="nav-item" data-view="notices">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Notices</span>
                 </div>
                 <!-- Admin nav item (shown only to CEOs/Managers) -->
                 <div class="nav-item" data-view="admin" id="adminNavItem" style="display: none;">
@@ -2011,7 +2131,6 @@
 
             <!-- Members View -->
             <div id="membersView" style="display: none;">
-              
                 <div id="teamMembersTab">
                     <div class="section-header" style="margin-top: var(--space-sm);">
                         <h2>Team Members</h2>
@@ -2034,7 +2153,7 @@
                 </div>
             </div>
 
-            <!-- Chat View (with image upload and typing indicator) -->
+            <!-- Chat View -->
             <div id="chatView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-comments"></i> Team Chat</h2>
@@ -2042,6 +2161,7 @@
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages"></div>
                     <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-avatars" id="typingAvatars"></div>
                         <span id="typingText"></span>
                         <div class="typing-dots">
                             <div></div><div></div><div></div>
@@ -2071,11 +2191,10 @@
                 <div id="ideasList" class="activity-feed"></div>
             </div>
 
-            <!-- Notices View -->
+            <!-- Notices View (still accessible) -->
             <div id="noticesView" style="display: none;">
                 <div class="section-header">
                     <h2>Announcements</h2>
-                    <!-- Notice button only for admins (hidden) -->
                     <button class="btn btn-primary" id="addNoticeBtn" style="width: auto; padding: var(--space-xs) var(--space-md); height: 36px; display: none;" onclick="openNoticeModal()">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -2114,7 +2233,6 @@
                         <span>Status</span>
                         <span style="color: var(--success);" id="profileStatus">Active</span>
                     </div>
-                    <!-- Payment Method Display -->
                     <div class="payment-info" id="paymentInfoDisplay">
                         <div class="label">Payment Method</div>
                         <div class="value" id="paymentMethodDisplay">Cash</div>
@@ -2163,7 +2281,7 @@
                 </div>
             </div>
 
-            <!-- Meetings View -->
+            <!-- Meetings View (enhanced) -->
             <div id="meetingsView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-handshake"></i> Upcoming Meetings</h2>
@@ -2179,7 +2297,7 @@
                 <div id="tasksList" class="activity-feed"></div>
             </div>
 
-            <!-- Admin View (only for CEOs/Managers) -->
+            <!-- Admin View (now with Learning tab) -->
             <div id="adminView" style="display: none;">
                 <div class="section-header">
                     <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
@@ -2187,6 +2305,7 @@
                 <div class="tab-bar" style="margin-bottom: var(--space-lg);">
                     <div class="tab active" data-admin-tab="leaderboard">Leaderboard</div>
                     <div class="tab" data-admin-tab="users">User Management</div>
+                    <div class="tab" data-admin-tab="learning">Learning</div>
                 </div>
 
                 <div id="adminLeaderboardTab">
@@ -2206,49 +2325,62 @@
                     </div>
                     <div id="adminUserList"></div>
                 </div>
+
+                <div id="adminLearningTab" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-graduation-cap"></i> Learning Resources</h3>
+                            <button class="action-btn edit" onclick="openLearningModal()" style="width: auto; padding: 8px 16px;">
+                                <i class="fas fa-plus"></i> Add Resource
+                            </button>
+                        </div>
+                        <div id="adminLearningList" class="member-list"></div>
+                    </div>
+                </div>
             </div>
 
-         <!-- New About View -->
-<div id="aboutView" style="display: none;">
-    <div class="section-header">
-        <h2><i class="fas fa-info-circle"></i> About DarkRoot</h2>
-    </div>
+            <!-- Learning View (user) -->
+            <div id="learningView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-graduation-cap"></i> Learning Resources</h2>
+                </div>
+                <div id="learningList" class="learning-grid"></div>
+            </div>
 
-    <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
-        <h3>Our Team</h3>
-        <p style="margin: var(--space-md) 0;">
-            DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. 
-            Our primary goal is to build a strong, disciplined, and high-performance team environment.
-        </p>
-    </div>
-
-    <!-- Development & Skill Policy -->
-    <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg);">
-        <h3>Development & Skill-Building Phase</h3>
-        
-        <p style="margin: var(--space-md) 0;">
-            At the current stage, our focus is not on salary distribution. 
-            We understand that many members are still developing their skills.
-        </p>
-
-        <p style="margin: var(--space-md) 0;">
-            The team leader has decided to first build a skilled, capable, and professional team. 
-            Training, practice, and performance improvement will be prioritized during this phase.
-        </p>
-
-        <p style="margin: var(--space-md) 0;">
-            After one month, a final team meeting will be conducted. Based on performance evaluation and system stability, 
-            the official salary distribution system will then be finalized and implemented.
-        </p>
-
-        <p style="font-weight: 600;">
-            Skill development comes first. Salary system comes after team readiness.
-        </p>
-    </div>
-</div>
+            <!-- About View -->
+            <div id="aboutView" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-info-circle"></i> About DarkRoot</h2>
+                </div>
+                <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+                    <h3>Our Team</h3>
+                    <p style="margin: var(--space-md) 0;">
+                        DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. 
+                        Our primary goal is to build a strong, disciplined, and high-performance team environment.
+                    </p>
+                </div>
+                <div class="card" style="background: var(--white); border-radius: var(--radius-lg); padding: var(--space-lg);">
+                    <h3>Development & Skill-Building Phase</h3>
+                    <p style="margin: var(--space-md) 0;">
+                        At the current stage, our focus is not on salary distribution. 
+                        We understand that many members are still developing their skills.
+                    </p>
+                    <p style="margin: var(--space-md) 0;">
+                        The team leader has decided to first build a skilled, capable, and professional team. 
+                        Training, practice, and performance improvement will be prioritized during this phase.
+                    </p>
+                    <p style="margin: var(--space-md) 0;">
+                        After one month, a final team meeting will be conducted. Based on performance evaluation and system stability, 
+                        the official salary distribution system will then be finalized and implemented.
+                    </p>
+                    <p style="font-weight: 600;">
+                        Skill development comes first. Salary system comes after team readiness.
+                    </p>
+                </div>
+            </div>
         </main>
 
-        <!-- Bottom Navigation -->
+        <!-- Bottom Navigation (Learn replaces Notices) -->
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item-bottom active" data-view="dashboard">
                 <i class="fas fa-home"></i>
@@ -2266,9 +2398,9 @@
                 <i class="fas fa-lightbulb"></i>
                 <span>Ideas</span>
             </div>
-            <div class="nav-item-bottom" data-view="notices">
-                <i class="fas fa-bell"></i>
-                <span>News</span>
+            <div class="nav-item-bottom" data-view="learning">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Learn</span>
             </div>
             <div class="nav-item-bottom" data-view="profile">
                 <i class="fas fa-user"></i>
@@ -2281,7 +2413,7 @@
         </nav>
     </div>
 
-    <!-- Image Upload Modal (for profile photo) -->
+    <!-- Modals -->
     <div class="modal-overlay" id="imageUploadModal">
         <div class="modal">
             <div class="modal-header">
@@ -2310,7 +2442,6 @@
         </div>
     </div>
 
-    <!-- Task Submission Modal (image + message) -->
     <div class="modal-overlay" id="taskSubmissionModal">
         <div class="modal">
             <div class="modal-header">
@@ -2334,13 +2465,9 @@
                 <input type="file" id="submissionFileInput" accept="image/*" style="display: none;">
                 <input type="hidden" id="submissionTaskId">
                 <input type="hidden" id="submissionTaskPoints">
-                
-                <!-- New message field -->
                 <div style="margin: var(--space-md) 0;">
                     <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--space-sm); resize: vertical; width: 100%;" placeholder="Add a message (optional)"></textarea>
                 </div>
-
-                <!-- WhatsApp button -->
                 <div style="margin: var(--space-md) 0; text-align: center;">
                     <button class="btn btn-success" style="width: 100%; background: #25D366; color: white;" onclick="window.open('https://wa.me/9779764598332', '_blank', 'width=600,height=600')">
                         <i class="fa-brands fa-whatsapp"></i> Share via WhatsApp
@@ -2354,7 +2481,6 @@
         </div>
     </div>
 
-    <!-- Notice Modal -->
     <div class="modal-overlay" id="noticeModal">
         <div class="modal">
             <div class="modal-header">
@@ -2371,7 +2497,6 @@
         </div>
     </div>
 
-    <!-- Edit Name Modal -->
     <div class="modal-overlay" id="editNameModal">
         <div class="modal">
             <div class="modal-header">
@@ -2387,7 +2512,6 @@
         </div>
     </div>
 
-    <!-- Edit Payment Modal (eSewa/Cash) -->
     <div class="modal-overlay" id="paymentModal">
         <div class="modal">
             <div class="modal-header">
@@ -2398,12 +2522,8 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: var(--space-md);">
                 <div style="display: flex; gap: var(--space-lg); align-items: center;">
-                    <label>
-                        <input type="radio" name="paymentType" value="cash" checked> Cash
-                    </label>
-                    <label>
-                        <input type="radio" name="paymentType" value="esewa"> eSewa
-                    </label>
+                    <label><input type="radio" name="paymentType" value="cash" checked> Cash</label>
+                    <label><input type="radio" name="paymentType" value="esewa"> eSewa</label>
                 </div>
                 <div id="esewaIdField" style="display: none;">
                     <label class="input-label">eSewa ID (mobile number)</label>
@@ -2414,7 +2534,6 @@
         </div>
     </div>
 
-    <!-- Edit User Modal (Admin) - with Block/Unblock button -->
     <div class="modal-overlay" id="editUserModal">
         <div class="modal">
             <div class="modal-header">
@@ -2442,7 +2561,6 @@
                         <option value="CEO">CEO</option>
                     </select>
                 </div>
-                <!-- Block/Unblock button (visible only to admins) -->
                 <button class="btn btn-warning" id="blockUserBtn" style="display: none;" onclick="toggleBlockUser()">Block User</button>
                 <button class="btn btn-primary" onclick="saveUserEdit()">Save Changes</button>
                 <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button>
@@ -2450,7 +2568,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal (used for chat) -->
     <div class="modal-overlay" id="deleteConfirmModal">
         <div class="modal" style="text-align: center;">
             <div class="modal-header">
@@ -2467,7 +2584,6 @@
         </div>
     </div>
 
-    <!-- Image View Modal (Lightbox) -->
     <div class="modal-overlay image-view-modal" id="imageViewModal" onclick="closeModal('imageViewModal')">
         <div class="modal" onclick="event.stopPropagation()">
             <div class="modal-close" onclick="closeModal('imageViewModal')">
@@ -2477,7 +2593,6 @@
         </div>
     </div>
 
-    <!-- Welcome Popup Modal -->
     <div class="modal-overlay" id="welcomeModal">
         <div class="modal">
             <div class="modal-header">
@@ -2492,6 +2607,44 @@
                 <p style="color: var(--gray-600);">Start chatting and collaborating with your team!</p>
                 <button class="btn btn-primary" onclick="closeModal('welcomeModal')" style="margin-top: var(--space-lg);">Got it</button>
             </div>
+        </div>
+    </div>
+
+    <!-- New Learning Modal (for admin) -->
+    <div class="modal-overlay" id="learningModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="learningModalTitle">Add Learning Resource</h3>
+                <div class="modal-close" onclick="closeModal('learningModal')">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <input type="hidden" id="learningId">
+            <div class="input-field">
+                <label>Title</label>
+                <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript">
+            </div>
+            <div class="input-field">
+                <label>Description</label>
+                <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..."></textarea>
+            </div>
+            <div class="input-field">
+                <label>Type</label>
+                <select id="learningType" class="chat-input">
+                    <option value="video">Video</option>
+                    <option value="article">Article</option>
+                    <option value="course">Course</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label>URL</label>
+                <input type="url" id="learningUrl" class="chat-input" placeholder="https://...">
+            </div>
+            <div class="input-field">
+                <label>Thumbnail URL (optional)</label>
+                <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://...">
+            </div>
+            <button class="btn btn-primary" onclick="saveLearningResource()">Save</button>
         </div>
     </div>
 
@@ -2529,18 +2682,18 @@
         let currentUser = null;
         let currentMemberData = null;
         let allMembers = [];
-        let blockedUsers = new Set(); // store blocked UIDs
-        let selectedImageFile = null; // for profile
-        let selectedSubmissionFile = null; // for task
+        let blockedUsers = new Set();
+        let selectedImageFile = null;
+        let selectedSubmissionFile = null;
         let chatMessagesRef = null;
         let typingTimeout = null;
         let typingRef = null;
         let isNewLogin = false;
         let memberChart, pointsChart, analyticsChart;
-        let allTasks = []; // store tasks for reference
-        let messageToDelete = null; // for confirmation modal
-        // Custom ranks (still present for admin panel, but leaderboard ignores them now)
+        let allTasks = [];
+        let messageToDelete = null;
         let customRanks = {};
+        let allRoles = [];
 
         // DOM Elements
         const splashScreen = document.getElementById('splashScreen');
@@ -2572,10 +2725,12 @@
         const tasksView = document.getElementById('tasksView');
         const adminView = document.getElementById('adminView');
         const aboutView = document.getElementById('aboutView');
+        const learningView = document.getElementById('learningView');
 
         // Admin sub-tabs
         const adminLeaderboardTab = document.getElementById('adminLeaderboardTab');
         const adminUsersTab = document.getElementById('adminUsersTab');
+        const adminLearningTab = document.getElementById('adminLearningTab');
         const adminUserSearch = document.getElementById('adminUserSearch');
 
         // Login/Signup elements
@@ -2592,18 +2747,10 @@
             toastMessage.textContent = message;
             toast.className = 'toast ' + type;
             toast.style.display = 'flex';
-            
-            if (type === 'success') {
-                toastIcon.className = 'fas fa-check-circle';
-            } else if (type === 'error') {
-                toastIcon.className = 'fas fa-exclamation-circle';
-            } else {
-                toastIcon.className = 'fas fa-info-circle';
-            }
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+            if (type === 'success') toastIcon.className = 'fas fa-check-circle';
+            else if (type === 'error') toastIcon.className = 'fas fa-exclamation-circle';
+            else toastIcon.className = 'fas fa-info-circle';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
         function getInitials(name) {
@@ -2613,16 +2760,13 @@
 
         function formatDate(timestamp) {
             if (!timestamp) return 'Just now';
-            const now = Date.now();
-            const diff = now - timestamp;
-            
+            const diff = Date.now() - timestamp;
             if (diff < 60000) return 'Just now';
             if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
             if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
             return moment(timestamp).format('MMM DD');
         }
 
-        // Image viewer function
         window.showImageModal = function(src) {
             imageViewSrc.src = src;
             imageViewModal.style.display = 'flex';
@@ -2630,24 +2774,19 @@
 
         // ==================== SKELETON LOADING ====================
         function showSkeletons() {
-            const statsGrid = document.getElementById('statsGrid');
-            statsGrid.innerHTML = `
+            document.getElementById('statsGrid').innerHTML = `
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
                 <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
             `;
-
-            const aiInsights = document.getElementById('aiInsights');
-            aiInsights.innerHTML = `
+            document.getElementById('aiInsights').innerHTML = `
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
                 <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
             `;
-
-            const teamGrid = document.getElementById('teamGrid');
-            teamGrid.innerHTML = `
+            document.getElementById('teamGrid').innerHTML = `
                 <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
                 <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
                 <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
@@ -2668,10 +2807,7 @@
 
         window.updateName = async function() {
             const newName = document.getElementById('editNameInput').value.trim();
-            if (!newName) {
-                showToast('Name cannot be empty', 'error');
-                return;
-            }
+            if (!newName) { showToast('Name cannot be empty', 'error'); return; }
             try {
                 await db.ref('members/' + currentUser.uid).update({ name: newName });
                 currentMemberData.name = newName;
@@ -2706,10 +2842,7 @@
         window.savePaymentInfo = async function() {
             const type = document.querySelector('input[name="paymentType"]:checked').value;
             const esewaId = type === 'esewa' ? document.getElementById('esewaIdInput').value.trim() : '';
-            if (type === 'esewa' && !esewaId) {
-                showToast('Please enter eSewa ID', 'error');
-                return;
-            }
+            if (type === 'esewa' && !esewaId) { showToast('Please enter eSewa ID', 'error'); return; }
             const paymentMethod = { type, esewaId };
             await db.ref('members/' + currentUser.uid).update({ paymentMethod });
             currentMemberData.paymentMethod = paymentMethod;
@@ -2746,6 +2879,7 @@
             tasksView.style.display = 'none';
             adminView.style.display = 'none';
             aboutView.style.display = 'none';
+            learningView.style.display = 'none';
 
             if (viewName === 'members') {
                 membersView.style.display = 'block';
@@ -2761,6 +2895,7 @@
                 showAdminTab('leaderboard');
                 loadAdminUsers();
                 renderRankList();
+                loadAdminLearning();
             } else if (viewName === 'analytics') {
                 analyticsView.style.display = 'block';
                 initAnalyticsChart();
@@ -2772,18 +2907,17 @@
                 loadTasks();
             } else if (viewName === 'about') {
                 aboutView.style.display = 'block';
+            } else if (viewName === 'learning') {
+                learningView.style.display = 'block';
+                loadLearningResources();
             } else {
                 document.getElementById(viewName + 'View').style.display = 'block';
-                if (viewName === 'dashboard') {
-                    loadDashboardData();
-                }
+                if (viewName === 'dashboard') loadDashboardData();
             }
 
             document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
                 item.classList.remove('active');
-                if (item.dataset.view === viewName) {
-                    item.classList.add('active');
-                }
+                if (item.dataset.view === viewName) item.classList.add('active');
             });
 
             if (window.innerWidth <= 768) {
@@ -2792,12 +2926,8 @@
             }
 
             switch(viewName) {
-                case 'members':
-                    loadMembers();
-                    break;
-                case 'notices':
-                    loadNotices();
-                    break;
+                case 'members': loadMembers(); break;
+                case 'notices': loadNotices(); break;
             }
         }
 
@@ -2806,14 +2936,10 @@
             const membersTab = document.getElementById('teamMembersTab');
             const leaderboardTab = document.getElementById('teamLeaderboardTab');
             const tabs = document.querySelectorAll('[data-team-tab]');
-            
             tabs.forEach(tab => {
                 tab.classList.remove('active');
-                if (tab.dataset.teamTab === tabName) {
-                    tab.classList.add('active');
-                }
+                if (tab.dataset.teamTab === tabName) tab.classList.add('active');
             });
-
             if (tabName === 'members') {
                 membersTab.style.display = 'block';
                 leaderboardTab.style.display = 'none';
@@ -2826,54 +2952,39 @@
         }
 
         document.querySelectorAll('[data-team-tab]').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                showTeamTab(e.target.dataset.teamTab);
-            });
+            tab.addEventListener('click', (e) => { showTeamTab(e.target.dataset.teamTab); });
         });
 
-        // Admin sub‑tabs
+        // Admin sub‑tabs (including Learning)
         function showAdminTab(tabName) {
             const tabs = document.querySelectorAll('[data-admin-tab]');
             tabs.forEach(tab => {
                 tab.classList.remove('active');
-                if (tab.dataset.adminTab === tabName) {
-                    tab.classList.add('active');
-                }
+                if (tab.dataset.adminTab === tabName) tab.classList.add('active');
             });
-
             adminLeaderboardTab.style.display = 'none';
             adminUsersTab.style.display = 'none';
-
-            if (tabName === 'leaderboard') {
-                adminLeaderboardTab.style.display = 'block';
-            } else if (tabName === 'users') {
-                adminUsersTab.style.display = 'block';
-            }
+            adminLearningTab.style.display = 'none';
+            if (tabName === 'leaderboard') adminLeaderboardTab.style.display = 'block';
+            else if (tabName === 'users') adminUsersTab.style.display = 'block';
+            else if (tabName === 'learning') adminLearningTab.style.display = 'block';
         }
 
         document.querySelectorAll('[data-admin-tab]').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                showAdminTab(e.target.dataset.adminTab);
-            });
+            tab.addEventListener('click', (e) => { showAdminTab(e.target.dataset.adminTab); });
         });
 
         // Navigation event listeners
         document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
             item.addEventListener('click', () => {
-                if (item.dataset.view) {
-                    showView(item.dataset.view);
-                }
+                if (item.dataset.view) showView(item.dataset.view);
             });
         });
 
         // ==================== LOAD BLOCKED USERS ====================
         async function loadBlockedUsers() {
             const snapshot = await db.ref('settings/blockedUsers').once('value');
-            if (snapshot.exists()) {
-                blockedUsers = new Set(snapshot.val() || []);
-            } else {
-                blockedUsers.clear();
-            }
+            blockedUsers = new Set(snapshot.exists() ? snapshot.val() : []);
         }
 
         // ==================== TOGGLE BLOCK USER ====================
@@ -2881,11 +2992,8 @@
             const uid = document.getElementById('editUserId').value;
             if (!uid) return;
             let blocked = Array.from(blockedUsers);
-            if (blockedUsers.has(uid)) {
-                blocked = blocked.filter(id => id !== uid);
-            } else {
-                blocked.push(uid);
-            }
+            if (blockedUsers.has(uid)) blocked = blocked.filter(id => id !== uid);
+            else blocked.push(uid);
             await db.ref('settings/blockedUsers').set(blocked);
             blockedUsers = new Set(blocked);
             updateBlockButton(uid);
@@ -2905,7 +3013,7 @@
             }
         }
 
-        // ==================== AUTH - EMAIL/PASSWORD ====================
+        // ==================== AUTH ====================
         splashScreen.style.display = 'flex';
         authSection.style.display = 'none';
         dashboardSection.style.display = 'none';
@@ -2923,12 +3031,7 @@
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
-            if (!email || !password) {
-                showToast('Please fill all fields', 'error');
-                return;
-            }
-
+            if (!email || !password) { showToast('Please fill all fields', 'error'); return; }
             try {
                 splashScreen.style.display = 'flex';
                 await auth.signInWithEmailAndPassword(email, password);
@@ -2944,22 +3047,9 @@
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             const confirm = document.getElementById('signupConfirmPassword').value;
-
-            if (!name || !email || !password || !confirm) {
-                showToast('Please fill all fields', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showToast('Password must be 6+ characters', 'error');
-                return;
-            }
-
-            if (password !== confirm) {
-                showToast('Passwords do not match', 'error');
-                return;
-            }
-
+            if (!name || !email || !password || !confirm) { showToast('Please fill all fields', 'error'); return; }
+            if (password.length < 6) { showToast('Password must be 6+ characters', 'error'); return; }
+            if (password !== confirm) { showToast('Passwords do not match', 'error'); return; }
             try {
                 splashScreen.style.display = 'flex';
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -2980,27 +3070,16 @@
                 try {
                     currentUser = user;
                     const snapshot = await db.ref('members/' + user.uid).once('value');
-                    
                     if (snapshot.exists()) {
                         currentMemberData = snapshot.val();
-                        
-                        await db.ref('members/' + user.uid).update({
-                            lastActive: Date.now()
-                        });
-                        
+                        await db.ref('members/' + user.uid).update({ lastActive: Date.now() });
                         if (user.photoURL && currentMemberData.photoURL !== user.photoURL) {
                             await db.ref('members/' + user.uid).update({ photoURL: user.photoURL });
                             currentMemberData.photoURL = user.photoURL;
                         }
-                        
-                        // Load blocked users
                         await loadBlockedUsers();
-                        
-                        // Load custom ranks
                         await loadCustomRanks();
-                        
-                        // Notice button only for admins (CEO/Manager)
-                        if (currentMemberData.role === 'CEO') {
+                        if (currentMemberData.role === 'CEO' || currentMemberData.role === 'Manager') {
                             if (addNoticeBtn) addNoticeBtn.style.display = 'inline-flex';
                             adminBottomNav.style.display = 'flex';
                             adminNavItem.style.display = 'flex';
@@ -3009,22 +3088,14 @@
                             adminBottomNav.style.display = 'none';
                             adminNavItem.style.display = 'none';
                         }
-                        
                         updateUIWithMemberData();
-                        
                         splashScreen.style.display = 'none';
                         authSection.style.display = 'none';
                         dashboardSection.style.display = 'block';
-                        
                         showSkeletons();
                         loadDashboardData();
                         showView('dashboard');
-
-                        if (isNewLogin) {
-                            showWelcomePopup();
-                            isNewLogin = false;
-                        }
-                        
+                        if (isNewLogin) { showWelcomePopup(); isNewLogin = false; }
                         showToast('Welcome back, ' + (currentMemberData.name || 'Member'));
                     } else {
                         await createMemberRecord(user);
@@ -3059,16 +3130,14 @@
                 status: 'Active',
                 joinDate: Date.now(),
                 lastActive: Date.now(),
-                paymentMethod: { type: 'cash', esewaId: '' } // default payment method
+                paymentMethod: { type: 'cash', esewaId: '' }
             };
-            
             await db.ref('members/' + user.uid).set(memberData);
             await db.ref('activity_logs').push({
                 action: 'New member registered',
                 email: user.email,
                 timestamp: Date.now()
             });
-            
             currentMemberData = memberData;
             updateUIWithMemberData();
             showWelcomePopup();
@@ -3076,18 +3145,15 @@
 
         function updateUIWithMemberData() {
             if (!currentMemberData) return;
-            
             const name = currentMemberData.name || 'Member';
             const initials = getInitials(name);
             const points = currentMemberData.points || 0;
             const salary = currentMemberData.salary || 0;
-            
             document.getElementById('sidebarAvatarText').textContent = initials;
             document.getElementById('sidebarName').textContent = name;
             document.getElementById('sidebarEmail').textContent = currentMemberData.email || '';
             document.getElementById('sidebarPoints').textContent = points.toLocaleString();
             document.getElementById('sidebarSalary').textContent = '$' + salary.toLocaleString();
-            
             document.getElementById('profileAvatarText').textContent = initials;
             document.getElementById('profileName').textContent = name;
             document.getElementById('profileEmail').textContent = currentMemberData.email || '';
@@ -3096,13 +3162,8 @@
             document.getElementById('profileJoinDate').textContent = moment(currentMemberData.joinDate).format('MMM DD, YYYY');
             document.getElementById('profileStatus').textContent = currentMemberData.status || 'Active';
             document.getElementById('profileRole').textContent = currentMemberData.role || 'Member';
-            
-            if (currentMemberData.photoURL) {
-                updateProfilePicture(currentMemberData.photoURL);
-            } else if (currentUser?.photoURL) {
-                updateProfilePicture(currentUser.photoURL);
-            }
-            
+            if (currentMemberData.photoURL) updateProfilePicture(currentMemberData.photoURL);
+            else if (currentUser?.photoURL) updateProfilePicture(currentUser.photoURL);
             updatePaymentDisplay();
             calculateRank();
         }
@@ -3112,7 +3173,6 @@
             const sidebarImg = document.getElementById('sidebarAvatarImg');
             sidebarImg.src = url;
             sidebarImg.style.display = 'block';
-
             document.getElementById('profileAvatarText').style.display = 'none';
             const profileImg = document.getElementById('profileAvatarImg');
             profileImg.src = url;
@@ -3124,21 +3184,15 @@
                 const snapshot = await db.ref('members').once('value');
                 const members = [];
                 snapshot.forEach(child => {
-                    members.push({
-                        uid: child.key,
-                        points: child.val().points || 0
-                    });
+                    members.push({ uid: child.key, points: child.val().points || 0 });
                 });
-                
                 members.sort((a, b) => b.points - a.points);
                 const rank = members.findIndex(m => m.uid === currentUser.uid) + 1;
                 document.getElementById('sidebarRank').textContent = '#' + rank;
-            } catch (error) {
-                console.error('Error calculating rank:', error);
-            }
+            } catch (error) { console.error('Error calculating rank:', error); }
         }
 
-        // ==================== IMAGE UPLOAD (Profile) using imgbb ====================
+        // ==================== IMAGE UPLOAD ====================
         window.openImageUploadModal = function() {
             document.getElementById('imageUploadModal').style.display = 'flex';
         };
@@ -3169,9 +3223,7 @@
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
             selectedImageFile = file;
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('previewImg');
@@ -3183,43 +3235,25 @@
         });
 
         window.uploadImage = async function() {
-            if (!selectedImageFile) {
-                showToast('Please select an image', 'error');
-                return;
-            }
-
+            if (!selectedImageFile) { showToast('Please select an image', 'error'); return; }
             const uploadBtn = document.getElementById('uploadBtn');
             const originalText = uploadBtn.innerHTML;
             uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
             uploadBtn.disabled = true;
-
             try {
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedImageFile);
-
-                const response = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
+                const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
                 const data = await response.json();
-                
                 if (data.success) {
                     const imageUrl = data.data.url;
-                    
-                    await db.ref('members/' + currentUser.uid).update({
-                        photoURL: imageUrl
-                    });
-                    
+                    await db.ref('members/' + currentUser.uid).update({ photoURL: imageUrl });
                     currentMemberData.photoURL = imageUrl;
                     updateProfilePicture(imageUrl);
-                    
                     showToast('Profile photo updated!');
                     closeModal('imageUploadModal');
-                } else {
-                    throw new Error('Upload failed');
-                }
+                } else throw new Error('Upload failed');
             } catch (error) {
                 showToast('Upload failed', 'error');
             } finally {
@@ -3228,42 +3262,30 @@
             }
         };
 
-        // ==================== CHAT IMAGE UPLOAD (imgbb) ====================
+        // ==================== CHAT ====================
         window.handleChatFileSelect = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
-
-            // Check if user is blocked
             if (blockedUsers.has(currentUser.uid)) {
                 showToast('You are blocked from sending messages', 'error');
                 document.getElementById('chatFileInput').value = '';
                 return;
             }
-
             const attachBtn = document.getElementById('chatAttachBtn');
             const originalHtml = attachBtn.innerHTML;
             attachBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             attachBtn.disabled = true;
-
             try {
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', file);
-
-                const response = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
+                const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
                 const data = await response.json();
-                
                 if (data.success) {
                     const imageUrl = data.data.url;
                     await sendImageMessage(imageUrl);
                     showToast('Image uploaded', 'success');
-                } else {
-                    throw new Error('Upload failed');
-                }
+                } else throw new Error('Upload failed');
             } catch (error) {
                 console.error('Upload error:', error);
                 showToast('Failed to upload image', 'error');
@@ -3284,7 +3306,6 @@
             });
         }
 
-        // ==================== DELETE MESSAGE with confirmation ====================
         window.promptDeleteMessage = function(messageId) {
             messageToDelete = messageId;
             deleteConfirmModal.style.display = 'flex';
@@ -3302,35 +3323,35 @@
             messageToDelete = null;
         };
 
-        // ==================== TYPING INDICATOR ====================
         let typingTimeoutId = null;
-
         function handleTyping() {
             if (!currentUser || !typingRef) return;
-
             typingRef.set(true);
-
             if (typingTimeoutId) clearTimeout(typingTimeoutId);
-
-            typingTimeoutId = setTimeout(() => {
-                typingRef.set(false);
-            }, 2000);
+            typingTimeoutId = setTimeout(() => { typingRef.set(false); }, 2000);
         }
 
         function setupTypingListener() {
-            if (typingRef) {
-                typingRef.off();
-                typingRef = null;
-            }
+            if (typingRef) { typingRef.off(); typingRef = null; }
             typingRef = db.ref('typing/' + currentUser.uid);
             db.ref('typing').on('value', (snapshot) => {
                 const typingData = snapshot.val() || {};
                 const typingUsers = [];
+                const typingAvatars = document.getElementById('typingAvatars');
+                typingAvatars.innerHTML = '';
                 for (let uid in typingData) {
                     if (uid !== currentUser.uid && typingData[uid] === true) {
                         const member = allMembers.find(m => m.uid === uid);
                         if (member) {
                             typingUsers.push(member.name);
+                            const avatar = document.createElement('div');
+                            avatar.className = 'typing-avatar';
+                            if (member.photoURL) {
+                                avatar.innerHTML = `<img src="${member.photoURL}">`;
+                            } else {
+                                avatar.textContent = getInitials(member.name);
+                            }
+                            typingAvatars.appendChild(avatar);
                         }
                     }
                 }
@@ -3338,13 +3359,9 @@
                 const typingText = document.getElementById('typingText');
                 if (typingUsers.length > 0) {
                     let text = '';
-                    if (typingUsers.length === 1) {
-                        text = `${typingUsers[0]} is typing`;
-                    } else if (typingUsers.length === 2) {
-                        text = `${typingUsers[0]} and ${typingUsers[1]} are typing`;
-                    } else {
-                        text = `${typingUsers.length} people are typing`;
-                    }
+                    if (typingUsers.length === 1) text = `${typingUsers[0]} is typing`;
+                    else if (typingUsers.length === 2) text = `${typingUsers[0]} and ${typingUsers[1]} are typing`;
+                    else text = `${typingUsers.length} people are typing`;
                     typingText.textContent = text;
                     indicator.style.display = 'flex';
                 } else {
@@ -3353,7 +3370,7 @@
             });
         }
 
-        // ==================== TASK SUBMISSION (imgbb + message) ====================
+        // ==================== TASK SUBMISSION ====================
         window.openTaskSubmissionModal = function(taskId, taskTitle, taskPoints) {
             document.getElementById('submissionTaskId').value = taskId;
             document.getElementById('submissionTaskPoints').value = taskPoints;
@@ -3365,10 +3382,7 @@
         document.getElementById('submissionFileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
             selectedSubmissionFile = file;
-            
-            // Show preview
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('submissionPreviewImg');
@@ -3380,34 +3394,22 @@
         });
 
         window.submitTask = async function() {
-            if (!selectedSubmissionFile) {
-                showToast('Please select an image', 'error');
-                return;
-            }
-
+            if (!selectedSubmissionFile) { showToast('Please select an image', 'error'); return; }
             const submitBtn = document.getElementById('submitTaskBtn');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             submitBtn.disabled = true;
-
             try {
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedSubmissionFile);
-                
-                const response = await fetch('https://api.imgbb.com/1/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                
+                const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
                 const data = await response.json();
-                
                 if (data.success) {
                     const fileUrl = data.data.url;
                     const taskId = document.getElementById('submissionTaskId').value;
                     const taskPoints = parseInt(document.getElementById('submissionTaskPoints').value);
                     const message = document.getElementById('submissionMessage').value.trim();
-
                     const submissionData = {
                         userId: currentUser.uid,
                         taskId: taskId,
@@ -3417,18 +3419,12 @@
                         submittedAt: Date.now(),
                         taskPoints: taskPoints
                     };
-                    if (message) {
-                        submissionData.message = message;
-                    }
-
+                    if (message) submissionData.message = message;
                     await db.ref('task_submissions').push(submissionData);
-
                     showToast('Task submitted for approval!', 'success');
                     closeModal('taskSubmissionModal');
                     loadTasks();
-                } else {
-                    throw new Error('Upload failed');
-                }
+                } else throw new Error('Upload failed');
             } catch (error) {
                 console.error('Submission error:', error);
                 showToast('Submission failed: ' + error.message, 'error');
@@ -3439,19 +3435,11 @@
             }
         };
 
-        // ==================== IDEAS (with block check) ====================
+        // ==================== IDEAS ====================
         window.postIdea = async function() {
-            // Check if user is blocked
-            if (blockedUsers.has(currentUser.uid)) {
-                showToast('You are blocked from posting ideas', 'error');
-                return;
-            }
-
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from posting ideas', 'error'); return; }
             const text = document.getElementById('ideaInput').value.trim();
-            if (!text) {
-                showToast('Please enter your idea', 'error');
-                return;
-            }
+            if (!text) { showToast('Please enter your idea', 'error'); return; }
             try {
                 await db.ref('ideas').push({
                     userId: currentUser.uid,
@@ -3463,9 +3451,7 @@
                 document.getElementById('ideaInput').value = '';
                 showToast('Idea posted!', 'success');
                 loadIdeas();
-            } catch (error) {
-                showToast('Failed to post idea', 'error');
-            }
+            } catch (error) { showToast('Failed to post idea', 'error'); }
         };
 
         async function loadIdeas() {
@@ -3507,11 +3493,7 @@
 
         async function loadStats() {
             const snapshot = await db.ref('members').once('value');
-            let total = 0;
-            let totalPoints = 0;
-            let topPoints = 0;
-            let active = 0;
-            
+            let total = 0, totalPoints = 0, topPoints = 0, active = 0;
             snapshot.forEach(child => {
                 const member = child.val();
                 total++;
@@ -3519,29 +3501,11 @@
                 if ((member.points || 0) > topPoints) topPoints = member.points;
                 if (member.status === 'Active') active++;
             });
-
-            const statsGrid = document.getElementById('statsGrid');
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-value">${total}</div>
-                    <div class="stat-label">Members</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-star"></i></div>
-                    <div class="stat-value">${(totalPoints / 1000).toFixed(1)}K</div>
-                    <div class="stat-label">Points</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
-                    <div class="stat-value">${topPoints}</div>
-                    <div class="stat-label">Top</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                    <div class="stat-value">${active}</div>
-                    <div class="stat-label">Active</div>
-                </div>
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value">${total}</div><div class="stat-label">Members</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-value">${(totalPoints/1000).toFixed(1)}K</div><div class="stat-label">Points</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-value">${topPoints}</div><div class="stat-label">Top</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">${active}</div><div class="stat-label">Active</div></div>
             `;
         }
 
@@ -3551,32 +3515,18 @@
                 const membersSnapshot = await db.ref('members').once('value');
                 const members = [];
                 membersSnapshot.forEach(child => members.push({ uid: child.key, ...child.val() }));
-                
-                if (members.length === 0) {
-                    container.innerHTML = '<div class="insight-item">No data available</div>';
-                    return;
-                }
-
+                if (members.length === 0) { container.innerHTML = '<div class="insight-item">No data available</div>'; return; }
                 const totalMembers = members.length;
                 const totalPoints = members.reduce((sum, m) => sum + (m.points || 0), 0);
                 const avgPoints = Math.round(totalPoints / totalMembers);
-                
                 const topPerformer = members.reduce((top, m) => (m.points || 0) > (top.points || 0) ? m : top, members[0]);
-                
-                const atRiskMembers = members.filter(m => (m.points || 0) < 100).length;
-                
                 const oneDayAgo = Date.now() - 86400000;
                 const activeMembers = members.filter(m => (m.lastActive || 0) > oneDayAgo).length;
                 const activePercent = Math.round((activeMembers / totalMembers) * 100);
-
-                const pointsTrend = avgPoints > 500 ? '+23%' : avgPoints > 200 ? '+12%' : '-5%';
-
                 const insights = [
-                   
                     { icon: 'fa-star', title: 'Top Performer', desc: topPerformer ? `${topPerformer.name || 'Unknown'} with ${topPerformer.points || 0} pts` : 'No data' },
                     { icon: 'fa-clock', title: 'Active Rate', desc: `${activePercent}% active in last 24h (${activeMembers}/${totalMembers})` }
                 ];
-
                 container.innerHTML = insights.map(insight => `
                     <div class="insight-item">
                         <div class="insight-icon"><i class="fas ${insight.icon}"></i></div>
@@ -3586,7 +3536,6 @@
                         </div>
                     </div>
                 `).join('');
-                
             } catch (error) {
                 console.error('Error loading insights:', error);
                 document.getElementById('aiInsights').innerHTML = '<div class="insight-item">Error loading insights</div>';
@@ -3977,67 +3926,49 @@
             loadNotices();
         };
 
-        // ==================== CHAT (with delete and date separators) ====================
+
+        // ==================== CHAT LOADING ====================
         function loadChatMessages() {
             const messagesContainer = document.getElementById('chatMessages');
             messagesContainer.innerHTML = '';
-
-            if (chatMessagesRef) {
-                chatMessagesRef.off();
-            }
-
+            if (chatMessagesRef) chatMessagesRef.off();
             chatMessagesRef = db.ref('chat_messages').orderByChild('timestamp').limitToLast(50);
-            
-            let lastMessage = null;
-            let currentGroup = null;
-            let lastDate = null;
-
+            let lastMessage = null, currentGroup = null, lastDate = null;
             chatMessagesRef.on('child_added', (snapshot) => {
                 const msg = snapshot.val();
                 const msgKey = snapshot.key;
                 if (!msg) return;
-
                 const msgDate = moment(msg.timestamp).format('YYYY-MM-DD');
                 if (lastDate !== msgDate) {
-                    // Add date separator
                     const separator = document.createElement('div');
                     separator.className = 'date-separator';
                     separator.innerHTML = `<span>${moment(msg.timestamp).format('MMMM D, YYYY')}</span>`;
                     messagesContainer.appendChild(separator);
                     lastDate = msgDate;
-                    currentGroup = null; // start new group after date
+                    currentGroup = null;
                 }
-
                 const isSameSender = lastMessage && msg.senderId === lastMessage.senderId && (msg.timestamp - lastMessage.timestamp) < 120000;
-                
                 if (!isSameSender) {
                     currentGroup = document.createElement('div');
                     currentGroup.className = 'message-group';
                     messagesContainer.appendChild(currentGroup);
                 }
-
                 const messageDiv = createMessageElement(msg, msgKey);
                 currentGroup.appendChild(messageDiv);
-
                 lastMessage = msg;
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
-
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('chatSendBtn');
-            
             chatInput.addEventListener('input', () => {
                 sendBtn.disabled = chatInput.value.trim() === '';
                 handleTyping();
             });
-
             sendBtn.onclick = sendChatMessage;
             chatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !sendBtn.disabled) sendChatMessage();
             });
-
             setupTypingListener();
-
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.target.style.display === 'none' && typingRef) {
@@ -4058,20 +3989,11 @@
             messageDiv.id = `msg-${key}`;
             const avatarHtml = senderAvatar ? `<img src="${senderAvatar}" style="width:100%; height:100%; object-fit:cover;">` : senderInitials;
             const timeStr = msg.timestamp ? moment(msg.timestamp).format('hh:mm A') : 'Just now';
-
             let contentHtml = '';
-            if (msg.text) {
-                contentHtml = `<div class="message-text">${msg.text}</div>`;
-            }
-            if (msg.imageUrl) {
-                contentHtml += `<img src="${msg.imageUrl}" class="chat-image" onclick="showImageModal('${msg.imageUrl}')">`;
-            }
-
+            if (msg.text) contentHtml = `<div class="message-text">${msg.text}</div>`;
+            if (msg.imageUrl) contentHtml += `<img src="${msg.imageUrl}" class="chat-image" onclick="showImageModal('${msg.imageUrl}')">`;
             const deleteBtn = isOwn ? `<button class="delete-msg-btn" onclick="promptDeleteMessage('${key}')"><i class="fas fa-trash"></i></button>` : '';
-
-            // Message status (simple: just "✓" for now)
             const statusIcon = isOwn ? '<span class="message-status"><i class="fas fa-check"></i></span>' : '';
-
             messageDiv.innerHTML = `
                 <div class="message-avatar">${avatarHtml}</div>
                 <div class="message-bubble">
@@ -4088,13 +4010,7 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
-
-            // Check if user is blocked
-            if (blockedUsers.has(currentUser.uid)) {
-                showToast('You are blocked from sending messages', 'error');
-                return;
-            }
-
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from sending messages', 'error'); return; }
             try {
                 await db.ref('chat_messages').push({
                     senderId: currentUser.uid,
@@ -4107,20 +4023,16 @@
                 document.getElementById('chatSendBtn').disabled = true;
                 if (typingRef) typingRef.set(false);
                 if (typingTimeoutId) clearTimeout(typingTimeoutId);
-            } catch (error) {
-                showToast('Failed to send message', 'error');
-            }
+            } catch (error) { showToast('Failed to send message', 'error'); }
         }
 
-        // ==================== MEETINGS (Member view with clickable links) ====================
+        // ==================== MEETINGS (enhanced) ====================
         async function loadMeetings() {
             const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
             const meetings = [];
             snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
-            // Show upcoming (dateTime >= now)
             const now = Date.now();
             const upcoming = meetings.filter(m => (m.dateTime || 0) >= now).sort((a,b) => a.dateTime - b.dateTime);
-            
             const container = document.getElementById('meetingsList');
             container.innerHTML = '';
             if (upcoming.length === 0) {
@@ -4129,90 +4041,57 @@
             }
             upcoming.forEach(meeting => {
                 const dateStr = moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A');
-                // Check if location is a URL
                 let locationHtml = meeting.location || 'TBD';
+                let joinButton = '';
                 if (meeting.location && (meeting.location.startsWith('http://') || meeting.location.startsWith('https://'))) {
                     locationHtml = `<a href="${meeting.location}" target="_blank" style="color: var(--primary); text-decoration: underline;">${meeting.location}</a>`;
+                    joinButton = `<a href="${meeting.location}" target="_blank" class="btn btn-primary btn-sm" style="width: auto; padding: 6px 12px; margin-left: auto;">Join</a>`;
                 }
                 container.innerHTML += `
-                    <div class="activity-item">
+                    <div class="activity-item" style="flex-wrap: wrap;">
                         <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-handshake" style="color: var(--primary);"></i></div>
-                        <div class="activity-content">
+                        <div class="activity-content" style="flex:1;">
                             <div class="activity-title">${meeting.title}</div>
                             <div class="activity-meta">${dateStr} · ${locationHtml}</div>
                             <div style="font-size: 0.8rem; margin-top: var(--space-xs);">${meeting.description || ''}</div>
                         </div>
+                        ${joinButton}
                     </div>
                 `;
             });
         }
 
-        // ==================== TASKS (Member view with submission workflow, expandable description, and message) ====================
+        // ==================== TASKS ====================
         async function loadTasks() {
             try {
                 const tasksSnap = await db.ref('tasks').once('value');
                 allTasks = [];
-                tasksSnap.forEach(child => {
-                    allTasks.push({ id: child.key, ...child.val() });
-                });
-                console.log('Tasks fetched:', allTasks.length);
-
-                const submissionsSnap = await db.ref('task_submissions')
-                    .orderByChild('userId')
-                    .equalTo(currentUser.uid)
-                    .once('value');
+                tasksSnap.forEach(child => allTasks.push({ id: child.key, ...child.val() }));
+                const submissionsSnap = await db.ref('task_submissions').orderByChild('userId').equalTo(currentUser.uid).once('value');
                 const submissions = {};
-                submissionsSnap.forEach(child => {
-                    const sub = child.val();
-                    submissions[sub.taskId] = sub;
-                });
-
+                submissionsSnap.forEach(child => { const sub = child.val(); submissions[sub.taskId] = sub; });
                 const container = document.getElementById('tasksList');
                 container.innerHTML = '';
-
-                if (allTasks.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>';
-                    return;
-                }
-
+                if (allTasks.length === 0) { container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>'; return; }
                 allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-
                 allTasks.forEach(task => {
-                    if (!task.title || task.points === undefined) {
-                        console.warn('Skipping invalid task:', task);
-                        return;
-                    }
-
+                    if (!task.title || task.points === undefined) return;
                     const submission = submissions[task.id];
-                    let actionHtml = '';
-                    let statusHtml = '';
-
+                    let actionHtml = '', statusHtml = '';
                     if (submission) {
                         const status = submission.status;
-                        let statusColor = '';
-                        let statusText = '';
-                        if (status === 'pending_manager') {
-                            statusColor = 'var(--warning)';
-                            statusText = 'Pending Manager';
-                        } else if (status === 'pending_ceo') {
-                            statusColor = 'var(--warning)';
-                            statusText = 'Pending CEO';
-                        } else if (status === 'approved') {
-                            statusColor = 'var(--success)';
-                            statusText = 'Approved';
-                        } else if (status === 'rejected') {
-                            statusColor = 'var(--danger)';
-                            statusText = 'Rejected';
-                        }
+                        let statusColor = '', statusText = '';
+                        if (status === 'pending_manager') { statusColor = 'var(--warning)'; statusText = 'Pending Manager'; }
+                        else if (status === 'pending_ceo') { statusColor = 'var(--warning)'; statusText = 'Pending CEO'; }
+                        else if (status === 'approved') { statusColor = 'var(--success)'; statusText = 'Approved'; }
+                        else if (status === 'rejected') { statusColor = 'var(--danger)'; statusText = 'Rejected'; }
                         statusHtml = `<span class="team-badge" style="background: ${statusColor}20; color: ${statusColor};">${statusText}</span>`;
                         if (status === 'rejected' && submission.rejectionReason) {
                             statusHtml += `<div style="font-size: 0.7rem; color: var(--danger); margin-top: 4px;">Reason: ${submission.rejectionReason}</div>`;
                         }
-                        // Show image preview
                         if (submission.fileUrl) {
                             statusHtml += `<div><img src="${submission.fileUrl}" class="chat-image" onclick="showImageModal('${submission.fileUrl}')"></div>`;
                         }
-                        // Show message if present
                         if (submission.message) {
                             statusHtml += `<div style="font-size: 0.8rem; margin-top: 4px; padding: 4px 8px; background: var(--gray-200); border-radius: var(--radius-md);"><i class="fas fa-quote-left" style="color: var(--gray-600);"></i> ${submission.message}</div>`;
                         }
@@ -4220,7 +4099,6 @@
                         const safeTitle = task.title.replace(/'/g, "\\'");
                         actionHtml = `<button class="btn btn-primary btn-sm" onclick="openTaskSubmissionModal('${task.id}', '${safeTitle}', ${task.points})" style="width: auto; height: 36px;">Submit</button>`;
                     }
-
                     let descriptionHtml = '';
                     if (task.description) {
                         const descId = `desc-${task.id}`;
@@ -4229,12 +4107,9 @@
                             <span class="toggle-description" onclick="document.getElementById('${descId}').classList.toggle('truncated'); this.innerText = this.innerText === 'Read more' ? 'Show less' : 'Read more';">Read more</span>
                         `;
                     }
-
                     container.innerHTML += `
                         <div class="activity-item" style="flex-wrap: wrap;">
-                            <div class="activity-avatar" style="background: var(--primary-light);">
-                                <i class="fas fa-tasks" style="color: var(--primary);"></i>
-                            </div>
+                            <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-tasks" style="color: var(--primary);"></i></div>
                             <div class="activity-content" style="flex:1;">
                                 <div class="activity-title">${task.title}</div>
                                 <div class="activity-meta">${task.points} points</div>
@@ -4245,96 +4120,214 @@
                         </div>
                     `;
                 });
-            } catch (error) {
-                console.error('Error in loadTasks:', error);
-                showToast('Failed to load tasks', 'error');
-            }
+            } catch (error) { console.error('Error in loadTasks:', error); showToast('Failed to load tasks', 'error'); }
         }
 
-        // ==================== ANALYTICS CHART ====================
+        // ==================== ANALYTICS ====================
         function initAnalyticsChart() {
             const ctx = document.getElementById('analyticsChart').getContext('2d');
             if (analyticsChart) analyticsChart.destroy();
             analyticsChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
                     datasets: [{
                         label: 'Visits',
-                        data: [65, 59, 80, 81, 56, 55, 40],
+                        data: [65,59,80,81,56,55,40],
                         borderColor: 'var(--primary)',
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        backgroundColor: 'rgba(37,99,235,0.1)',
                         fill: true,
                         tension: 0.4
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
+        // ==================== LEARNING MANAGEMENT ====================
+        async function loadLearningResources() {
+            const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
+            const resources = [];
+            snapshot.forEach(child => resources.push({ id: child.key, ...child.val() }));
+            resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            const container = document.getElementById('learningList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (resources.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No learning resources yet.</div>';
+                return;
+            }
+            resources.forEach(res => {
+                const typeIcon = res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group');
+                const card = document.createElement('div');
+                card.className = 'learning-card';
+                card.innerHTML = `
+                    <div class="learning-thumbnail">
+                        ${res.thumbnail ? `<img src="${res.thumbnail}" alt="${res.title}">` : `<i class="fas ${typeIcon}"></i>`}
+                    </div>
+                    <div class="learning-title">${res.title}</div>
+                    <div class="learning-description">${res.description || ''}</div>
+                    <div class="learning-meta">
+                        <span class="learning-type">${res.type}</span>
+                        <span><i class="far fa-clock"></i> ${formatDate(res.createdAt)}</span>
+                    </div>
+                    <div class="learning-link">
+                        <a href="${res.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Resource</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function loadAdminLearning() {
+            const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
+            const resources = [];
+            snapshot.forEach(child => resources.push({ id: child.key, ...child.val() }));
+            resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            const container = document.getElementById('adminLearningList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (resources.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No resources added yet.</div>';
+                return;
+            }
+            resources.forEach(res => {
+                const card = document.createElement('div');
+                card.className = 'member-card';
+                card.innerHTML = `
+                    <div class="member-card-header">
+                        <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div>
+                        <div class="member-info">
+                            <div class="member-name">${res.title}</div>
+                            <div class="member-email">${res.type} · ${formatDate(res.createdAt)}</div>
+                        </div>
+                    </div>
+                    <div class="admin-learning-actions">
+                        <button class="action-btn edit" onclick="editLearningResource('${res.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.openLearningModal = function(id = null) {
+            document.getElementById('learningModalTitle').textContent = id ? 'Edit Learning Resource' : 'Add Learning Resource';
+            document.getElementById('learningId').value = id || '';
+            if (id) {
+                db.ref('learning/' + id).once('value', snap => {
+                    const r = snap.val();
+                    document.getElementById('learningTitle').value = r.title || '';
+                    document.getElementById('learningDescription').value = r.description || '';
+                    document.getElementById('learningType').value = r.type || 'video';
+                    document.getElementById('learningUrl').value = r.url || '';
+                    document.getElementById('learningThumbnail').value = r.thumbnail || '';
+                });
+            } else {
+                document.getElementById('learningTitle').value = '';
+                document.getElementById('learningDescription').value = '';
+                document.getElementById('learningType').value = 'video';
+                document.getElementById('learningUrl').value = '';
+                document.getElementById('learningThumbnail').value = '';
+            }
+            document.getElementById('learningModal').style.display = 'flex';
+        };
+
+        window.saveLearningResource = async function() {
+            const id = document.getElementById('learningId').value;
+            const title = document.getElementById('learningTitle').value.trim();
+            const description = document.getElementById('learningDescription').value.trim();
+            const type = document.getElementById('learningType').value;
+            const url = document.getElementById('learningUrl').value.trim();
+            const thumbnail = document.getElementById('learningThumbnail').value.trim();
+            if (!title || !url) { showToast('Title and URL are required', 'error'); return; }
+            const data = { title, description, type, url, thumbnail, createdAt: Date.now(), createdBy: currentUser?.uid };
+            try {
+                if (id) await db.ref('learning/' + id).update(data);
+                else await db.ref('learning').push(data);
+                showToast('Learning resource saved');
+                closeModal('learningModal');
+                loadAdminLearning();
+                if (learningView.style.display !== 'none') loadLearningResources();
+            } catch (error) { showToast('Error saving', 'error'); }
+        };
+
+        window.editLearningResource = function(id) {
+            openLearningModal(id);
+        };
+
+        window.deleteLearningResource = async function(id) {
+            if (confirm('Delete this resource?')) {
+                await db.ref('learning/' + id).remove();
+                showToast('Resource deleted');
+                loadAdminLearning();
+                if (learningView.style.display !== 'none') loadLearningResources();
+            }
+        };
+
+        // ==================== ACTIVITY LOGS ====================
+        async function loadActivityLogs() {
+            const snapshot = await db.ref('activity_logs').orderByChild('timestamp').limitToLast(20).once('value');
+            const container = document.getElementById('activityLogs');
+            container.innerHTML = '';
+            if (!snapshot.exists()) { container.innerHTML = '<p style="color: var(--text-muted);">No activity logs</p>'; return; }
+            const logs = [];
+            snapshot.forEach(child => logs.push({ id: child.key, ...child.val() }));
+            logs.reverse().forEach(log => {
+                const logEl = document.createElement('div');
+                logEl.className = 'log-item';
+                logEl.innerHTML = `<div><i class="fas fa-circle" style="color: var(--primary); font-size: 0.5rem;"></i> ${log.action}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">${formatDate(log.timestamp)} • ${log.admin || 'System'}</div>`;
+                container.appendChild(logEl);
+            });
+        }
+
+        window.clearLogs = function() {
+            if (confirm('Clear all activity logs?')) {
+                db.ref('activity_logs').remove();
+                showToast('Logs cleared');
+                loadActivityLogs();
+            }
+        };
+
+        // ==================== EXPORT ====================
+        window.exportData = function() {
+            const dataStr = JSON.stringify(allMembers, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `darkroot_members_${new Date().toISOString().slice(0,10)}.json`;
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            logActivity('Exported member data');
+            showToast('Data exported');
+        };
+
         // ==================== REAL-TIME UPDATES ====================
         db.ref('members').on('child_changed', () => {
-            if (currentUser) {
-                calculateRank();
-                if (membersView.style.display !== 'none') loadMembers();
-                if (dashboardView.style.display !== 'none') {
-                    loadTeamMembers();
-                    loadStats();
-                }
-                // Refresh leaderboard if open
-                if (document.getElementById('teamLeaderboardTab').style.display !== 'none') {
-                    loadLeaderboard();
-                }
-            }
+            if (membersView.style.display !== 'none') loadMembers();
+            if (dashboardView.style.display !== 'none') { loadTeamMembers(); loadStats(); }
+            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
         });
-
         db.ref('members').on('child_added', () => {
-            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') {
-                loadLeaderboard();
-            }
+            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
             if (membersView.style.display !== 'none') loadMembers();
         });
-
         db.ref('members').on('child_removed', () => {
-            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') {
-                loadLeaderboard();
-            }
+            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
             if (membersView.style.display !== 'none') loadMembers();
         });
-
-        db.ref('notices').on('child_added', () => {
-            if (noticesView.style.display !== 'none') loadNotices();
+        db.ref('notices').on('child_added', () => { if (noticesView.style.display !== 'none') loadNotices(); });
+        db.ref('task_submissions').on('child_added', () => { if (tasksView.style.display !== 'none') loadTasks(); });
+        db.ref('task_submissions').on('child_changed', () => { if (tasksView.style.display !== 'none') loadTasks(); });
+        db.ref('settings/blockedUsers').on('value', (snapshot) => { blockedUsers = new Set(snapshot.exists() ? snapshot.val() : []); });
+        db.ref('settings/ranks').on('value', (snapshot) => { customRanks = snapshot.exists() ? snapshot.val() : {}; });
+        db.ref('learning').on('value', () => {
+            if (learningView.style.display !== 'none') loadLearningResources();
+            if (adminView.style.display !== 'none' && adminLearningTab.style.display !== 'none') loadAdminLearning();
         });
 
-        db.ref('task_submissions').on('child_added', () => {
-            if (tasksView.style.display !== 'none') loadTasks();
-        });
-        db.ref('task_submissions').on('child_changed', () => {
-            if (tasksView.style.display !== 'none') loadTasks();
-        });
-
-        // Listen for blocked users changes
-        db.ref('settings/blockedUsers').on('value', (snapshot) => {
-            if (snapshot.exists()) {
-                blockedUsers = new Set(snapshot.val() || []);
-            } else {
-                blockedUsers.clear();
-            }
-        });
-
-        // Listen for custom ranks changes (only affects admin panel)
-        db.ref('settings/ranks').on('value', (snapshot) => {
-            if (snapshot.exists()) {
-                customRanks = snapshot.val();
-            } else {
-                customRanks = {};
-            }
-        });
-
-        console.log('DarkRoot - New simple leaderboard, enhanced chat, image modal, payment & about');
+        console.log('DarkRoot - Learning, enhanced meetings, chat avatars added.');
     </script>
 </body>
 </html>
