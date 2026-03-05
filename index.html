@@ -4073,32 +4073,67 @@
             try {
                 const tasksSnap = await db.ref('tasks').once('value');
                 allTasks = [];
-                tasksSnap.forEach(child => allTasks.push({ id: child.key, ...child.val() }));
-                const submissionsSnap = await db.ref('task_submissions').orderByChild('userId').equalTo(currentUser.uid).once('value');
+                tasksSnap.forEach(child => {
+                    allTasks.push({ id: child.key, ...child.val() });
+                });
+                console.log('Tasks fetched:', allTasks.length);
+
+                const submissionsSnap = await db.ref('task_submissions')
+                    .orderByChild('userId')
+                    .equalTo(currentUser.uid)
+                    .once('value');
                 const submissions = {};
-                submissionsSnap.forEach(child => { const sub = child.val(); submissions[sub.taskId] = sub; });
+                submissionsSnap.forEach(child => {
+                    const sub = child.val();
+                    submissions[sub.taskId] = sub;
+                });
+
                 const container = document.getElementById('tasksList');
                 container.innerHTML = '';
-                if (allTasks.length === 0) { container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>'; return; }
+
+                if (allTasks.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: var(--space-xl); color: var(--gray-500);">No tasks available</div>';
+                    return;
+                }
+
                 allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
                 allTasks.forEach(task => {
-                    if (!task.title || task.points === undefined) return;
+                    if (!task.title || task.points === undefined) {
+                        console.warn('Skipping invalid task:', task);
+                        return;
+                    }
+
                     const submission = submissions[task.id];
-                    let actionHtml = '', statusHtml = '';
+                    let actionHtml = '';
+                    let statusHtml = '';
+
                     if (submission) {
                         const status = submission.status;
-                        let statusColor = '', statusText = '';
-                        if (status === 'pending_manager') { statusColor = 'var(--warning)'; statusText = 'Pending Manager'; }
-                        else if (status === 'pending_ceo') { statusColor = 'var(--warning)'; statusText = 'Pending CEO'; }
-                        else if (status === 'approved') { statusColor = 'var(--success)'; statusText = 'Approved'; }
-                        else if (status === 'rejected') { statusColor = 'var(--danger)'; statusText = 'Rejected'; }
+                        let statusColor = '';
+                        let statusText = '';
+                        if (status === 'pending_manager') {
+                            statusColor = 'var(--warning)';
+                            statusText = 'Pending Manager';
+                        } else if (status === 'pending_ceo') {
+                            statusColor = 'var(--warning)';
+                            statusText = 'Pending CEO';
+                        } else if (status === 'approved') {
+                            statusColor = 'var(--success)';
+                            statusText = 'Approved';
+                        } else if (status === 'rejected') {
+                            statusColor = 'var(--danger)';
+                            statusText = 'Rejected';
+                        }
                         statusHtml = `<span class="team-badge" style="background: ${statusColor}20; color: ${statusColor};">${statusText}</span>`;
                         if (status === 'rejected' && submission.rejectionReason) {
                             statusHtml += `<div style="font-size: 0.7rem; color: var(--danger); margin-top: 4px;">Reason: ${submission.rejectionReason}</div>`;
                         }
+                        // Show image preview
                         if (submission.fileUrl) {
                             statusHtml += `<div><img src="${submission.fileUrl}" class="chat-image" onclick="showImageModal('${submission.fileUrl}')"></div>`;
                         }
+                        // Show message if present
                         if (submission.message) {
                             statusHtml += `<div style="font-size: 0.8rem; margin-top: 4px; padding: 4px 8px; background: var(--gray-200); border-radius: var(--radius-md);"><i class="fas fa-quote-left" style="color: var(--gray-600);"></i> ${submission.message}</div>`;
                         }
@@ -4106,6 +4141,7 @@
                         const safeTitle = task.title.replace(/'/g, "\\'");
                         actionHtml = `<button class="btn btn-primary btn-sm" onclick="openTaskSubmissionModal('${task.id}', '${safeTitle}', ${task.points})" style="width: auto; height: 36px;">Submit</button>`;
                     }
+
                     let descriptionHtml = '';
                     if (task.description) {
                         const descId = `desc-${task.id}`;
@@ -4114,9 +4150,12 @@
                             <span class="toggle-description" onclick="document.getElementById('${descId}').classList.toggle('truncated'); this.innerText = this.innerText === 'Read more' ? 'Show less' : 'Read more';">Read more</span>
                         `;
                     }
+
                     container.innerHTML += `
                         <div class="activity-item" style="flex-wrap: wrap;">
-                            <div class="activity-avatar" style="background: var(--primary-light);"><i class="fas fa-tasks" style="color: var(--primary);"></i></div>
+                            <div class="activity-avatar" style="background: var(--primary-light);">
+                                <i class="fas fa-tasks" style="color: var(--primary);"></i>
+                            </div>
                             <div class="activity-content" style="flex:1;">
                                 <div class="activity-title">${task.title}</div>
                                 <div class="activity-meta">${task.points} points</div>
@@ -4127,7 +4166,10 @@
                         </div>
                     `;
                 });
-            } catch (error) { console.error('Error in loadTasks:', error); showToast('Failed to load tasks', 'error'); }
+            } catch (error) {
+                console.error('Error in loadTasks:', error);
+                showToast('Failed to load tasks', 'error');
+            }
         }
 
         // ==================== ANALYTICS ====================
