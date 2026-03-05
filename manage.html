@@ -653,7 +653,7 @@
             display: block;
         }
 
-        /* Bottom Navigation - now 7 items (Payments replaces Payroll) */
+        /* Bottom Navigation - 7 items */
         .admin-nav {
             background: var(--card-bg);
             border-top: 2px solid var(--border);
@@ -795,37 +795,6 @@
             max-height: 70vh;
             border-radius: 16px;
         }
-
-        /* Rank input */
-        .rank-input {
-            width: 60px;
-            padding: 4px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--card-light);
-            color: white;
-            text-align: center;
-        }
-        .rank-save-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-        .rank-reset-btn {
-            background: var(--warning);
-            color: black;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -948,7 +917,7 @@
                             </div>
                         </div>
 
-                        <!-- Role Management Card (NEW) -->
+                        <!-- Role Management Card -->
                         <div class="card" id="roleManagementCard">
                             <div class="card-header">
                                 <h3><i class="fas fa-tags"></i> Role Management</h3>
@@ -1006,7 +975,7 @@
                         </div>
                     </div>
 
-                    <!-- Approvals View -->
+                    <!-- Approvals View (enhanced for CEO) -->
                     <div id="approvalsView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -1038,22 +1007,7 @@
                         </div>
                     </div>
 
-                    <!-- Leaderboard Management View -->
-                    <div id="leaderboardView" style="display: none;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-trophy"></i> Leaderboard Positions</h3>
-                                <button class="action-btn edit" onclick="resetAllRanks()" style="background: var(--warning); width: auto; padding: 8px 16px;">
-                                    <i class="fas fa-undo"></i> Reset to Points
-                                </button>
-                            </div>
-                            <p style="color: var(--text-secondary); margin-bottom: 15px;">Set custom rank for each member (1 = highest). Leave blank to use points order.</p>
-                            <div id="rankList" class="member-list"></div>
-                            <button class="rank-save-btn" onclick="saveAllRanks()">Save All Ranks</button>
-                        </div>
-                    </div>
-
-                    <!-- NEW: Payments View (replaces Payroll) -->
+                    <!-- Payments View -->
                     <div id="paymentsView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
@@ -1067,17 +1021,29 @@
                             <div id="paymentsList" class="member-list"></div>
                         </div>
                     </div>
+
+                    <!-- Learning View (Admin) -->
+                    <div id="adminLearningView" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-graduation-cap"></i> Learning Resources</h3>
+                                <button class="action-btn edit" onclick="openLearningModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> Add Resource
+                                </button>
+                            </div>
+                            <div id="adminLearningList" class="member-list"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Navigation (Payments replaces Payroll) -->
+        <!-- Bottom Navigation (7 items) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
             <div class="nav-item active" data-view="members">
                 <i class="fas fa-users"></i>
                 <span>Members</span>
             </div>
-        
             <div class="nav-item" data-view="meetings">
                 <i class="fas fa-handshake"></i>
                 <span>Meetings</span>
@@ -1098,16 +1064,20 @@
                 <i class="fas fa-bullhorn"></i>
                 <span>Notices</span>
             </div>
+            <div class="nav-item" data-view="learning">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Learning</span>
+            </div>
         </div>
 
         <!-- Toast Notification -->
         <div class="toast" id="toast">
-            <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+            <i class="fas fa-info-circle" id="toastIcon"></i>
             <span id="toastMessage">Notification</span>
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals (all existing modals remain unchanged) -->
     <div class="modal-overlay" id="editMemberModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('editMemberModal')">&times;</span>
@@ -1177,7 +1147,7 @@
         </div>
     </div>
 
-    <!-- Meeting Modal (unchanged) -->
+    <!-- Meeting Modal -->
     <div class="modal-overlay" id="meetingModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('meetingModal')">&times;</span>
@@ -1209,7 +1179,7 @@
         </div>
     </div>
 
-    <!-- Task Modal (unchanged) -->
+    <!-- Task Modal -->
     <div class="modal-overlay" id="taskModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('taskModal')">&times;</span>
@@ -1233,7 +1203,7 @@
         </div>
     </div>
 
-    <!-- Image Upload Modal (unchanged) -->
+    <!-- Image Upload Modal -->
     <div class="modal-overlay" id="imageUploadModal">
         <div class="modal">
             <span class="modal-close" onclick="closeModal('imageUploadModal')">&times;</span>
@@ -1253,6 +1223,72 @@
                 <button class="btn btn-outline" style="flex:1;" onclick="closeModal('imageUploadModal')">Cancel</button>
                 <button class="btn" style="flex:1;" onclick="uploadImage()" id="uploadBtn">Upload</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal (Admin) -->
+    <div class="modal-overlay" id="editUserModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('editUserModal')">&times;</span>
+            <h3><i class="fas fa-user-edit"></i> Edit User</h3>
+            <div style="display: flex; flex-direction: column; gap: var(--space-md);" id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="input-field">
+                    <label>Points</label>
+                    <input type="number" id="editUserPoints" class="chat-input" placeholder="Points" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                </div>
+                <div class="input-field">
+                    <label>Salary ($)</label>
+                    <input type="number" id="editUserSalary" class="chat-input" placeholder="Salary" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                </div>
+                <div class="input-field">
+                    <label>Role</label>
+                    <select id="editUserRole" class="chat-input" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                        <option value="Member">Member</option>
+                        <option value="Senior">Senior</option>
+                        <option value="Manager">Manager</option>
+                        <option value="CEO">CEO</option>
+                    </select>
+                </div>
+                <!-- Block/Unblock button (visible only to admins) -->
+                <button class="btn btn-warning" id="blockUserBtn" style="display: none;" onclick="toggleBlockUser()">Block User</button>
+                <button class="btn btn-primary" onclick="saveUserEdit()">Save Changes</button>
+                <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Modal -->
+    <div class="modal-overlay" id="learningModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('learningModal')">&times;</span>
+            <h3 id="learningModalTitle">Add Learning Resource</h3>
+            <input type="hidden" id="learningId">
+            <div class="input-field">
+                <label>Title</label>
+                <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Description</label>
+                <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
+            </div>
+            <div class="input-field">
+                <label>Type</label>
+                <select id="learningType" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+                    <option value="video">Video</option>
+                    <option value="article">Article</option>
+                    <option value="course">Course</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label>URL</label>
+                <input type="url" id="learningUrl" class="chat-input" placeholder="https://..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <div class="input-field">
+                <label>Thumbnail URL (optional)</label>
+                <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
+            </div>
+            <button class="btn" onclick="saveLearningResource()">Save</button>
         </div>
     </div>
 
@@ -1284,21 +1320,71 @@
         let allTasks = [];
         let currentFilter = 'all';
         let currentSearchTerm = '';
-        let currentApprovalFilter = 'pending_manager';
+        let currentApprovalFilter = 'pending_manager'; // default, will be updated based on role
         const IMGBB_API_KEY = 'a046c848dfa5230136f107106d4bb187';
         let selectedImageFile = null;
-        let customRanks = {};
         let allRoles = [];
+        let blockedUsers = new Set();
+
+        // DOM Elements (will be retrieved inside functions when needed, to avoid null issues)
+        const authSection = document.getElementById('authSection');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminNav = document.getElementById('adminNav');
+        const adminRoleSpan = document.getElementById('adminRole');
+        const adminAvatarIcon = document.getElementById('adminAvatarIcon');
+        const adminAvatarImg = document.getElementById('adminAvatarImg');
+        const addNoticeBtn = document.getElementById('addNoticeBtn');
+        const adminBottomNav = document.getElementById('adminBottomNav');
+        const adminNavItem = document.getElementById('adminNavItem');
+        const imageViewModal = document.getElementById('imageViewModal');
+        const imageViewSrc = document.getElementById('imageViewSrc');
+
+        // Views
+        const membersView = document.getElementById('membersView');
+        const meetingsView = document.getElementById('meetingsView');
+        const tasksView = document.getElementById('tasksView');
+        const approvalsView = document.getElementById('approvalsView');
+        const noticesView = document.getElementById('noticesView');
+        const paymentsView = document.getElementById('paymentsView');
+        const adminLearningView = document.getElementById('adminLearningView');
+
+        // Admin sub-tabs (not used anymore, we use bottom nav)
+        const adminUserSearch = document.getElementById('adminUserSearch');
+
+        // Login/Signup elements
+        const loginCard = document.getElementById('loginCard');
+        const signupCard = document.getElementById('signupCard');
+        const showSignupBtn = document.getElementById('showSignupBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
         // ==================== UTILITY FUNCTIONS ====================
         function showToast(message, type = 'success') {
+            // Get fresh references each time to avoid null issues
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            if (!toast || !toastMessage || !toastIcon) {
+                console.error('Toast elements not found');
+                return;
+            }
+            
             toastMessage.textContent = message;
-            toast.style.borderColor = type === 'success' ? '#2ecc71' : '#e74c3c';
-            toast.querySelector('i').style.color = type === 'success' ? '#2ecc71' : '#e74c3c';
+            toast.className = 'toast ' + type;
             toast.style.display = 'flex';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+            if (type === 'success') toastIcon.className = 'fas fa-check-circle';
+            else if (type === 'error') toastIcon.className = 'fas fa-exclamation-circle';
+            else toastIcon.className = 'fas fa-info-circle';
+            
+            // Ensure it hides after 3 seconds
+            setTimeout(() => { 
+                if (toast.style.display === 'flex') {
+                    toast.style.display = 'none'; 
+                }
+            }, 3000);
         }
 
         function logActivity(action, details = '') {
@@ -1326,6 +1412,12 @@
 
         function getRoleClass(role) {
             return role ? role.toLowerCase().replace(/ /g, '-') : 'member';
+        }
+
+        // ==================== LOAD BLOCKED USERS ====================
+        async function loadBlockedUsers() {
+            const snapshot = await db.ref('settings/blockedUsers').once('value');
+            blockedUsers = new Set(snapshot.exists() ? snapshot.val() : []);
         }
 
         // ==================== ROLE MANAGEMENT ====================
@@ -1423,19 +1515,22 @@
                     currentAdmin = user;
                     currentAdminData = data;
                     document.getElementById('authSection').style.display = 'none';
-                    document.getElementById('adminPanel').style.display = 'block';
-                    document.getElementById('adminNav').style.display = 'flex';
-                    document.getElementById('adminRole').textContent = data.role;
+                    adminPanel.style.display = 'block';
+                    adminNav.style.display = 'flex';
+                    adminRoleSpan.textContent = data.role;
+                    // Set initial approval filter based on role
                     if (data.role === 'Manager') {
                         currentApprovalFilter = 'pending_manager';
                     } else {
-                        currentApprovalFilter = 'pending_ceo';
+                        // For CEO, default to pending_manager (they can also see pending_ceo via tabs)
+                        currentApprovalFilter = 'pending_manager';
                     }
                     if (data.photoURL) {
-                        document.getElementById('adminAvatarIcon').style.display = 'none';
-                        document.getElementById('adminAvatarImg').src = data.photoURL;
-                        document.getElementById('adminAvatarImg').style.display = 'inline';
+                        adminAvatarIcon.style.display = 'none';
+                        adminAvatarImg.src = data.photoURL;
+                        adminAvatarImg.style.display = 'inline';
                     }
+                    await loadBlockedUsers();
                     await loadRoles();
                     loadDashboardStats();
                     loadAllMembers();
@@ -1443,7 +1538,6 @@
                     loadTasks();
                     loadNotices();
                     loadActivityLogs();
-                    loadCustomRanks();
                     showToast(`Welcome back, ${data.name}`, 'success');
                     logActivity('Admin logged in');
                 } else {
@@ -1452,8 +1546,8 @@
                 }
             } else {
                 document.getElementById('authSection').style.display = 'flex';
-                document.getElementById('adminPanel').style.display = 'none';
-                document.getElementById('adminNav').style.display = 'none';
+                adminPanel.style.display = 'none';
+                adminNav.style.display = 'none';
             }
         });
 
@@ -1489,27 +1583,23 @@
         async function loadAllMembers() {
             const snapshot = await db.ref('members').once('value');
             allMembers = [];
-            
             snapshot.forEach(child => {
                 allMembers.push({
                     uid: child.key,
                     ...child.val()
                 });
             });
-            
             filterAndDisplayMembers();
         }
 
         function filterAndDisplayMembers() {
             const searchTerm = document.getElementById('memberSearch')?.value.toLowerCase() || '';
-            
             const filtered = allMembers.filter(member => {
                 if (currentFilter !== 'all' && member.role !== currentFilter) return false;
                 return (member.name && member.name.toLowerCase().includes(searchTerm)) ||
                        (member.email && member.email.toLowerCase().includes(searchTerm)) ||
                        (member.role && member.role.toLowerCase().includes(searchTerm));
             });
-            
             displayMembers(filtered);
         }
 
@@ -1519,18 +1609,14 @@
                 container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 10px;"></i><p>No members found</p></div>`;
                 return;
             }
-            
             container.innerHTML = '';
             members.sort((a, b) => (b.points || 0) - (a.points || 0));
-            
             members.forEach(member => {
                 const memberCard = document.createElement('div');
                 memberCard.className = 'member-card';
                 memberCard.id = `member-${member.uid}`;
-                
                 const initials = getInitials(member.name);
                 const roleClass = getRoleClass(member.role);
-                
                 memberCard.innerHTML = `
                     <div class="member-card-header">
                         <div class="member-avatar">
@@ -1584,7 +1670,6 @@
                         </button>
                     </div>
                 `;
-                
                 container.appendChild(memberCard);
             });
         }
@@ -1592,13 +1677,10 @@
         window.editMember = function(uid, currentName, currentEmail, currentRole) {
             const modal = document.getElementById('editMemberModal');
             const content = document.getElementById('editMemberContent');
-            
-            // Build role dropdown with allRoles
             let roleOptions = '';
             allRoles.forEach(role => {
                 roleOptions += `<option value="${role}" ${role === currentRole ? 'selected' : ''}>${role}</option>`;
             });
-            
             content.innerHTML = `
                 <div class="input-field">
                     <label>Email</label>
@@ -1620,7 +1702,6 @@
                     <i class="fas fa-save"></i> Update
                 </button>
             `;
-            
             modal.style.display = 'flex';
         };
 
@@ -1785,94 +1866,18 @@
             navigator.clipboard.writeText(text).then(() => showToast('eSewa ID copied!'));
         };
 
-        // ==================== LEADERBOARD RANK MANAGEMENT ====================
-        async function loadCustomRanks() {
-            const snap = await db.ref('settings/ranks').once('value');
-            customRanks = snap.exists() ? snap.val() : {};
-        }
-
-        function renderRankList() {
-            const container = document.getElementById('rankList');
-            if (!container) return;
-            
-            // Sort members by current rank (if set) or points
-            const membersWithRank = allMembers.map(m => ({
-                ...m,
-                rank: customRanks[m.uid] || null
-            }));
-            
-            // Separate ranked and unranked, then sort ranked by rank, unranked by points
-            const ranked = membersWithRank.filter(m => m.rank !== null).sort((a, b) => a.rank - b.rank);
-            const unranked = membersWithRank.filter(m => m.rank === null).sort((a, b) => (b.points || 0) - (a.points || 0));
-            const sorted = [...ranked, ...unranked];
-            
-            container.innerHTML = '';
-            sorted.forEach(member => {
-                const memberDiv = document.createElement('div');
-                memberDiv.className = 'member-card';
-                memberDiv.innerHTML = `
-                    <div class="member-card-header">
-                        <div class="member-avatar">${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}</div>
-                        <div class="member-info">
-                            <div class="member-name">${member.name}</div>
-                            <div class="member-email">${member.email}</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                        <label style="color: var(--text-secondary);">Rank:</label>
-                        <input type="number" id="rank-${member.uid}" class="rank-input" value="${member.rank || ''}" placeholder="Auto" min="1" max="${allMembers.length}">
-                        <span style="color: var(--text-secondary); font-size:0.8rem;">(1 = highest)</span>
-                    </div>
-                `;
-                container.appendChild(memberDiv);
-            });
-        }
-
-        window.saveAllRanks = async function() {
-            const newRanks = {};
-            allMembers.forEach(member => {
-                const input = document.getElementById(`rank-${member.uid}`);
-                if (input && input.value) {
-                    newRanks[member.uid] = parseInt(input.value);
-                }
-            });
-            // Validate no duplicates
-            const rankValues = Object.values(newRanks);
-            const uniqueRanks = new Set(rankValues);
-            if (rankValues.length !== uniqueRanks.size) {
-                showToast('Duplicate ranks are not allowed', 'error');
-                return;
-            }
-            await db.ref('settings/ranks').set(newRanks);
-            customRanks = newRanks;
-            showToast('Ranks saved successfully');
-            logActivity('Updated custom ranks');
-        };
-
-        window.resetAllRanks = async function() {
-            if (confirm('Reset all custom ranks? Members will be ordered by points.')) {
-                await db.ref('settings/ranks').remove();
-                customRanks = {};
-                renderRankList();
-                showToast('Ranks reset');
-            }
-        };
-
         // ==================== MEETINGS MANAGEMENT ====================
         async function loadMeetings() {
             const snapshot = await db.ref('meetings').orderByChild('dateTime').once('value');
             const container = document.getElementById('adminMeetingsList');
             container.innerHTML = '';
-            
             const meetings = [];
             snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
             meetings.sort((a, b) => (a.dateTime || 0) - (b.dateTime || 0));
-            
             if (meetings.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No meetings scheduled.</div>';
                 return;
             }
-            
             meetings.forEach(meeting => {
                 const dateStr = meeting.dateTime ? moment(meeting.dateTime).format('MMM DD, YYYY · hh:mm A') : 'TBD';
                 const card = document.createElement('div');
@@ -1930,19 +1935,16 @@
             const date = document.getElementById('meetingDate').value;
             const time = document.getElementById('meetingTime').value;
             const location = document.getElementById('meetingLocation').value;
-            
             if (!title || !date || !time) {
                 showToast('Title, date and time are required', 'error');
                 return;
             }
-            
             const dateTime = new Date(date + 'T' + time).getTime();
             const meetingData = { 
                 title, description, location, dateTime, 
                 createdBy: currentAdmin?.uid, 
                 createdAt: Date.now() 
             };
-            
             try {
                 if (id) {
                     await db.ref('meetings/' + id).update(meetingData);
@@ -1970,18 +1972,15 @@
             const snapshot = await db.ref('tasks').once('value');
             const container = document.getElementById('adminTasksList');
             container.innerHTML = '';
-            
             allTasks = [];
             snapshot.forEach(child => {
                 allTasks.push({ id: child.key, ...child.val() });
             });
             allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-            
             if (allTasks.length === 0) {
                 container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No tasks created.</div>';
                 return;
             }
-            
             allTasks.forEach(task => {
                 const card = document.createElement('div');
                 card.className = 'item-card';
@@ -2026,18 +2025,15 @@
             const title = document.getElementById('taskTitle').value;
             const description = document.getElementById('taskDescription').value;
             const points = parseInt(document.getElementById('taskPoints').value) || 0;
-            
             if (!title || points <= 0) {
                 showToast('Title and positive points required', 'error');
                 return;
             }
-            
             const taskData = { 
                 title, description, points, 
                 createdBy: currentAdmin?.uid, 
                 createdAt: Date.now() 
             };
-            
             try {
                 if (id) {
                     await db.ref('tasks/' + id).update(taskData);
@@ -2054,17 +2050,15 @@
 
         window.deleteTask = async function(id) {
             if (confirm('Delete this task? It will also remove all completions.')) {
-                // Remove all submissions for this task
                 const submissionsSnap = await db.ref('task_submissions').orderByChild('taskId').equalTo(id).once('value');
                 submissionsSnap.forEach(child => child.ref.remove());
-                
                 await db.ref('tasks/' + id).remove();
                 showToast('Task deleted');
                 loadTasks();
             }
         };
 
-        // ==================== APPROVALS MANAGEMENT (FIXED: now shows fileUrl or screenshotUrl) ====================
+        // ==================== APPROVALS MANAGEMENT (enhanced for CEO) ====================
         function renderApprovalFilters() {
             const container = document.getElementById('approvalFilters');
             if (!container) return;
@@ -2074,7 +2068,7 @@
             if (role === 'Manager') {
                 tabsHtml = `
                     <div class="filter-tab ${currentApprovalFilter === 'pending_manager' ? 'active' : ''}" data-approval-status="pending_manager">
-                        <i class="fas fa-clock"></i> Pending (Manager)
+                        <i class="fas fa-clock"></i> Pending
                     </div>
                     <div class="filter-tab ${currentApprovalFilter === 'approved' ? 'active' : ''}" data-approval-status="approved">
                         <i class="fas fa-check-circle"></i> Approved
@@ -2085,8 +2079,11 @@
                 `;
             } else if (role === 'CEO') {
                 tabsHtml = `
+                    <div class="filter-tab ${currentApprovalFilter === 'pending_manager' ? 'active' : ''}" data-approval-status="pending_manager">
+                        <i class="fas fa-clock"></i> Pending (Manager)
+                    </div>
                     <div class="filter-tab ${currentApprovalFilter === 'pending_ceo' ? 'active' : ''}" data-approval-status="pending_ceo">
-                        <i class="fas fa-clock"></i> Pending (CEO)
+                        <i class="fas fa-hourglass-half"></i> Pending (CEO)
                     </div>
                     <div class="filter-tab ${currentApprovalFilter === 'approved' ? 'active' : ''}" data-approval-status="approved">
                         <i class="fas fa-check-circle"></i> Approved
@@ -2094,12 +2091,6 @@
                     <div class="filter-tab ${currentApprovalFilter === 'rejected' ? 'active' : ''}" data-approval-status="rejected">
                         <i class="fas fa-times-circle"></i> Rejected
                     </div>
-                `;
-            } else {
-                tabsHtml = `
-                    <div class="filter-tab active" data-approval-status="pending_manager">Pending</div>
-                    <div class="filter-tab" data-approval-status="approved">Approved</div>
-                    <div class="filter-tab" data-approval-status="rejected">Rejected</div>
                 `;
             }
             
@@ -2166,14 +2157,18 @@
                         <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve</button>
                         <button class="action-btn reject" onclick="handleApproval('${sub.id}', 'reject')"><i class="fas fa-times"></i> Reject</button>
                     `;
+                } else if (sub.status === 'pending_manager' && role === 'CEO') {
+                    actionButtons = `
+                        <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve (→ CEO Pending)</button>
+                        <button class="action-btn reject" onclick="handleApproval('${sub.id}', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                    `;
                 } else if (sub.status === 'pending_ceo' && role === 'CEO') {
                     actionButtons = `
-                        <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                        <button class="action-btn approve" onclick="handleApproval('${sub.id}', 'approve')"><i class="fas fa-check"></i> Approve (Final)</button>
                         <button class="action-btn reject" onclick="handleApproval('${sub.id}', 'reject')"><i class="fas fa-times"></i> Reject</button>
                     `;
                 }
 
-                // Use fileUrl or screenshotUrl (fallback)
                 const imageUrl = sub.fileUrl || sub.screenshotUrl || '';
 
                 card.innerHTML = `
@@ -2231,6 +2226,14 @@
                     });
                     logActivity('Approved by Manager, moved to CEO pending', `Submission ID: ${submissionId}`);
                     showToast('Approved, now pending CEO');
+                } else if (sub.status === 'pending_manager' && role === 'CEO') {
+                    await subRef.update({
+                        status: 'pending_ceo',
+                        approvedByManager: currentAdmin.uid,
+                        approvedAtManager: Date.now()
+                    });
+                    logActivity('CEO approved manager-pending, moved to CEO pending', `Submission ID: ${submissionId}`);
+                    showToast('Moved to CEO pending');
                 } else if (sub.status === 'pending_ceo' && role === 'CEO') {
                     const task = allTasks.find(t => t.id === sub.taskId);
                     if (task) {
@@ -2263,13 +2266,11 @@
                 showToast('Please enter notice text', 'error');
                 return;
             }
-            
             await db.ref('notices').push({
                 text: noticeText,
                 postedBy: currentAdmin?.email,
                 timestamp: Date.now()
             });
-            
             document.getElementById('noticeInput').value = '';
             logActivity('Posted notice', noticeText);
             showToast('Notice posted');
@@ -2280,12 +2281,10 @@
             const snapshot = await db.ref('notices').orderByChild('timestamp').limitToLast(5).once('value');
             const container = document.getElementById('noticesList');
             container.innerHTML = '';
-            
             if (!snapshot.exists()) {
                 container.innerHTML = '<p style="color: var(--text-muted);">No notices yet</p>';
                 return;
             }
-            
             const notices = [];
             snapshot.forEach(child => notices.push({ id: child.key, ...child.val() }));
             notices.reverse().forEach(notice => {
@@ -2323,12 +2322,10 @@
             const snapshot = await db.ref('activity_logs').orderByChild('timestamp').limitToLast(20).once('value');
             const container = document.getElementById('activityLogs');
             container.innerHTML = '';
-            
             if (!snapshot.exists()) {
                 container.innerHTML = '<p style="color: var(--text-muted);">No activity logs</p>';
                 return;
             }
-            
             const logs = [];
             snapshot.forEach(child => logs.push({ id: child.key, ...child.val() }));
             logs.reverse().forEach(log => {
@@ -2398,9 +2395,9 @@
                 if (data.success) {
                     const url = data.data.url;
                     await db.ref('members/' + currentAdmin.uid).update({ photoURL: url });
-                    document.getElementById('adminAvatarIcon').style.display = 'none';
-                    document.getElementById('adminAvatarImg').src = url;
-                    document.getElementById('adminAvatarImg').style.display = 'inline';
+                    adminAvatarIcon.style.display = 'none';
+                    adminAvatarImg.src = url;
+                    adminAvatarImg.style.display = 'inline';
                     showToast('Profile photo updated!');
                     closeModal('imageUploadModal');
                 } else throw new Error('Upload failed');
@@ -2427,6 +2424,246 @@
             }
         };
 
+        // ==================== ADMIN USER MANAGEMENT ====================
+        window.openEditUserModal = function(uid) {
+            const member = allMembers.find(m => m.uid === uid);
+            if (!member) return;
+            document.getElementById('editUserId').value = uid;
+            document.getElementById('editUserPoints').value = member.points || 0;
+            document.getElementById('editUserSalary').value = member.salary || 0;
+            document.getElementById('editUserRole').value = member.role || 'Member';
+            const blockBtn = document.getElementById('blockUserBtn');
+            if (blockedUsers.has(uid)) {
+                blockBtn.textContent = 'Unblock User';
+                blockBtn.classList.remove('btn-warning');
+                blockBtn.classList.add('btn-success');
+            } else {
+                blockBtn.textContent = 'Block User';
+                blockBtn.classList.remove('btn-success');
+                blockBtn.classList.add('btn-warning');
+            }
+            blockBtn.style.display = 'inline-block';
+            document.getElementById('editUserModal').style.display = 'flex';
+        };
+
+        window.saveUserEdit = async function() {
+            const uid = document.getElementById('editUserId').value;
+            const points = parseInt(document.getElementById('editUserPoints').value) || 0;
+            const salary = parseInt(document.getElementById('editUserSalary').value) || 0;
+            const role = document.getElementById('editUserRole').value;
+            await db.ref('members/' + uid).update({ points, salary, role });
+            logActivity('Edited user', `UID: ${uid}, Points: ${points}, Salary: ${salary}, Role: ${role}`);
+            showToast('User updated');
+            closeModal('editUserModal');
+            loadAllMembers();
+        };
+
+        window.confirmDeleteUser = async function() {
+            const uid = document.getElementById('editUserId').value;
+            if (confirm('⚠️ Delete this user permanently?')) {
+                await db.ref('members/' + uid).remove();
+                logActivity('Deleted user', `UID: ${uid}`);
+                showToast('User deleted');
+                closeModal('editUserModal');
+                loadAllMembers();
+                loadDashboardStats();
+            }
+        };
+
+        window.toggleBlockUser = async function() {
+            const uid = document.getElementById('editUserId').value;
+            let blocked = Array.from(blockedUsers);
+            if (blockedUsers.has(uid)) {
+                blocked = blocked.filter(id => id !== uid);
+            } else {
+                blocked.push(uid);
+            }
+            await db.ref('settings/blockedUsers').set(blocked);
+            blockedUsers = new Set(blocked);
+            const btn = document.getElementById('blockUserBtn');
+            if (blockedUsers.has(uid)) {
+                btn.textContent = 'Unblock User';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-success');
+            } else {
+                btn.textContent = 'Block User';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-warning');
+            }
+            showToast(blockedUsers.has(uid) ? 'User blocked' : 'User unblocked');
+        };
+
+        // ==================== ADMIN USER LIST ====================
+        async function loadAdminUsers() {
+            const snapshot = await db.ref('members').once('value');
+            const members = [];
+            snapshot.forEach(child => members.push({ uid: child.key, ...child.val() }));
+            allMembers = members;
+            displayAdminUsers(members);
+        }
+
+        function displayAdminUsers(members) {
+            const searchTerm = adminUserSearch?.value.toLowerCase() || '';
+            const filtered = members.filter(m => 
+                (m.name && m.name.toLowerCase().includes(searchTerm)) || 
+                (m.email && m.email.toLowerCase().includes(searchTerm))
+            );
+            const container = document.getElementById('adminUserList');
+            container.innerHTML = filtered.map(member => `
+                <div class="user-row">
+                    <div class="user-row-avatar">
+                        ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
+                    </div>
+                    <div class="user-row-info">
+                        <div class="user-row-name">
+                            ${member.name} 
+                        </div>
+                        <div class="user-row-email">${member.email}</div>
+                    </div>
+                    <div class="user-row-actions">
+                        <button class="btn btn-sm btn-outline" onclick="openEditUserModal('${member.uid}')"><i class="fas fa-edit"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        adminUserSearch?.addEventListener('input', loadAdminUsers);
+
+        // ==================== BULK ACTIONS ====================
+        window.bulkUpdatePoints = function() {
+            const points = prompt('Enter points to add to ALL members:');
+            if (points !== null) {
+                allMembers.forEach(member => {
+                    db.ref('members/' + member.uid).update({
+                        points: (member.points || 0) + parseInt(points)
+                    });
+                });
+                logActivity('Bulk points update', `Added ${points} points to all members`);
+                showToast(`Added ${points} points to all members`);
+                setTimeout(loadAllMembers, 1000);
+            }
+        };
+
+        window.resetLeaderboard = function() {
+            if (confirm('⚠️ Reset ALL member points to 0?')) {
+                allMembers.forEach(member => {
+                    db.ref('members/' + member.uid).update({ points: 0 });
+                });
+                logActivity('Reset leaderboard', 'All points set to 0');
+                showToast('Leaderboard reset');
+                setTimeout(loadAllMembers, 1000);
+            }
+        };
+
+        // ==================== LEARNING MANAGEMENT ====================
+        function loadAdminLearning() {
+            const container = document.getElementById('adminLearningList');
+            if (!container) return;
+            db.ref('learning').orderByChild('createdAt').once('value', (snap) => {
+                const resources = [];
+                snap.forEach(child => resources.push({ id: child.key, ...child.val() }));
+                resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                container.innerHTML = '';
+                if (resources.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No learning resources added.</div>';
+                    return;
+                }
+                resources.forEach(res => {
+                    const card = document.createElement('div');
+                    card.className = 'member-card';
+                    card.innerHTML = `
+                        <div class="member-card-header">
+                            <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div>
+                            <div class="member-info">
+                                <div class="member-name">${res.title}</div>
+                                <div class="member-email">${res.type} · ${formatDate(res.createdAt)}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 10px;">
+                            <button class="action-btn edit" onclick="editLearningResource('${res.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        window.openLearningModal = function(id = null) {
+            document.getElementById('learningModalTitle').textContent = id ? 'Edit Learning Resource' : 'Add Learning Resource';
+            document.getElementById('learningId').value = id || '';
+            if (id) {
+                db.ref('learning/' + id).once('value', snap => {
+                    const r = snap.val();
+                    document.getElementById('learningTitle').value = r.title || '';
+                    document.getElementById('learningDescription').value = r.description || '';
+                    document.getElementById('learningType').value = r.type || 'video';
+                    document.getElementById('learningUrl').value = r.url || '';
+                    document.getElementById('learningThumbnail').value = r.thumbnail || '';
+                });
+            } else {
+                document.getElementById('learningTitle').value = '';
+                document.getElementById('learningDescription').value = '';
+                document.getElementById('learningType').value = 'video';
+                document.getElementById('learningUrl').value = '';
+                document.getElementById('learningThumbnail').value = '';
+            }
+            document.getElementById('learningModal').style.display = 'flex';
+        };
+
+        window.saveLearningResource = async function() {
+            const id = document.getElementById('learningId').value;
+            const title = document.getElementById('learningTitle').value.trim();
+            const description = document.getElementById('learningDescription').value.trim();
+            const type = document.getElementById('learningType').value;
+            const url = document.getElementById('learningUrl').value.trim();
+            const thumbnail = document.getElementById('learningThumbnail').value.trim();
+            if (!title || !url) { showToast('Title and URL are required', 'error'); return; }
+            const data = { title, description, type, url, thumbnail, createdAt: Date.now(), createdBy: currentAdmin?.uid };
+            try {
+                if (id) await db.ref('learning/' + id).update(data);
+                else await db.ref('learning').push(data);
+                showToast('Learning resource saved');
+                closeModal('learningModal');
+                loadAdminLearning();
+            } catch (error) { showToast('Error saving', 'error'); }
+        };
+
+        window.editLearningResource = function(id) {
+            openLearningModal(id);
+        };
+
+        window.deleteLearningResource = async function(id) {
+            if (confirm('Delete this learning resource?')) {
+                await db.ref('learning/' + id).remove();
+                showToast('Resource deleted');
+                loadAdminLearning();
+            }
+        };
+
+        // ==================== BOTTOM NAVIGATION ====================
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+                const view = item.dataset.view;
+                membersView.style.display = 'none';
+                meetingsView.style.display = 'none';
+                tasksView.style.display = 'none';
+                approvalsView.style.display = 'none';
+                noticesView.style.display = 'none';
+                paymentsView.style.display = 'none';
+                adminLearningView.style.display = 'none';
+                if (view === 'members') { membersView.style.display = 'block'; loadAllMembers(); }
+                else if (view === 'meetings') { meetingsView.style.display = 'block'; loadMeetings(); }
+                else if (view === 'tasks') { tasksView.style.display = 'block'; loadTasks(); }
+                else if (view === 'approvals') { approvalsView.style.display = 'block'; renderApprovalFilters(); loadApprovals(); }
+                else if (view === 'payments') { paymentsView.style.display = 'block'; loadPaymentsView(); }
+                else if (view === 'notices') { noticesView.style.display = 'block'; loadNotices(); }
+                else if (view === 'learning') { adminLearningView.style.display = 'block'; loadAdminLearning(); }
+            });
+        });
+
         // ==================== EVENT LISTENERS ====================
         document.getElementById('memberSearch').addEventListener('input', (e) => {
             currentSearchTerm = e.target.value;
@@ -2435,47 +2672,34 @@
 
         document.getElementById('paymentTypeFilter')?.addEventListener('change', loadPaymentsView);
 
-        // Bottom navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-                const view = item.dataset.view;
-                document.getElementById('membersView').style.display = 'none';
-                document.getElementById('meetingsView').style.display = 'none';
-                document.getElementById('tasksView').style.display = 'none';
-                document.getElementById('approvalsView').style.display = 'none';
-                document.getElementById('noticesView').style.display = 'none';
-                document.getElementById('leaderboardView').style.display = 'none';
-                document.getElementById('paymentsView').style.display = 'none';
-                if (view === 'members') { document.getElementById('membersView').style.display = 'block'; loadAllMembers(); }
-                else if (view === 'leaderboard') { document.getElementById('leaderboardView').style.display = 'block'; renderRankList(); }
-                else if (view === 'meetings') { document.getElementById('meetingsView').style.display = 'block'; loadMeetings(); }
-                else if (view === 'tasks') { document.getElementById('tasksView').style.display = 'block'; loadTasks(); }
-                else if (view === 'approvals') { document.getElementById('approvalsView').style.display = 'block'; renderApprovalFilters(); loadApprovals(); }
-                else if (view === 'payments') { document.getElementById('paymentsView').style.display = 'block'; loadPaymentsView(); }
-                else if (view === 'notices') { document.getElementById('noticesView').style.display = 'block'; loadNotices(); }
-            });
-        });
-
         window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) e.target.style.display = 'none'; };
 
         // ==================== INITIALIZATION ====================
         db.ref('members').on('child_changed', () => {
-            if (document.getElementById('membersView').style.display !== 'none') loadAllMembers();
+            if (membersView.style.display !== 'none') loadAllMembers();
             loadDashboardStats();
         });
-        db.ref('meetings').on('value', () => { if (document.getElementById('meetingsView').style.display !== 'none') loadMeetings(); });
+        db.ref('members').on('child_added', () => {
+            if (membersView.style.display !== 'none') loadAllMembers();
+        });
+        db.ref('members').on('child_removed', () => {
+            if (membersView.style.display !== 'none') loadAllMembers();
+        });
+        db.ref('meetings').on('value', () => { if (meetingsView.style.display !== 'none') loadMeetings(); });
         db.ref('tasks').on('value', () => { 
-            if (document.getElementById('tasksView').style.display !== 'none') loadTasks(); 
-            if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
+            if (tasksView.style.display !== 'none') loadTasks(); 
+            if (approvalsView.style.display !== 'none') loadApprovals(); 
         });
-        db.ref('notices').on('child_added', () => { if (document.getElementById('noticesView').style.display !== 'none') loadNotices(); });
-        db.ref('activity_logs').on('value', () => { if (document.getElementById('membersView').style.display !== 'none') loadActivityLogs(); });
+        db.ref('notices').on('child_added', () => { if (noticesView.style.display !== 'none') loadNotices(); });
+        db.ref('activity_logs').on('value', () => { if (membersView.style.display !== 'none') loadActivityLogs(); });
         db.ref('task_submissions').on('value', () => { 
-            if (document.getElementById('approvalsView').style.display !== 'none') loadApprovals(); 
+            if (approvalsView.style.display !== 'none') loadApprovals(); 
         });
+        db.ref('settings/blockedUsers').on('value', (snapshot) => { blockedUsers = new Set(snapshot.exists() ? snapshot.val() : []); });
         db.ref('settings/roles').on('value', () => { if (currentAdmin) loadRoles(); });
+        db.ref('learning').on('value', () => {
+            if (adminLearningView.style.display !== 'none') loadAdminLearning();
+        });
     </script>
 </body>
 </html>
