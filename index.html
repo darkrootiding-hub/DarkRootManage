@@ -28,6 +28,13 @@
             user-select: none;
         }
 
+        input, textarea, [contenteditable] {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
@@ -1693,6 +1700,195 @@
             word-break: break-word;
         }
 
+        /* ========== IDEA REACTIONS ========== */
+        .idea-reactions-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: var(--space-xs) 0;
+            border-top: 1px solid var(--gray-100);
+            border-bottom: 1px solid var(--gray-100);
+            margin: var(--space-xs) 0;
+            flex-wrap: wrap;
+        }
+        .reaction-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--gray-100);
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .reaction-btn:active { transform: scale(0.92); }
+        .reaction-btn.reacted {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .reaction-btn .emoji { font-size: 1rem; }
+        .reaction-btn .count { font-size: 0.75rem; font-weight: 600; }
+        .reaction-add-btn {
+            background: none;
+            border: 1.5px dashed var(--gray-300);
+            border-radius: var(--radius-full);
+            padding: 4px 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+        .reaction-add-btn:active { background: var(--gray-100); }
+
+        /* Emoji picker popover */
+        .emoji-picker-popover {
+            position: absolute;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            padding: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            z-index: 500;
+            width: 200px;
+            border: 1px solid var(--gray-200);
+        }
+        .emoji-pick-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .emoji-pick-btn:hover { background: var(--gray-100); transform: scale(1.2); }
+
+        /* ========== IDEA COMMENTS ========== */
+        .idea-comments-section {
+            margin-top: var(--space-sm);
+        }
+        .comments-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .comments-toggle-btn:active { opacity: 0.7; }
+        .comments-list {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: var(--space-sm);
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .comments-list.open { display: flex; }
+        .comment-item {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: flex-start;
+        }
+        .comment-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--primary);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .comment-bubble {
+            background: var(--gray-100);
+            border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+            padding: 6px 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .comment-author {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+        .comment-text {
+            font-size: 0.82rem;
+            word-break: break-word;
+            color: var(--gray-800);
+        }
+        .comment-time {
+            font-size: 0.65rem;
+            color: var(--gray-400);
+            margin-top: 2px;
+        }
+        .comment-delete-btn {
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .comment-delete-btn:hover { color: var(--danger); background: var(--danger-light); }
+        .comment-input-row {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
+            align-items: center;
+        }
+        .comment-input-field {
+            flex: 1;
+            background: var(--gray-100);
+            border: 1.5px solid transparent;
+            border-radius: var(--radius-full);
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            outline: none;
+            transition: var(--transition);
+            font-family: inherit;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .comment-input-field:focus { border-color: var(--primary); background: var(--white); }
+        .comment-send-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .comment-send-btn:active { background: var(--primary-dark); transform: scale(0.93); }
+        .comment-send-btn:disabled { background: var(--gray-300); cursor: not-allowed; }
+
         /* ========== RANK MANAGEMENT (from admin panel) ========== */
         .rank-input {
             width: 60px;
@@ -2909,7 +3105,7 @@
                 showTeamTab('members');
             } else if (viewName === 'ideas') {
                 ideasView.style.display = 'block';
-                loadIdeas();
+                setupIdeasListener();
             } else if (viewName === 'chat') {
                 chatView.style.display = 'block';
                 loadChatMessages();
@@ -3459,6 +3655,8 @@
         };
 
         // ==================== IDEAS ====================
+        const IDEA_EMOJIS = ['👍','❤️','🔥','😂','😮','👏','💡','🎉'];
+
         window.postIdea = async function() {
             if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from posting ideas', 'error'); return; }
             const text = document.getElementById('ideaInput').value.trim();
@@ -3469,7 +3667,9 @@
                     userName: currentMemberData.name,
                     userPhoto: currentMemberData.photoURL || '',
                     text: text,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    reactions: {},
+                    commentCount: 0
                 });
                 document.getElementById('ideaInput').value = '';
                 showToast('Idea posted!', 'success');
@@ -3489,20 +3689,302 @@
             snapshot.forEach(child => ideas.push({ id: child.key, ...child.val() }));
             ideas.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             ideas.forEach(idea => {
-                const timeStr = idea.timestamp ? moment(idea.timestamp).format('MMM DD, hh:mm A') : 'Just now';
-                const avatarHtml = idea.userPhoto ? `<img src="${idea.userPhoto}">` : getInitials(idea.userName || 'Unknown');
-                container.innerHTML += `
-                    <div class="idea-item">
-                        <div class="idea-header">
-                            <div class="idea-avatar">${avatarHtml}</div>
-                            <div>
-                                <div class="idea-author">${idea.userName || 'Unknown'}</div>
-                                <div class="idea-time">${timeStr}</div>
-                            </div>
+                const el = buildIdeaElement(idea);
+                container.appendChild(el);
+            });
+        }
+
+        function buildIdeaElement(idea) {
+            const timeStr = idea.timestamp ? moment(idea.timestamp).format('MMM DD, hh:mm A') : 'Just now';
+            const avatarHtml = idea.userPhoto ? `<img src="${idea.userPhoto}">` : getInitials(idea.userName || 'Unknown');
+            const isOwn = idea.userId === currentUser?.uid;
+
+            // Build reaction buttons from stored reactions object
+            // reactions = { emoji: { uid: true, ... }, ... }
+            const reactions = idea.reactions || {};
+            let reactBtns = '';
+            const reactionMap = {};
+            for (const [emoji, users] of Object.entries(reactions)) {
+                const count = Object.keys(users).length;
+                if (count === 0) continue;
+                const iReacted = users[currentUser.uid] === true;
+                reactionMap[emoji] = { count, iReacted };
+                reactBtns += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${idea.id}', '${emoji}')">
+                    <span class="emoji">${emoji}</span><span class="count">${count}</span>
+                </button>`;
+            }
+            reactBtns += `<button class="reaction-add-btn" onclick="openEmojiPicker(event, '${idea.id}')">＋</button>`;
+
+            const commentCount = idea.commentCount || 0;
+            const deleteBtn = isOwn ? `<button onclick="deleteIdea('${idea.id}')" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:0.75rem;"><i class="fas fa-trash"></i></button>` : '';
+
+            const div = document.createElement('div');
+            div.className = 'idea-item';
+            div.id = `idea-${idea.id}`;
+            div.innerHTML = `
+                <div class="idea-header" style="justify-content: space-between;">
+                    <div style="display:flex;align-items:center;gap:var(--space-sm);">
+                        <div class="idea-avatar">${avatarHtml}</div>
+                        <div>
+                            <div class="idea-author">${idea.userName || 'Unknown'}</div>
+                            <div class="idea-time">${timeStr}</div>
                         </div>
-                        <div class="idea-text">${idea.text}</div>
                     </div>
-                `;
+                    ${deleteBtn}
+                </div>
+                <div class="idea-text">${escapeHtml(idea.text)}</div>
+                <div class="idea-reactions-bar" id="reactions-${idea.id}">${reactBtns}</div>
+                <div class="idea-comments-section">
+                    <button class="comments-toggle-btn" onclick="toggleComments('${idea.id}', this)">
+                        <i class="fas fa-comment"></i> ${commentCount > 0 ? commentCount + ' comment' + (commentCount > 1 ? 's' : '') : 'Comment'}
+                    </button>
+                    <div class="comments-list" id="comments-${idea.id}">
+                        <div style="text-align:center;padding:8px;color:var(--gray-400);font-size:0.8rem;" id="comments-loading-${idea.id}">Loading...</div>
+                        <div class="comment-input-row">
+                            <div class="comment-avatar">
+                                ${currentMemberData?.photoURL ? `<img src="${currentMemberData.photoURL}">` : getInitials(currentMemberData?.name || 'Me')}
+                            </div>
+                            <input class="comment-input-field" id="comment-input-${idea.id}" placeholder="Write a comment..." 
+                                onkeypress="if(event.key==='Enter') postComment('${idea.id}')"
+                                oninput="document.getElementById('comment-send-${idea.id}').disabled = !this.value.trim()">
+                            <button class="comment-send-btn" id="comment-send-${idea.id}" disabled onclick="postComment('${idea.id}')">
+                                <i class="fas fa-paper-plane" style="font-size:0.8rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ==================== REACTIONS ====================
+        window.toggleReaction = async function(ideaId, emoji) {
+            const path = `ideas/${ideaId}/reactions/${encodeEmoji(emoji)}/${currentUser.uid}`;
+            const snap = await db.ref(path).once('value');
+            if (snap.exists()) {
+                await db.ref(path).remove();
+            } else {
+                await db.ref(path).set(true);
+            }
+            // Re-render just the reaction bar
+            refreshReactionBar(ideaId);
+        };
+
+        async function refreshReactionBar(ideaId) {
+            const snap = await db.ref(`ideas/${ideaId}/reactions`).once('value');
+            const reactions = snap.val() || {};
+            const bar = document.getElementById(`reactions-${ideaId}`);
+            if (!bar) return;
+            let html = '';
+            for (const [emojiKey, users] of Object.entries(reactions)) {
+                const emoji = decodeEmoji(emojiKey);
+                const count = Object.keys(users).length;
+                if (count === 0) continue;
+                const iReacted = users[currentUser.uid] === true;
+                html += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${ideaId}', '${emoji}')">
+                    <span class="emoji">${emoji}</span><span class="count">${count}</span>
+                </button>`;
+            }
+            html += `<button class="reaction-add-btn" onclick="openEmojiPicker(event, '${ideaId}')">＋</button>`;
+            bar.innerHTML = html;
+        }
+
+        function encodeEmoji(e) { return encodeURIComponent(e).replace(/%/g,'_'); }
+        function decodeEmoji(e) { try { return decodeURIComponent(e.replace(/_/g,'%')); } catch { return e; } }
+
+        let activePickerClose = null;
+        window.openEmojiPicker = function(event, ideaId) {
+            event.stopPropagation();
+            // Remove existing picker
+            if (activePickerClose) { activePickerClose(); activePickerClose = null; }
+            const btn = event.currentTarget;
+            const picker = document.createElement('div');
+            picker.className = 'emoji-picker-popover';
+            IDEA_EMOJIS.forEach(em => {
+                const b = document.createElement('button');
+                b.className = 'emoji-pick-btn';
+                b.textContent = em;
+                b.onclick = (e) => { e.stopPropagation(); toggleReaction(ideaId, em); picker.remove(); activePickerClose = null; };
+                picker.appendChild(b);
+            });
+            // Position near button
+            document.body.appendChild(picker);
+            const rect = btn.getBoundingClientRect();
+            const top = rect.bottom + window.scrollY + 4;
+            const left = Math.min(rect.left + window.scrollX, window.innerWidth - 210);
+            picker.style.top = top + 'px';
+            picker.style.left = left + 'px';
+            picker.style.position = 'absolute';
+            const close = () => { picker.remove(); activePickerClose = null; document.removeEventListener('click', close); };
+            activePickerClose = close;
+            setTimeout(() => document.addEventListener('click', close), 10);
+        };
+
+        // ==================== COMMENTS ====================
+        let openCommentsListeners = {};
+
+        window.toggleComments = function(ideaId, btn) {
+            const list = document.getElementById(`comments-${ideaId}`);
+            const isOpen = list.classList.toggle('open');
+            if (isOpen) {
+                loadComments(ideaId);
+                btn.innerHTML = `<i class="fas fa-comment-slash"></i> Hide`;
+            } else {
+                // Detach listener
+                if (openCommentsListeners[ideaId]) {
+                    db.ref(`idea_comments/${ideaId}`).off('value', openCommentsListeners[ideaId]);
+                    delete openCommentsListeners[ideaId];
+                }
+                btn.innerHTML = `<i class="fas fa-comment"></i> Comment`;
+            }
+        };
+
+        function loadComments(ideaId) {
+            // Detach old listener if any
+            if (openCommentsListeners[ideaId]) {
+                db.ref(`idea_comments/${ideaId}`).off('value', openCommentsListeners[ideaId]);
+            }
+            const handler = (snap) => {
+                const list = document.getElementById(`comments-${ideaId}`);
+                if (!list) return;
+                const inputRow = list.querySelector('.comment-input-row');
+                // Remove old comments (keep input row)
+                const existing = list.querySelectorAll('.comment-item');
+                existing.forEach(el => el.remove());
+                const loading = document.getElementById(`comments-loading-${ideaId}`);
+                if (loading) loading.remove();
+
+                if (!snap.exists()) {
+                    const empty = document.createElement('div');
+                    empty.id = `comments-empty-${ideaId}`;
+                    empty.style.cssText = 'text-align:center;padding:8px;color:var(--gray-400);font-size:0.8rem;';
+                    empty.textContent = 'No comments yet. Be first!';
+                    list.insertBefore(empty, inputRow);
+                    return;
+                }
+                const emptyEl = document.getElementById(`comments-empty-${ideaId}`);
+                if (emptyEl) emptyEl.remove();
+
+                const comments = [];
+                snap.forEach(child => comments.push({ id: child.key, ...child.val() }));
+                comments.sort((a,b) => (a.timestamp||0) - (b.timestamp||0));
+                comments.forEach(c => {
+                    const el = buildCommentElement(c, ideaId);
+                    list.insertBefore(el, inputRow);
+                });
+                // Auto scroll
+                list.scrollTop = list.scrollHeight;
+            };
+            openCommentsListeners[ideaId] = handler;
+            db.ref(`idea_comments/${ideaId}`).orderByChild('timestamp').on('value', handler);
+        }
+
+        function buildCommentElement(c, ideaId) {
+            const el = document.createElement('div');
+            el.className = 'comment-item';
+            el.id = `comment-item-${c.id}`;
+            const avatarHtml = c.userPhoto ? `<img src="${c.userPhoto}">` : getInitials(c.userName || '?');
+            const timeStr = c.timestamp ? moment(c.timestamp).fromNow() : 'just now';
+            const isOwn = c.userId === currentUser?.uid;
+            const isAdmin = currentMemberData?.role === 'CEO' || currentMemberData?.role === 'Manager';
+            const delBtn = (isOwn || isAdmin) ? `<button class="comment-delete-btn" onclick="deleteComment('${ideaId}','${c.id}')"><i class="fas fa-times"></i></button>` : '';
+            el.innerHTML = `
+                <div class="comment-avatar">${avatarHtml}</div>
+                <div class="comment-bubble">
+                    <div class="comment-author">${escapeHtml(c.userName || 'Unknown')}</div>
+                    <div class="comment-text">${escapeHtml(c.text || '')}</div>
+                    <div class="comment-time">${timeStr}</div>
+                </div>
+                ${delBtn}
+            `;
+            return el;
+        }
+
+        window.postComment = async function(ideaId) {
+            const input = document.getElementById(`comment-input-${ideaId}`);
+            const text = input.value.trim();
+            if (!text) return;
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from commenting', 'error'); return; }
+            const sendBtn = document.getElementById(`comment-send-${ideaId}`);
+            sendBtn.disabled = true;
+            try {
+                await db.ref(`idea_comments/${ideaId}`).push({
+                    userId: currentUser.uid,
+                    userName: currentMemberData.name || 'Unknown',
+                    userPhoto: currentMemberData.photoURL || '',
+                    text: text,
+                    timestamp: Date.now()
+                });
+                // Increment comment count on idea
+                await db.ref(`ideas/${ideaId}/commentCount`).transaction(count => (count || 0) + 1);
+                input.value = '';
+                // Update button text
+                const toggleBtn = document.querySelector(`#idea-${ideaId} .comments-toggle-btn`);
+                if (toggleBtn) toggleBtn.innerHTML = `<i class="fas fa-comment-slash"></i> Hide`;
+            } catch(err) {
+                showToast('Failed to post comment', 'error');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        };
+
+        window.deleteComment = async function(ideaId, commentId) {
+            if (!confirm('Delete this comment?')) return;
+            try {
+                await db.ref(`idea_comments/${ideaId}/${commentId}`).remove();
+                await db.ref(`ideas/${ideaId}/commentCount`).transaction(count => Math.max((count || 1) - 1, 0));
+            } catch(err) { showToast('Failed to delete comment', 'error'); }
+        };
+
+        window.deleteIdea = async function(ideaId) {
+            if (!confirm('Delete this idea?')) return;
+            try {
+                await db.ref(`ideas/${ideaId}`).remove();
+                await db.ref(`idea_comments/${ideaId}`).remove();
+                const el = document.getElementById(`idea-${ideaId}`);
+                if (el) el.remove();
+                showToast('Idea deleted');
+            } catch(err) { showToast('Failed to delete idea', 'error'); }
+        };
+
+        // Real-time ideas feed
+        let ideasRef = null;
+        function setupIdeasListener() {
+            if (ideasRef) ideasRef.off();
+            ideasRef = db.ref('ideas').orderByChild('timestamp').limitToLast(50);
+            ideasRef.on('child_added', (snap) => {
+                const idea = { id: snap.key, ...snap.val() };
+                // Only add if not already in DOM
+                if (!document.getElementById(`idea-${idea.id}`)) {
+                    const container = document.getElementById('ideasList');
+                    const emptyMsg = container.querySelector('div[style*="text-align"]');
+                    if (emptyMsg) emptyMsg.remove();
+                    const el = buildIdeaElement(idea);
+                    container.prepend(el);
+                }
+            });
+            ideasRef.on('child_changed', (snap) => {
+                // Refresh reaction bar and comment count if idea element exists
+                const idea = { id: snap.key, ...snap.val() };
+                const existing = document.getElementById(`idea-${idea.id}`);
+                if (existing) {
+                    refreshReactionBar(idea.id);
+                    // Update comment count button
+                    const toggleBtn = existing.querySelector('.comments-toggle-btn');
+                    const count = idea.commentCount || 0;
+                    const listOpen = document.getElementById(`comments-${idea.id}`)?.classList.contains('open');
+                    if (toggleBtn && !listOpen) {
+                        toggleBtn.innerHTML = `<i class="fas fa-comment"></i> ${count > 0 ? count + ' comment' + (count > 1 ? 's' : '') : 'Comment'}`;
+                    }
+                }
+            });
+            ideasRef.on('child_removed', (snap) => {
+                const el = document.getElementById(`idea-${snap.key}`);
+                if (el) el.remove();
             });
         }
 
@@ -3569,7 +4051,11 @@
             const snapshot = await db.ref('members').orderByChild('points').limitToLast(4).once('value');
             const members = [];
             snapshot.forEach(child => {
-                members.push({ uid: child.key, ...child.val() });
+                const m = { uid: child.key, ...child.val() };
+                members.push(m);
+                // Keep allMembers cache up to date so showMemberProfile works from dashboard
+                const idx = allMembers.findIndex(x => x.uid === m.uid);
+                if (idx >= 0) allMembers[idx] = m; else allMembers.push(m);
             });
             
             const container = document.getElementById('teamGrid');
@@ -3671,22 +4157,42 @@
         document.getElementById('memberRoleFilter')?.addEventListener('change', filterAndDisplayMembers);
 
         window.showMemberProfile = async function(uid) {
-            const member = allMembers.find(m => m.uid === uid) || { name: 'Unknown', email: '', points: 0, salary: 0, status: 'Active' };
+            // Always fetch fresh from Firebase — never rely on allMembers being populated
+            let member = allMembers.find(m => m.uid === uid);
+            if (!member || !member.name) {
+                try {
+                    const snap = await db.ref('members/' + uid).once('value');
+                    if (snap.exists()) {
+                        member = { uid, ...snap.val() };
+                        // Cache into allMembers for later use
+                        const idx = allMembers.findIndex(m => m.uid === uid);
+                        if (idx >= 0) allMembers[idx] = member; else allMembers.push(member);
+                    }
+                } catch(e) {}
+            }
+            if (!member || !member.name) {
+                showToast('Could not load member profile', 'error');
+                return;
+            }
+
             const isAdmin = currentMemberData?.role === 'CEO' || currentMemberData?.role === 'Manager';
             const blockButtonHtml = isAdmin ? `<button class="btn ${blockedUsers.has(uid) ? 'btn-success' : 'btn-warning'}" onclick="toggleBlockFromProfile('${uid}')" style="margin-top: var(--space-md); width: 100%;">${blockedUsers.has(uid) ? 'Unblock User' : 'Block User'}</button>` : '';
+
+            const joinStr = member.joinDate ? moment(member.joinDate).format('MMM DD, YYYY') : '—';
             
             const content = `
                 <div style="text-align: center; margin-bottom: var(--space-lg);">
-                    <div class="team-avatar" style="width: 80px; height: 80px; margin: 0 auto var(--space-md);">
-                        ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
+                    <div class="team-avatar" style="width: 80px; height: 80px; margin: 0 auto var(--space-md); font-size:1.8rem;">
+                        ${member.photoURL ? `<img src="${member.photoURL}" style="width:100%;height:100%;object-fit:cover;">` : getInitials(member.name)}
                     </div>
                     <h3 style="font-size: 1.3rem; margin-bottom: var(--space-xs);">${member.name}</h3>
                     <span class="team-badge">${member.role || 'Member'}</span>
                 </div>
-                <div class="info-row" style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-200);"><span>Email</span><span>${member.email}</span></div>
-                <div class="info-row" style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-200);"><span>Points</span><span>${member.points || 0}</span></div>
-                <div class="info-row" style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--gray-200);"><span>Salary</span><span>$${member.salary || 0}</span></div>
-                <div class="info-row" style="display: flex; justify-content: space-between; padding: var(--space-sm) 0;"><span>Status</span><span style="color: var(--success);">${member.status || 'Active'}</span></div>
+                <div class="info-row" style="display:flex;justify-content:space-between;padding:var(--space-sm) 0;border-bottom:1px solid var(--gray-200);"><span style="color:var(--gray-600);">Email</span><span style="font-size:0.85rem;word-break:break-all;">${member.email || '—'}</span></div>
+                <div class="info-row" style="display:flex;justify-content:space-between;padding:var(--space-sm) 0;border-bottom:1px solid var(--gray-200);"><span style="color:var(--gray-600);">Points</span><span style="font-weight:700;color:var(--primary);">⭐ ${member.points || 0}</span></div>
+                <div class="info-row" style="display:flex;justify-content:space-between;padding:var(--space-sm) 0;border-bottom:1px solid var(--gray-200);"><span style="color:var(--gray-600);">Salary</span><span style="font-weight:600;">$${member.salary || 0}</span></div>
+                <div class="info-row" style="display:flex;justify-content:space-between;padding:var(--space-sm) 0;border-bottom:1px solid var(--gray-200);"><span style="color:var(--gray-600);">Joined</span><span>${joinStr}</span></div>
+                <div class="info-row" style="display:flex;justify-content:space-between;padding:var(--space-sm) 0;"><span style="color:var(--gray-600);">Status</span><span style="color:var(--success);font-weight:600;">${member.status || 'Active'}</span></div>
                 ${blockButtonHtml}
             `;
             
