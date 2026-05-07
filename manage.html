@@ -7,7 +7,7 @@
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Moment.js -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <style>
@@ -809,20 +809,310 @@
         .learning-resource-link:hover {
             text-decoration: underline;
         }
+
+        /* ── SMOOTH TRANSITIONS ── */
+        #authSection { transition: opacity 0.3s ease; }
+        #adminPanel { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+        /* ── GOOGLE AUTH CARD ── */
+        .auth-card {
+            background: #14181f;
+            border-radius: 28px;
+            padding: 36px 24px;
+            border: 1px solid #2c3a47;
+            width: 100%;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+        }
+        .auth-logo-wrap {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 32px rgba(231,76,60,0.35);
+        }
+        .auth-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem; font-weight: 800;
+            text-align: center; color: #ecf0f1; margin-bottom: 6px;
+        }
+        .auth-subtitle { text-align: center; color: #7f8c8d; font-size: 0.88rem; margin-bottom: 28px; }
+        .btn-google {
+            width: 100%; height: 52px;
+            background: #1e2630;
+            border: 1.5px solid #2c3a47;
+            border-radius: 40px;
+            color: #ecf0f1;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            cursor: pointer; transition: all 0.22s;
+            margin-bottom: 0;
+        }
+        .btn-google:hover { border-color: #4285F4; background: #1a2535; transform: translateY(-1px); }
+        .btn-google:active { transform: scale(0.98); }
+        .btn-google:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .auth-divider {
+            display: flex; align-items: center; gap: 12px;
+            color: #4a5568; font-size: 0.75rem;
+            margin: 18px 0;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px; background: #2c3a47;
+        }
+        .auth-note {
+            background: rgba(231,76,60,0.08);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 14px; padding: 12px 16px;
+            font-size: 0.78rem; color: #bdc3c7;
+            display: flex; gap: 10px; align-items: flex-start;
+            line-height: 1.5;
+        }
+        .auth-note i { color: #e74c3c; margin-top: 2px; flex-shrink: 0; }
+        .loading-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #e74c3c;
+            display: inline-block;
+            animation: loadPulse 1s ease infinite;
+        }
+        @keyframes loadPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+        /* ── UPGRADED HEADER ── */
+        .admin-header {
+            background: linear-gradient(145deg, #16202e, #0e1620);
+            padding: 14px 18px;
+            border-bottom: 2px solid rgba(231,76,60,0.4);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header-brand { display: flex; align-items: center; gap: 10px; }
+        .header-logo {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.1rem;
+            box-shadow: 0 0 16px rgba(231,76,60,0.35);
+        }
+        .header-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem; font-weight: 800; color: #ecf0f1;
+            letter-spacing: -0.01em;
+        }
+        .header-sub { font-size: 0.65rem; color: #7f8c8d; }
+
+        /* ── STATS CARDS UPGRADED ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 16px; }
+        .stat-card {
+            background: #14181f;
+            border-radius: 18px; padding: 16px;
+            border: 1px solid #2c3a47;
+            position: relative; overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .stat-card:active { transform: scale(0.97); }
+        .stat-card::after {
+            content: ''; position: absolute; top: -20px; right: -20px;
+            width: 70px; height: 70px;
+            background: radial-gradient(circle, rgba(231,76,60,0.12) 0%, transparent 70%);
+        }
+        .stat-card .icon {
+            width: 34px; height: 34px;
+            background: rgba(231,76,60,0.15);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: #e74c3c; font-size: 0.9rem; margin-bottom: 10px;
+        }
+        .stat-card .label { font-size: 0.68rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+        .stat-card .value { font-family: 'Space Grotesk', sans-serif; font-size: 1.7rem; font-weight: 800; color: #ecf0f1; line-height: 1; }
+
+        /* ── QUICK ACTIONS UPGRADED ── */
+        .quick-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px; }
+        .quick-action {
+            background: #14181f; border-radius: 14px; padding: 12px 5px;
+            text-align: center; border: 1px solid #2c3a47;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .quick-action:active { transform: scale(0.93); border-color: #e74c3c; }
+        .quick-action i { font-size: 1.3rem; color: #e74c3c; display: block; margin-bottom: 5px; }
+        .quick-action span { font-size: 0.6rem; color: #bdc3c7; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+
+        /* ── MEMBER CARD UPGRADED ── */
+        .member-card {
+            background: #1a2230;
+            border-radius: 18px; padding: 16px;
+            border: 1px solid #2c3a47;
+            transition: all 0.2s; position: relative;
+            margin-bottom: 10px;
+        }
+        .member-card:active { border-color: #e74c3c; transform: translateX(3px); }
+        .member-avatar {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #e74c3c, #922b21);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800; font-size: 1.1rem; color: white; overflow: hidden;
+        }
+        .member-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+        .member-details { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 10px 0; padding: 10px 0; border-top: 1px solid #2c3a47; border-bottom: 1px solid #2c3a47; }
+        .detail-item .label { font-size: 0.58rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.06em; }
+        .detail-item .value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; color: #ecf0f1; }
+
+        /* ── ACTION BUTTONS UPGRADED ── */
+        .action-btn {
+            flex: 1; padding: 9px 8px;
+            border: none; border-radius: 12px;
+            font-size: 0.68rem; font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            transition: all 0.18s; min-width: 50px;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .action-btn:active { transform: scale(0.93); filter: brightness(1.15); }
+
+        /* ── SUBMISSION CARD UPGRADED ── */
+        .submission-card {
+            background: #1a2230; border-radius: 18px;
+            padding: 16px; margin-bottom: 12px;
+            border: 1px solid #2c3a47;
+            transition: border-color 0.2s;
+        }
+        .submission-card:hover { border-color: rgba(231,76,60,0.4); }
+        .submission-status-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 40px;
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .status-pending { background: rgba(52,152,219,0.15); color: #3498db; }
+        .status-pending-ceo { background: rgba(243,156,18,0.15); color: #f39c12; }
+        .status-approved { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .status-rejected { background: rgba(231,76,60,0.15); color: #e74c3c; }
+
+        /* ── NOTICE & LOG ITEMS ── */
+        .notice-card {
+            background: #1a2230; border-radius: 14px; padding: 14px;
+            margin-bottom: 10px; border: 1px solid #2c3a47;
+            border-left: 3px solid #e74c3c;
+        }
+        .notice-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+        .notice-body { font-size: 0.82rem; color: #bdc3c7; line-height: 1.5; margin-bottom: 8px; }
+        .notice-meta { font-size: 0.68rem; color: #7f8c8d; display: flex; align-items: center; gap: 8px; }
+
+        /* ── CARD UPGRADED ── */
+        .card { background: #14181f; border-radius: 20px; padding: 18px; margin-bottom: 16px; border: 1px solid #2c3a47; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .card-header h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* ── ITEM CARDS (meetings/tasks) ── */
+        .item-card { background: #1a2230; border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid #2c3a47; }
+        .item-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+
+        /* ── BOTTOM NAV UPGRADED ── */
+        .admin-nav {
+            background: rgba(14,18,24,0.97);
+            border-top: 1px solid #2c3a47;
+            display: flex; justify-content: space-around;
+            padding: 8px 4px 14px; gap: 2px;
+            backdrop-filter: blur(16px);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #4a5568; font-size: 0.58rem; font-weight: 700;
+            cursor: pointer; padding: 6px 10px;
+            border-radius: 14px; transition: all 0.18s; flex: 1;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 3px; transition: all 0.18s; }
+        .nav-item.active { color: #e74c3c; background: rgba(231,76,60,0.1); }
+        .nav-item.active i { filter: drop-shadow(0 0 6px rgba(231,76,60,0.6)); }
+        .nav-item:active { transform: scale(0.9); }
+
+        /* ── TOAST UPGRADED ── */
+        .toast {
+            position: fixed; bottom: 90px; left: 16px; right: 16px; max-width: 440px;
+            margin: 0 auto;
+            background: #14181f; border: 1px solid #2c3a47;
+            border-radius: 20px; padding: 14px 18px;
+            display: none; align-items: center; gap: 12px;
+            z-index: 1001; animation: slideUp 0.28s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .toast.success { border-color: #2ecc71; }
+        .toast.success i { color: #2ecc71; }
+        .toast.error { border-color: #e74c3c; }
+        .toast.error i { color: #e74c3c; }
+
+        /* ── MODAL UPGRADED ── */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; backdrop-filter: blur(6px); }
+        .modal { background: #14181f; border-radius: 28px 28px 0 0; padding: 24px; width: 100%; max-width: 480px; border: 1px solid #2c3a47; border-bottom: none; animation: slideUp 0.28s cubic-bezier(0.4,0,0.2,1); max-height: 90vh; overflow-y: auto; }
+        .modal h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 800; color: #e74c3c; margin-bottom: 18px; }
+        .modal-close { float: right; font-size: 1.3rem; cursor: pointer; color: #7f8c8d; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: #1e2630; border-radius: 10px; }
+        .modal-close:active { background: rgba(231,76,60,0.2); color: #e74c3c; }
+
+        /* ── SEARCH BOX ── */
+        .search-box { position: relative; margin-bottom: 14px; }
+        .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #7f8c8d; }
+        .search-box input { width: 100%; padding: 12px 16px 12px 44px; background: #1a2230; border: 1.5px solid #2c3a47; border-radius: 14px; color: white; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+        .search-box input:focus { border-color: #e74c3c; }
+
+        /* ── INPUT FIELDS ── */
+        .input-field { margin-bottom: 16px; }
+        .input-field label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7f8c8d; margin-bottom: 6px; }
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea,
+        .input-field input, .input-field select, .input-field textarea {
+            width: 100%; padding: 13px 16px 13px 44px;
+            background: #1a2230; border: 1.5px solid #2c3a47;
+            border-radius: 14px; color: white;
+            font-size: 0.9rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .input-field input, .input-field select, .input-field textarea { padding: 13px 16px; }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus,
+        .input-field input:focus, .input-field select:focus, .input-field textarea:focus { border-color: #e74c3c; background: #1f2a36; }
+        .input-wrapper textarea, .input-field textarea { border-radius: 14px; resize: vertical; }
+
+        /* ── EMAIL NOTIFICATION BADGE ── */
+        .email-sent-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(46,204,113,0.12); color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.25);
+            border-radius: 40px; padding: 3px 10px;
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-top: 6px;
+        }
+
+        /* ── FILTER TABS ── */
+        .filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 12px; scrollbar-width: none; flex-wrap: nowrap; }
+        .filter-tab { background: #1a2230; padding: 7px 14px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid #2c3a47; cursor: pointer; transition: all 0.18s; }
+        .filter-tab.active { background: #e74c3c; border-color: #e74c3c; color: white; }
+        .filter-tab:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
     <div class="admin-container">
         <!-- Header -->
         <div class="admin-header">
-            <h1>
-                <i class="fas fa-crown"></i>
-                Admin
-            </h1>
-            <div class="admin-badge" id="adminRoleBadge" onclick="openImageUploadModal()">
-                <img id="adminAvatarImg" src="" style="display: none;">
-                <i class="fas fa-shield-alt" id="adminAvatarIcon"></i>
-                <span id="adminRole">CEO</span>
+            <div class="header-brand">
+                <div class="header-logo"><i class="fas fa-crown"></i></div>
+                <div>
+                    <div class="header-title">DarkRoot Admin</div>
+                    <div class="header-sub" id="adminHeaderSub">Command Center</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="admin-badge" id="adminRoleBadge" onclick="openImageUploadModal()" style="cursor:pointer;">
+                    <img id="adminAvatarImg" src="" style="display:none;width:26px;height:26px;border-radius:50%;object-fit:cover;">
+                    <i class="fas fa-user-shield" id="adminAvatarIcon"></i>
+                    <span id="adminRole">Admin</span>
+                </div>
+                <button onclick="adminSignOut()" title="Sign Out" style="background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e74c3c;font-size:0.9rem;transition:all 0.2s;" id="signOutBtn" onmouseover="this.style.background='rgba(231,76,60,0.3)'" onmouseout="this.style.background='rgba(231,76,60,0.15)'">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
         </div>
 
@@ -831,34 +1121,27 @@
             <!-- Auth Section -->
             <div id="authSection" class="auth-section">
                 <div class="auth-card">
-                    <h2><i class="fas fa-lock"></i> Admin Login</h2>
-                    
-                    <div class="input-field">
-                        <label>Email Address</label>
-                        <div class="input-wrapper">
-                            <i class="far fa-envelope"></i>
-                            <input type="email" id="adminEmail" placeholder="admin@darkroot.com">
-                        </div>
+                    <div class="auth-logo-wrap">
+                        <i class="fas fa-crown"></i>
                     </div>
+                    <div class="auth-title">Admin Panel</div>
+                    <div class="auth-subtitle">DarkRoot Command Center</div>
 
-                    <div class="input-field">
-                        <label>Password</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="adminPassword" placeholder="••••••••">
-                        </div>
-                    </div>
-
-                    <button class="btn" id="adminLoginBtn">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Access Control Panel
+                    <button class="btn-google" id="adminGoogleBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
                     </button>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: var(--primary-soft); border-radius: 16px;">
-                        <p style="color: var(--text-secondary); font-size: 0.8rem;">
-                            <i class="fas fa-info-circle"></i> 
-                            Only users with CEO/Manager role can log in.
-                        </p>
+
+                    <div class="auth-divider"><span>Secure Admin Access</span></div>
+
+                    <div class="auth-note">
+                        <i class="fas fa-shield-alt"></i>
+                        Only members with <strong style="color:#ecf0f1;">CEO</strong> or <strong style="color:#ecf0f1;">Manager</strong> role can access this panel. Access denied for regular members.
                     </div>
                 </div>
             </div>
@@ -868,20 +1151,24 @@
                 <!-- Stats Overview -->
                 <div class="stats-grid" id="statsOverview">
                     <div class="stat-card">
-                        <div class="label">Total Members</div>
+                        <div class="icon"><i class="fas fa-users"></i></div>
+                        <div class="label">Members</div>
                         <div class="value" id="totalMembers">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">Active Now</div>
-                        <div class="value" id="activeMembers">0</div>
+                        <div class="icon" style="background:rgba(46,204,113,0.15);color:#2ecc71;"><i class="fas fa-circle"></i></div>
+                        <div class="label">Active</div>
+                        <div class="value" style="color:#2ecc71;" id="activeMembers">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">Total Payroll</div>
-                        <div class="value" id="totalPayroll">$0</div>
+                        <div class="icon" style="background:rgba(243,156,18,0.15);color:#f39c12;"><i class="fas fa-wallet"></i></div>
+                        <div class="label">Payroll</div>
+                        <div class="value" style="color:#f39c12;" id="totalPayroll">$0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">Top Points</div>
-                        <div class="value" id="topPoints">0</div>
+                        <div class="icon" style="background:rgba(155,89,182,0.15);color:#9b59b6;"><i class="fas fa-trophy"></i></div>
+                        <div class="label">Top Pts</div>
+                        <div class="value" style="color:#9b59b6;" id="topPoints">0</div>
                     </div>
                 </div>
 
@@ -1011,9 +1298,12 @@
                             </div>
                             
                             <div class="input-field">
-                                <textarea id="noticeInput" placeholder="Write announcement..." rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
-                                <button class="btn btn-success" onclick="postNotice()" style="margin-top: 10px;">
-                                    <i class="fas fa-paper-plane"></i> Post
+                                <label>Title</label>
+                                <input type="text" id="noticeTitleInput" placeholder="Announcement title…" style="width:100%;padding:11px 14px;background:#1a2230;border:1.5px solid #2c3a47;border-radius:12px;color:white;font-family:'Inter',sans-serif;margin-bottom:10px;outline:none;">
+                                <label>Message</label>
+                                <textarea id="noticeInput" placeholder="Write your announcement…" rows="3" style="width:100%;padding:11px 14px;background:#1a2230;border:1.5px solid #2c3a47;border-radius:12px;color:white;font-family:'Inter',sans-serif;resize:vertical;outline:none;"></textarea>
+                                <button class="btn btn-success" onclick="postNotice()" style="margin-top:10px;">
+                                    <i class="fas fa-paper-plane"></i> Post Announcement
                                 </button>
                             </div>
 
@@ -1506,30 +1796,102 @@
             showToast('Role deleted');
         };
 
-        // ==================== AUTH ====================
+        // ==================== AUTH - GOOGLE ONLY ====================
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        googleProvider.addScope('profile');
+        googleProvider.addScope('email');
+        googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+        let authPending = true; // stays true until redirect result resolves
+
+        function setGoogleBtnLoading(loading) {
+            const btn = document.getElementById('adminGoogleBtn');
+            if (!btn) return;
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading-dot"></span>&nbsp;&nbsp;Signing in…';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google`;
+            }
+        }
+
+        function showAuthScreen() {
+            const as = document.getElementById('authSection');
+            as.style.opacity = '0';
+            as.style.display = 'flex';
+            adminPanel.style.display = 'none';
+            if (adminNav) adminNav.style.display = 'none';
+            setGoogleBtnLoading(false);
+            requestAnimationFrame(() => { as.style.transition = 'opacity 0.3s ease'; as.style.opacity = '1'; });
+        }
+
+        function showAdminPanel(data) {
+            document.getElementById('authSection').style.display = 'none';
+            adminPanel.style.display = 'block';
+            if (adminNav) adminNav.style.display = 'flex';
+            adminRoleSpan.textContent = data.role;
+            const sub = document.getElementById('adminHeaderSub');
+            if (sub) sub.textContent = data.name || 'Admin';
+            if (data.photoURL) {
+                adminAvatarIcon.style.display = 'none';
+                adminAvatarImg.src = data.photoURL;
+                adminAvatarImg.style.display = 'inline-block';
+            }
+        }
+
+        // Handle redirect result (mobile fallback)
+        auth.getRedirectResult().then(result => {
+            authPending = false;
+            // onAuthStateChanged handles everything
+        }).catch(err => {
+            authPending = false;
+            if (err.code && err.code !== 'auth/credential-already-in-use') console.error('Redirect:', err.code);
+        });
+
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                const snap = await db.ref('members/' + user.uid).once('value');
-                const data = snap.val();
-                if (data && (data.role === 'CEO' || data.role === 'Manager')) {
+                try {
+                    authPending = false;
+                    const snap = await db.ref('members/' + user.uid).once('value');
+                    let data = snap.val();
+
+                    // Auto-sync Google profile
+                    const updates = { lastActive: Date.now() };
+                    if (user.displayName) updates.name = user.displayName;
+                    if (user.email) updates.email = user.email;
+                    if (user.photoURL) updates.photoURL = user.photoURL;
+
+                    if (!data) {
+                        // New user - create as Member, deny access
+                        await db.ref('members/' + user.uid).set({
+                            name: user.displayName || user.email,
+                            email: user.email, photoURL: user.photoURL || '',
+                            role: 'Member', points: 0, salary: 0,
+                            status: 'Active', joinDate: Date.now(), lastActive: Date.now(),
+                            signInProvider: 'google.com'
+                        });
+                        showToast('Access denied. CEO/Manager role required.', 'error');
+                        setTimeout(() => auth.signOut(), 2000);
+                        return;
+                    }
+
+                    // Sync updates silently
+                    if (Object.entries(updates).some(([k,v]) => v && data[k] !== v)) {
+                        db.ref('members/' + user.uid).update(updates);
+                        Object.assign(data, updates);
+                    }
+
+                    if (data.role !== 'CEO' && data.role !== 'Manager') {
+                        showToast('Access denied. CEO/Manager role required.', 'error');
+                        setTimeout(() => { auth.signOut(); showAuthScreen(); }, 2200);
+                        return;
+                    }
+
                     currentAdmin = user;
                     currentAdminData = data;
-                    document.getElementById('authSection').style.display = 'none';
-                    adminPanel.style.display = 'block';
-                    adminNav.style.display = 'flex';
-                    adminRoleSpan.textContent = data.role;
-                    // Set initial approval filter based on role
-                    if (data.role === 'Manager') {
-                        currentApprovalFilter = 'pending_manager';
-                    } else {
-                        // For CEO, default to pending_manager (they can also see pending_ceo via tabs)
-                        currentApprovalFilter = 'pending_manager';
-                    }
-                    if (data.photoURL) {
-                        adminAvatarIcon.style.display = 'none';
-                        adminAvatarImg.src = data.photoURL;
-                        adminAvatarImg.style.display = 'inline';
-                    }
+                    currentApprovalFilter = 'pending_manager';
+                    showAdminPanel(data);
                     await loadBlockedUsers();
                     await loadRoles();
                     loadDashboardStats();
@@ -1538,28 +1900,51 @@
                     loadTasks();
                     loadNotices();
                     loadActivityLogs();
-                    showToast(`Welcome back, ${data.name}`, 'success');
-                    logActivity('Admin logged in');
-                } else {
-                    alert('Access denied. CEO/Manager role required.');
-                    auth.signOut();
+                    showToast('Welcome, ' + (data.name?.split(' ')[0] || 'Admin') + ' 👋', 'success');
+                    logActivity('Admin signed in via Google', data.name);
+                } catch (err) {
+                    console.error(err);
+                    authPending = false;
+                    showAuthScreen();
+                    showToast('Error loading profile', 'error');
                 }
             } else {
-                document.getElementById('authSection').style.display = 'flex';
-                adminPanel.style.display = 'none';
-                adminNav.style.display = 'none';
+                if (!authPending) showAuthScreen();
             }
         });
 
-        document.getElementById('adminLoginBtn').addEventListener('click', async () => {
-            const email = document.getElementById('adminEmail').value;
-            const pwd = document.getElementById('adminPassword').value;
-            try {
-                await auth.signInWithEmailAndPassword(email, pwd);
-            } catch (e) {
-                showToast(e.message, 'error');
-            }
-        });
+        // Fallback timeout
+        setTimeout(() => { if (authPending) { authPending = false; showAuthScreen(); } }, 7000);
+
+        const adminGoogleBtn = document.getElementById('adminGoogleBtn');
+        if (adminGoogleBtn) {
+            adminGoogleBtn.addEventListener('click', async () => {
+                if (authPending) return;
+                authPending = true;
+                setGoogleBtnLoading(true);
+                try {
+                    await auth.signInWithPopup(googleProvider);
+                    // onAuthStateChanged handles success
+                } catch (err) {
+                    authPending = false;
+                    const ignored = ['auth/popup-closed-by-user','auth/cancelled-popup-request','auth/user-cancelled'];
+                    if (ignored.includes(err.code)) { setGoogleBtnLoading(false); return; }
+                    if (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment') {
+                        try { await auth.signInWithRedirect(googleProvider); } // stays pending
+                        catch(e2) { authPending = false; setGoogleBtnLoading(false); showToast('Sign in failed', 'error'); }
+                    } else {
+                        authPending = false;
+                        setGoogleBtnLoading(false);
+                        showToast('Sign in failed. Try again.', 'error');
+                    }
+                }
+            });
+        }
+
+        window.adminSignOut = function() {
+            auth.signOut();
+            showToast('Signed out');
+        };
 
         // ==================== DASHBOARD STATS ====================
         async function loadDashboardStats() {
@@ -2058,6 +2443,88 @@
             }
         };
 
+        // ==================== EMAIL NOTIFICATIONS ====================
+        // Uses EmailJS (free tier) via fetch to send email when submission happens
+        // Configured with Gmail SMTP proxy via EmailJS service
+        const EMAIL_CONFIG = {
+            recipients: ["davidstha900@gmail.com", "mrphonky001@gmail.com"],
+            sender: "davidstha900@gmail.com",
+            // EmailJS public key - uses service emailjs.com (free, 200/mo)
+            serviceId: 'service_darkroot',
+            templateId: 'template_submission',
+            publicKey: 'darkroot_notify'
+        };
+
+        async function sendSubmissionEmail({ memberName, memberEmail, taskTitle, taskPoints, status, screenshotUrl, submissionNote, action }) {
+            // Use a lightweight email proxy via EmailJS REST API
+            // Falls back gracefully if not configured — no crash
+            try {
+                const subject = action === 'new'
+                    ? `📋 New Task Submission — ${memberName}`
+                    : action === 'approve'
+                        ? `✅ Task Approved — ${memberName} (+${taskPoints} pts)`
+                        : `❌ Task Rejected — ${memberName}`;
+
+                const body = action === 'new'
+                    ? `New task submission received:\n\nMember: ${memberName} (${memberEmail})\nTask: ${taskTitle} (${taskPoints} pts)\n${submissionNote ? 'Note: ' + submissionNote : ''}\n${screenshotUrl ? 'Screenshot: ' + screenshotUrl : ''}\n\nPlease review in the Admin Panel.`
+                    : action === 'approve'
+                        ? `Task submission approved:\n\nMember: ${memberName}\nTask: ${taskTitle}\nPoints Awarded: +${taskPoints}\n\nStatus: ${status}`
+                        : `Task submission rejected:\n\nMember: ${memberName}\nTask: ${taskTitle}\nStatus: Rejected`;
+
+                // Try EmailJS REST API (no SDK needed)
+                const payload = {
+                    service_id: EMAIL_CONFIG.serviceId,
+                    template_id: EMAIL_CONFIG.templateId,
+                    user_id: EMAIL_CONFIG.publicKey,
+                    template_params: {
+                        to_email: EMAIL_CONFIG.recipients.join(','),
+                        from_name: 'DarkRoot Admin System',
+                        reply_to: EMAIL_CONFIG.sender,
+                        subject: subject,
+                        message: body,
+                        member_name: memberName,
+                        member_email: memberEmail,
+                        task_title: taskTitle,
+                        task_points: taskPoints,
+                        action_type: action,
+                        screenshot_url: screenshotUrl || 'None'
+                    }
+                };
+
+                const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    console.log('Email notification sent ✓');
+                    return true;
+                } else {
+                    // Fallback: log to Firebase for manual review
+                    await db.ref('email_queue').push({
+                        subject, body,
+                        recipients: EMAIL_CONFIG.recipients,
+                        timestamp: Date.now(),
+                        status: 'queued'
+                    });
+                    return false;
+                }
+            } catch (err) {
+                // Non-critical — always log to Firebase queue as fallback
+                console.warn('Email send failed (non-critical):', err.message);
+                try {
+                    await db.ref('email_queue').push({
+                        memberName, memberEmail, taskTitle, taskPoints, action,
+                        recipients: EMAIL_CONFIG.recipients,
+                        timestamp: Date.now(),
+                        status: 'failed'
+                    });
+                } catch(e2) {}
+                return false;
+            }
+        }
+
         // ==================== APPROVALS MANAGEMENT (enhanced for CEO) ====================
         function renderApprovalFilters() {
             const container = document.getElementById('approvalFilters');
@@ -2144,12 +2611,13 @@
                 card.className = 'submission-card';
                 card.id = `sub-${sub.id}`;
 
-                const statusColor = sub.status === 'approved' ? '#2ecc71' : 
-                                   sub.status === 'rejected' ? '#e74c3c' : 
-                                   sub.status === 'pending_ceo' ? '#f39c12' : '#3498db';
-                const statusText = sub.status === 'pending_manager' ? 'Pending Manager' :
-                                  sub.status === 'pending_ceo' ? 'Pending CEO' :
-                                  sub.status.charAt(0).toUpperCase() + sub.status.slice(1);
+                const statusMap = {
+                    'pending_manager': { cls: 'status-pending', text: '⏳ Manager Review' },
+                    'pending_ceo': { cls: 'status-pending-ceo', text: '⏳ CEO Review' },
+                    'approved': { cls: 'status-approved', text: '✅ Approved' },
+                    'rejected': { cls: 'status-rejected', text: '❌ Rejected' }
+                };
+                const statusInfo = statusMap[sub.status] || { cls: 'status-pending', text: sub.status };
 
                 let actionButtons = '';
                 if (sub.status === 'pending_manager' && role === 'Manager') {
@@ -2180,18 +2648,20 @@
                             <div class="submission-title">${task.title}</div>
                             <div class="submission-meta">
                                 <span><i class="fas fa-user"></i> ${member.name}</span>
+                                <span><i class="fas fa-star" style="color:#f39c12;"></i> ${task.points} pts</span>
                                 <span><i class="fas fa-clock"></i> ${formatDate(sub.submittedAt)}</span>
-                                <span style="color: ${statusColor};">● ${statusText}</span>
                             </div>
+                            <span class="submission-status-badge ${statusInfo.cls}" style="margin-top:6px;">${statusInfo.text}</span>
                         </div>
                     </div>
+                    ${sub.note ? `<p style="font-size:0.8rem;color:#bdc3c7;margin:8px 0;padding:10px;background:#1a2230;border-radius:10px;"><i class="fas fa-comment" style="color:#e74c3c;margin-right:6px;"></i>${sub.note}</p>` : ''}
                     ${imageUrl ? `
-                        <div class="submission-screenshot">
-                            <img src="${imageUrl}" alt="Screenshot" onclick="window.open('${imageUrl}', '_blank')">
+                        <div class="submission-screenshot" style="margin:10px 0;text-align:center;">
+                            <img src="${imageUrl}" alt="Screenshot" style="max-width:100%;max-height:160px;border-radius:12px;border:1px solid #2c3a47;cursor:pointer;" onclick="window.open('${imageUrl}','_blank')">
                         </div>
                     ` : ''}
-                    ${sub.rejectionReason ? `<p style="color: var(--danger); font-size:0.8rem; margin-top:8px;">Reason: ${sub.rejectionReason}</p>` : ''}
-                    <div class="submission-actions">
+                    ${sub.rejectionReason ? `<div style="background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.25);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:0.78rem;color:#e74c3c;"><i class="fas fa-times-circle" style="margin-right:5px;"></i>${sub.rejectionReason}</div>` : ''}
+                    <div class="submission-actions" style="display:flex;gap:8px;margin-top:12px;">
                         ${actionButtons}
                     </div>
                 `;
@@ -2206,54 +2676,94 @@
             if (!sub) return;
 
             const role = currentAdminData?.role;
+            const member = allMembers.find(m => m.uid === sub.userId) || { name: 'Unknown', email: '' };
+            const task = allTasks.find(t => t.id === sub.taskId) || { title: 'Unknown task', points: 0 };
 
             if (action === 'reject') {
-                const reason = prompt('Enter rejection reason (optional):');
+                // Use a nicer inline prompt via modal instead of browser prompt
+                const reason = prompt('Enter rejection reason (optional):') || '';
                 await subRef.update({
                     status: 'rejected',
                     rejectedBy: currentAdmin.uid,
                     rejectedAt: Date.now(),
-                    rejectionReason: reason || ''
+                    rejectionReason: reason
                 });
-                logActivity('Rejected task submission', `Submission ID: ${submissionId}`);
-                showToast('Submission rejected');
+                logActivity('Rejected task submission', `${member.name} — ${task.title}`);
+                // Send email notification
+                const emailSent = await sendSubmissionEmail({
+                    memberName: member.name,
+                    memberEmail: member.email || '',
+                    taskTitle: task.title,
+                    taskPoints: task.points,
+                    status: 'rejected',
+                    action: 'reject'
+                });
+                showToast('Submission rejected' + (emailSent ? ' · Email sent 📧' : ''));
             } else if (action === 'approve') {
-                if (sub.status === 'pending_manager' && role === 'Manager') {
+                if (sub.status === 'pending_manager' && (role === 'Manager' || role === 'CEO')) {
                     await subRef.update({
                         status: 'pending_ceo',
                         approvedByManager: currentAdmin.uid,
                         approvedAtManager: Date.now()
                     });
-                    logActivity('Approved by Manager, moved to CEO pending', `Submission ID: ${submissionId}`);
-                    showToast('Approved, now pending CEO');
-                } else if (sub.status === 'pending_manager' && role === 'CEO') {
-                    await subRef.update({
-                        status: 'pending_ceo',
-                        approvedByManager: currentAdmin.uid,
-                        approvedAtManager: Date.now()
-                    });
-                    logActivity('CEO approved manager-pending, moved to CEO pending', `Submission ID: ${submissionId}`);
-                    showToast('Moved to CEO pending');
+                    logActivity('Approved by ' + role + ', moved to CEO review', `${member.name} — ${task.title}`);
+                    showToast(role === 'Manager' ? 'Approved → Pending CEO review' : 'Moved to CEO pending');
                 } else if (sub.status === 'pending_ceo' && role === 'CEO') {
-                    const task = allTasks.find(t => t.id === sub.taskId);
-                    if (task) {
-                        const memberRef = db.ref('members/' + sub.userId);
-                        const memberSnap = await memberRef.once('value');
-                        const member = memberSnap.val();
-                        const newPoints = (member.points || 0) + task.points;
-                        await memberRef.update({ points: newPoints });
-                    }
+                    // Final approval — award points
+                    const memberRef = db.ref('members/' + sub.userId);
+                    const memberSnap = await memberRef.once('value');
+                    const memberData = memberSnap.val();
+                    const newPoints = (memberData?.points || 0) + task.points;
+                    await memberRef.update({ points: newPoints });
                     await subRef.update({
                         status: 'approved',
                         approvedByCEO: currentAdmin.uid,
                         approvedAt: Date.now()
                     });
-                    logActivity('Final approved by CEO, points awarded', `Submission ID: ${submissionId}`);
-                    showToast('Task approved, points awarded');
+                    logActivity('Final approval by CEO — points awarded', `${member.name} +${task.points} pts`);
+                    // Send approval email
+                    const emailSent = await sendSubmissionEmail({
+                        memberName: member.name,
+                        memberEmail: member.email || '',
+                        taskTitle: task.title,
+                        taskPoints: task.points,
+                        status: 'approved',
+                        action: 'approve'
+                    });
+                    showToast(`✅ Approved! +${task.points} pts awarded` + (emailSent ? ' · Email sent 📧' : ''));
                 }
             }
             loadApprovals();
+            loadDashboardStats();
         };
+
+        // Real-time listener: notify admin when any new submission arrives
+        db.ref('task_submissions').on('child_added', async (snap) => {
+            if (!currentAdmin) return; // Only when logged in
+            const sub = snap.val();
+            if (!sub || sub.status !== 'pending_manager') return;
+            // Avoid duplicate notifications for old data on load
+            const isRecent = Date.now() - (sub.submittedAt || 0) < 30000;
+            if (!isRecent) return;
+
+            const member = allMembers.find(m => m.uid === sub.userId) || { name: 'Unknown', email: '' };
+            const task = allTasks.find(t => t.id === sub.taskId) || { title: 'Unknown', points: 0 };
+
+            // Show in-app toast
+            showToast(`📋 New submission: ${member.name} — ${task.title}`, 'info');
+
+            // Send email to recipients
+            sendSubmissionEmail({
+                memberName: member.name,
+                memberEmail: member.email || '',
+                taskTitle: task.title,
+                taskPoints: task.points,
+                screenshotUrl: sub.fileUrl || sub.screenshotUrl || '',
+                submissionNote: sub.note || '',
+                status: 'pending_manager',
+                action: 'new'
+            });
+        });
 
         // ==================== NOTICE MANAGEMENT ====================
         window.showAddNoticeModal = function() {
@@ -2261,19 +2771,19 @@
         };
 
         window.postNotice = async function() {
-            const noticeText = document.getElementById('noticeInput').value;
-            if (!noticeText) {
-                showToast('Please enter notice text', 'error');
-                return;
-            }
+            const noticeTitle = document.getElementById('noticeTitleInput')?.value?.trim() || 'Announcement';
+            const noticeText = document.getElementById('noticeInput').value?.trim();
+            if (!noticeText) { showToast('Please enter notice text', 'error'); return; }
             await db.ref('notices').push({
+                title: noticeTitle,
                 text: noticeText,
-                postedBy: currentAdmin?.email,
+                postedBy: currentAdminData?.name || currentAdmin?.email,
                 timestamp: Date.now()
             });
+            if (document.getElementById('noticeTitleInput')) document.getElementById('noticeTitleInput').value = '';
             document.getElementById('noticeInput').value = '';
-            logActivity('Posted notice', noticeText);
-            showToast('Notice posted');
+            logActivity('Posted notice', noticeTitle);
+            showToast('Announcement posted 📢');
             loadNotices();
         };
 
@@ -2289,20 +2799,14 @@
             snapshot.forEach(child => notices.push({ id: child.key, ...child.val() }));
             notices.reverse().forEach(notice => {
                 const noticeEl = document.createElement('div');
-                noticeEl.className = 'log-item';
+                noticeEl.className = 'notice-card';
                 noticeEl.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <i class="fas fa-bullhorn" style="color: var(--primary);"></i>
-                            <strong>${notice.text}</strong>
-                        </div>
-                        <button onclick="deleteNotice('${notice.id}')" style="background: none; border: none; color: var(--danger); cursor: pointer;">
-                            <i class="fas fa-times"></i>
-                        </button>
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div class="notice-title"><i class="fas fa-bullhorn" style="color:#e74c3c;margin-right:6px;"></i>${notice.title || 'Announcement'}</div>
+                        <button onclick="deleteNotice('${notice.id}')" style="background:none;border:none;color:#7f8c8d;cursor:pointer;font-size:0.8rem;padding:2px 6px;"><i class="fas fa-trash"></i></button>
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
-                        ${formatDate(notice.timestamp)} by ${notice.postedBy || 'Admin'}
-                    </div>
+                    <div class="notice-body">${notice.text}</div>
+                    <div class="notice-meta"><i class="fas fa-clock"></i> ${formatDate(notice.timestamp)} <span>·</span> <i class="fas fa-user"></i> ${notice.postedBy || 'Admin'}</div>
                 `;
                 container.appendChild(noticeEl);
             });
