@@ -11,739 +11,1087 @@
     <!-- Moment.js -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <style>
-    /* ═══════════════════════════════════════════
-       DARKROOT ADMIN — PROFESSIONAL MOBILE DESIGN
-       ═══════════════════════════════════════════ */
-    *, *::before, *::after {
-        margin: 0; padding: 0;
-        box-sizing: border-box;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        user-select: none;
-    }
-    input, textarea, select { -webkit-user-select: text; user-select: text; }
-
-    :root {
-        /* Brand palette */
-        --red:       #e74c3c;
-        --red-dark:  #c0392b;
-        --red-dim:   rgba(231,76,60,0.12);
-        --red-glow:  rgba(231,76,60,0.28);
-        --green:     #2ecc71;
-        --green-dim: rgba(46,204,113,0.12);
-        --amber:     #f59e0b;
-        --amber-dim: rgba(245,158,11,0.12);
-        --blue:      #3b82f6;
-        --blue-dim:  rgba(59,130,246,0.12);
-        --purple:    #8b5cf6;
-
-        /* Surfaces */
-        --bg:    #080b10;
-        --s1:    #0e1318;
-        --s2:    #141c24;
-        --s3:    #1a2530;
-        --s4:    #21303d;
-        --border: rgba(255,255,255,0.07);
-        --border-r: rgba(231,76,60,0.25);
-
-        /* Text */
-        --t1: #f0eefc;
-        --t2: #8a9bb0;
-        --t3: #4a5a6a;
-
-        /* Spacing */
-        --r-sm: 10px; --r-md: 14px; --r-lg: 18px;
-        --r-xl: 22px; --r-2xl: 28px; --r-full: 9999px;
-    }
-
-    html, body {
-        height: 100%; overflow: hidden;
-        background: var(--bg);
-    }
-    body {
-        font-family: 'Inter', system-ui, sans-serif;
-        color: var(--t1);
-        display: flex; align-items: center; justify-content: center;
-        -webkit-font-smoothing: antialiased;
-    }
-
-    /* ── CONTAINER ── */
-    .admin-container {
-        width: 100%; max-width: 430px;
-        height: 100dvh;
-        display: flex; flex-direction: column;
-        background: var(--bg);
-        position: relative; overflow: hidden;
-    }
-    @media (min-width: 500px) {
-        .admin-container {
-            height: 94vh; max-height: 900px;
-            border-radius: 32px;
-            border: 1px solid var(--border);
-            box-shadow: 0 0 0 1px rgba(231,76,60,0.08), 0 40px 80px rgba(0,0,0,0.7);
+        /* ---------- RESET & VARIABLES ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
 
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--s4); border-radius: 3px; }
+        :root {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --primary-soft: #e74c3c20;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --dark-bg: #0a0c10;
+            --card-bg: #14181f;
+            --card-light: #1e2630;
+            --border: #2c3a47;
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --text-muted: #7f8c8d;
+            --admin-accent: #e67e22;
+        }
 
-    /* ══════════════════════════════════
-       AUTH SCREEN — FULL SCREEN PREMIUM
-       ══════════════════════════════════ */
-    .auth-section {
-        flex: 1; display: flex;
-        flex-direction: column;
-        align-items: center; justify-content: center;
-        padding: 28px 24px 40px;
-        background: var(--bg);
-        background-image:
-            radial-gradient(ellipse 500px 360px at 50% -10%, rgba(231,76,60,0.1) 0%, transparent 65%),
-            radial-gradient(ellipse 300px 200px at 90% 90%, rgba(139,92,246,0.06) 0%, transparent 60%);
-        position: relative; overflow: hidden;
-    }
-    .auth-section::before {
-        content: '';
-        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e74c3c' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        pointer-events: none; opacity: 0.5;
-    }
-    .auth-card {
-        width: 100%; position: relative; z-index: 1;
-        animation: authCardIn 0.5s cubic-bezier(0.34,1.2,0.64,1) both;
-    }
-    @keyframes authCardIn {
-        from { opacity: 0; transform: translateY(32px) scale(0.96); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .auth-icon-wrap {
-        width: 80px; height: 80px;
-        background: linear-gradient(135deg, var(--red), var(--red-dark));
-        border-radius: 24px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 2.2rem; color: white;
-        margin: 0 auto 20px;
-        box-shadow: 0 0 0 12px rgba(231,76,60,0.08), 0 0 40px var(--red-glow);
-        animation: iconFloat 3s ease-in-out infinite;
-    }
-    @keyframes iconFloat {
-        0%,100% { transform: translateY(0); }
-        50%      { transform: translateY(-5px); }
-    }
-    .auth-heading {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.8rem; font-weight: 800;
-        color: var(--t1); text-align: center;
-        margin-bottom: 6px; line-height: 1.1;
-    }
-    .auth-sub {
-        text-align: center; color: var(--t2);
-        font-size: 0.88rem; margin-bottom: 32px;
-        line-height: 1.5;
-    }
-    .btn-google {
-        width: 100%; height: 56px;
-        background: var(--s2);
-        border: 1.5px solid var(--border);
-        border-radius: var(--r-full);
-        color: var(--t1);
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem; font-weight: 600;
-        display: flex; align-items: center; justify-content: center; gap: 12px;
-        cursor: pointer;
-        transition: all 0.22s;
-        position: relative; overflow: hidden;
-        letter-spacing: 0.01em;
-    }
-    .btn-google::after {
-        content: '';
-        position: absolute; inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent);
-        pointer-events: none;
-    }
-    .btn-google:active { transform: scale(0.975); background: var(--s3); border-color: var(--border-r); }
-    .btn-google:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-    .auth-divider {
-        display: flex; align-items: center; gap: 12px;
-        margin: 20px 0; color: var(--t3); font-size: 0.72rem;
-    }
-    .auth-divider::before, .auth-divider::after {
-        content: ''; flex: 1; height: 1px; background: var(--border);
-    }
-    .auth-note {
-        background: var(--red-dim);
-        border: 1px solid var(--border-r);
-        border-radius: var(--r-lg); padding: 14px 16px;
-        font-size: 0.8rem; color: var(--t2); line-height: 1.55;
-        display: flex; gap: 10px; align-items: flex-start;
-    }
-    .auth-note i { color: var(--red); flex-shrink: 0; margin-top: 2px; }
-    .auth-note strong { color: var(--t1); }
-    .spin-dot {
-        width: 20px; height: 20px;
-        border: 2.5px solid rgba(231,76,60,0.25);
-        border-top-color: var(--red);
-        border-radius: 50%;
-        animation: spin 0.7s linear infinite;
-        display: inline-block; flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
 
-    /* ══════════════════
-       HEADER
-       ══════════════════ */
-    .admin-header {
-        flex-shrink: 0;
-        background: var(--s1);
-        border-bottom: 1px solid var(--border);
-        padding: 12px 16px;
-        display: flex; align-items: center; justify-content: space-between;
-        position: relative; z-index: 10;
-    }
-    .admin-header::after {
-        content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, var(--red), transparent 70%);
-    }
-    .header-brand { display: flex; align-items: center; gap: 10px; }
-    .header-logo {
-        width: 38px; height: 38px;
-        background: linear-gradient(135deg, var(--red), var(--red-dark));
-        border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        color: white; font-size: 1rem;
-        box-shadow: 0 0 16px var(--red-glow);
-    }
-    .header-title {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 1rem; font-weight: 800; color: var(--t1);
-    }
-    .header-sub { font-size: 0.62rem; color: var(--t3); margin-top: 1px; }
-    .header-right { display: flex; align-items: center; gap: 8px; }
-    .admin-badge {
-        display: flex; align-items: center; gap: 6px;
-        background: var(--s2); border: 1px solid var(--border-r);
-        border-radius: var(--r-full);
-        padding: 5px 12px 5px 5px;
-        cursor: pointer; transition: all 0.18s;
-    }
-    .admin-badge:active { background: var(--s3); }
-    .badge-avatar {
-        width: 26px; height: 26px; border-radius: 50%;
-        background: var(--red-dim); overflow: hidden;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.65rem; font-weight: 700; color: var(--red);
-    }
-    .badge-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .badge-role { font-size: 0.72rem; font-weight: 700; color: var(--t1); }
-    .sign-out-btn {
-        width: 34px; height: 34px;
-        background: var(--red-dim); border: 1px solid var(--border-r);
-        border-radius: 10px; color: var(--red); font-size: 0.85rem;
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: all 0.18s;
-    }
-    .sign-out-btn:active { background: var(--red); color: white; }
+        .admin-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--dark-bg);
+            height: 100vh;
+            max-height: 1000px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 40px rgba(231, 76, 60, 0.1);
+            border-radius: 0;
+            overflow: hidden;
+        }
 
-    /* ══════════════════
-       MAIN SCROLL AREA
-       ══════════════════ */
-    .admin-main {
-        flex: 1; overflow-y: auto; overflow-x: hidden;
-        padding: 14px;
-        scroll-behavior: smooth;
-    }
+        @media (min-width: 481px) {
+            .admin-container {
+                border-radius: 32px;
+                height: 95vh;
+                margin: 20px auto;
+                border: 1px solid var(--border);
+            }
+        }
 
-    /* ══════════════════
-       STATS GRID
-       ══════════════════ */
-    .stats-grid {
-        display: grid; grid-template-columns: repeat(2,1fr);
-        gap: 10px; margin-bottom: 14px;
-    }
-    .stat-card {
-        background: var(--s1); border: 1px solid var(--border);
-        border-radius: var(--r-xl); padding: 14px;
-        position: relative; overflow: hidden;
-        transition: transform 0.18s;
-    }
-    .stat-card:active { transform: scale(0.96); }
-    .stat-card::after {
-        content: ''; position: absolute; top: -24px; right: -24px;
-        width: 80px; height: 80px;
-        background: radial-gradient(circle, var(--red-dim) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    .stat-card .icon {
-        width: 32px; height: 32px; border-radius: 10px;
-        background: var(--red-dim); color: var(--red);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.85rem; margin-bottom: 10px;
-    }
-    .stat-card .label {
-        font-size: 0.62rem; color: var(--t3);
-        text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px;
-    }
-    .stat-card .value {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.6rem; font-weight: 800; color: var(--t1); line-height: 1;
-    }
+        /* Header */
+        .admin-header {
+            background: linear-gradient(145deg, #1a1f2a, #0f141c);
+            padding: 16px 20px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .admin-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-header h1 i {
+            color: var(--primary);
+            background: var(--primary-soft);
+            padding: 10px;
+            border-radius: 16px;
+        }
+        .admin-badge {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .admin-badge:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        .admin-badge img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 4px;
+        }
 
-    /* ══════════════════
-       QUICK ACTIONS
-       ══════════════════ */
-    .quick-actions {
-        display: grid; grid-template-columns: repeat(4,1fr);
-        gap: 8px; margin-bottom: 14px;
-    }
-    .quick-action {
-        background: var(--s1); border: 1px solid var(--border);
-        border-radius: var(--r-lg); padding: 12px 4px;
-        text-align: center; cursor: pointer; transition: all 0.18s;
-    }
-    .quick-action:active { transform: scale(0.9); border-color: var(--red); background: var(--red-dim); }
-    .quick-action i { font-size: 1.2rem; color: var(--red); display: block; margin-bottom: 5px; }
-    .quick-action span { font-size: 0.58rem; color: var(--t2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        /* Main Scroll Area */
+        .admin-main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--card-light);
+        }
+        .admin-main::-webkit-scrollbar {
+            width: 4px;
+        }
+        .admin-main::-webkit-scrollbar-track {
+            background: var(--card-light);
+        }
+        .admin-main::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
 
-    /* ══════════════════
-       CARD
-       ══════════════════ */
-    .card {
-        background: var(--s1); border: 1px solid var(--border);
-        border-radius: var(--r-xl); padding: 16px; margin-bottom: 12px;
-    }
-    .card-header {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 14px;
-    }
-    .card-header h3 {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 0.95rem; font-weight: 700;
-        display: flex; align-items: center; gap: 7px; color: var(--t1);
-    }
-    .card-header h3 i { color: var(--red); }
+        /* Auth Section */
+        .auth-section {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 40px 24px;
+            border: 1px solid var(--border);
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(231, 76, 60, 0.15);
+        }
+        .auth-card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary);
+        }
 
-    /* ══════════════════
-       MEMBER CARDS
-       ══════════════════ */
-    .member-list { display: flex; flex-direction: column; gap: 10px; }
-    .member-card {
-        background: var(--s2); border: 1px solid var(--border);
-        border-radius: var(--r-xl); padding: 14px;
-        transition: all 0.18s; position: relative; overflow: hidden;
-    }
-    .member-card:active { border-color: var(--border-r); transform: translateX(3px); }
-    .member-card::before {
-        content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
-        width: 3px; background: var(--red); border-radius: 0 3px 3px 0;
-        opacity: 0; transition: opacity 0.18s;
-    }
-    .member-card:active::before { opacity: 1; }
-    .member-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .member-avatar {
-        width: 46px; height: 46px;
-        background: linear-gradient(135deg, var(--red), var(--red-dark));
-        border-radius: 14px;
-        display: flex; align-items: center; justify-content: center;
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 800; font-size: 1.05rem; color: white; overflow: hidden;
-        flex-shrink: 0;
-    }
-    .member-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .member-info { flex: 1; min-width: 0; }
-    .member-name {
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 700; font-size: 0.95rem; color: var(--t1);
-        margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .member-email {
-        font-size: 0.72rem; color: var(--t2);
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        display: flex; align-items: center; gap: 4px;
-    }
-    .member-role-badge {
-        font-size: 0.62rem; padding: 3px 9px;
-        border-radius: var(--r-full); font-weight: 700; display: inline-block;
-        text-transform: uppercase; letter-spacing: 0.04em;
-        margin-top: 4px;
-    }
-    .role-ceo       { background: rgba(241,196,15,0.15); color: #f1c40f; }
-    .role-manager   { background: rgba(52,152,219,0.15); color: #3498db; }
-    .role-senior    { background: rgba(230,126,34,0.15); color: #e67e22; }
-    .role-member    { background: rgba(46,204,113,0.15); color: #2ecc71; }
-    .role-web-developer   { background: rgba(155,89,182,0.15); color: #9b59b6; }
-    .role-cyber-security  { background: rgba(230,126,34,0.15); color: #e67e22; }
-    .role-designer        { background: rgba(26,188,156,0.15); color: #1abc9c; }
-    .role-content-writer  { background: rgba(243,156,18,0.15); color: #f39c12; }
-    .member-details {
-        display: grid; grid-template-columns: repeat(3,1fr);
-        gap: 6px; padding: 10px 0;
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        margin: 0 0 10px;
-    }
-    .detail-item { text-align: center; }
-    .detail-item .label { font-size: 0.58rem; color: var(--t3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
-    .detail-item .value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--t1); }
-    .member-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        /* Input Fields */
+        .input-field {
+            margin-bottom: 20px;
+        }
+        .input-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: var(--card-light);
+            border: 2px solid transparent;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+        .input-wrapper textarea {
+            padding: 16px;
+            border-radius: 24px;
+            resize: vertical;
+        }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: #1f2a36;
+        }
+        .input-wrapper select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+        }
 
-    /* ══════════════════
-       ACTION BUTTONS
-       ══════════════════ */
-    .action-btn {
-        flex: 1; min-width: 52px; height: 34px; padding: 0 8px;
-        border: none; border-radius: 10px;
-        font-size: 0.65rem; font-weight: 700; font-family: 'Inter', sans-serif;
-        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
-        transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.03em;
-    }
-    .action-btn:active { transform: scale(0.91); filter: brightness(1.2); }
-    .action-btn.edit    { background: rgba(59,130,246,0.15); color: #3b82f6; }
-    .action-btn.points  { background: rgba(245,158,11,0.15); color: #f59e0b; }
-    .action-btn.salary  { background: rgba(46,204,113,0.15); color: #2ecc71; }
-    .action-btn.role    { background: var(--red-dim); color: var(--red); }
-    .action-btn.delete  { background: rgba(231,76,60,0.15); color: var(--red); }
-    .action-btn.approve { background: rgba(46,204,113,0.15); color: #2ecc71; }
-    .action-btn.reject  { background: rgba(231,76,60,0.15); color: var(--red); }
-    .action-btn.payment { background: var(--red-dim); color: var(--red); }
-    .action-btn.copy    { background: rgba(59,130,246,0.15); color: #3b82f6; padding: 0 8px; min-width: auto; }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+        .btn-success {
+            background: var(--success);
+        }
+        .btn-warning {
+            background: var(--warning);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+        }
 
-    /* ══════════════════
-       ITEM CARDS (meetings, tasks)
-       ══════════════════ */
-    .item-card {
-        background: var(--s2); border: 1px solid var(--border);
-        border-radius: var(--r-xl); padding: 14px; margin-bottom: 10px;
-        transition: border-color 0.18s;
-    }
-    .item-card:active { border-color: var(--border-r); }
-    .item-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .item-icon {
-        width: 38px; height: 38px; border-radius: 12px;
-        background: var(--red-dim); color: var(--red);
-        display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
-        flex-shrink: 0;
-    }
-    .item-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--t1); margin-bottom: 2px; }
-    .item-meta { font-size: 0.7rem; color: var(--t2); }
-    .item-actions { display: flex; gap: 6px; justify-content: flex-end; margin-top: 10px; }
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+        }
 
-    /* ══════════════════
-       SUBMISSION CARDS
-       ══════════════════ */
-    .submission-card {
-        background: var(--s2); border: 1px solid var(--border);
-        border-radius: var(--r-xl); padding: 14px; margin-bottom: 10px;
-        transition: border-color 0.18s;
-    }
-    .submission-card:active { border-color: var(--border-r); }
-    .submission-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .submission-avatar {
-        width: 40px; height: 40px; border-radius: 12px;
-        background: var(--red-dim); color: var(--red);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1rem; overflow: hidden; flex-shrink: 0;
-        font-family: 'Space Grotesk', sans-serif; font-weight: 700;
-    }
-    .submission-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .submission-info { flex: 1; min-width: 0; }
-    .submission-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--t1); margin-bottom: 3px; }
-    .submission-meta { font-size: 0.68rem; color: var(--t2); display: flex; gap: 10px; flex-wrap: wrap; }
-    .submission-screenshot { margin: 10px 0; text-align: center; }
-    .submission-screenshot img {
-        max-width: 100%; max-height: 160px;
-        border-radius: 12px; border: 1px solid var(--border); cursor: pointer;
-    }
-    .submission-actions { display: flex; gap: 8px; margin-top: 10px; }
-    .status-badge {
-        display: inline-flex; align-items: center; gap: 5px;
-        padding: 3px 10px; border-radius: var(--r-full);
-        font-size: 0.62rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;
-    }
-    .status-pending     { background: rgba(59,130,246,0.12); color: #3b82f6; }
-    .status-pending-ceo { background: rgba(245,158,11,0.12); color: #f59e0b; }
-    .status-approved    { background: rgba(46,204,113,0.12); color: #2ecc71; }
-    .status-rejected    { background: rgba(231,76,60,0.12); color: var(--red); }
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
 
-    /* ══════════════════
-       NOTICE CARDS
-       ══════════════════ */
-    .notice-card {
-        background: var(--s2); border: 1px solid var(--border);
-        border-left: 3px solid var(--red);
-        border-radius: var(--r-lg); padding: 13px 14px; margin-bottom: 10px;
-    }
-    .notice-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--t1); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
-    .notice-body  { font-size: 0.82rem; color: var(--t2); line-height: 1.5; margin-bottom: 8px; }
-    .notice-meta  { font-size: 0.65rem; color: var(--t3); display: flex; align-items: center; gap: 6px; }
+        /* Card */
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .card-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-header i {
+            color: var(--primary);
+        }
 
-    /* ══════════════════
-       LEARNING CARDS
-       ══════════════════ */
-    .learning-card {
-        background: var(--s2); border: 1px solid var(--border);
-        border-radius: var(--r-xl); overflow: hidden; margin-bottom: 12px;
-        transition: border-color 0.18s;
-    }
-    .learning-card:active { border-color: var(--border-r); }
-    .learning-thumb {
-        width: 100%; height: 140px;
-        background: var(--s3); position: relative; overflow: hidden;
-    }
-    .learning-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .learning-type-tag {
-        position: absolute; top: 10px; left: 10px;
-        padding: 3px 10px; border-radius: var(--r-full);
-        font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
-        backdrop-filter: blur(8px);
-    }
-    .type-video  { background: rgba(231,76,60,0.85); color: white; }
-    .type-article { background: rgba(59,130,246,0.85); color: white; }
-    .type-course { background: rgba(139,92,246,0.85); color: white; }
-    .learning-embed {
-        width: 100%; border: none;
-        aspect-ratio: 16/9; display: block;
-    }
-    .learning-body { padding: 14px; }
-    .learning-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--t1); margin-bottom: 5px; }
-    .learning-desc  { font-size: 0.78rem; color: var(--t2); line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .learning-footer { display: flex; align-items: center; justify-content: space-between; }
-    .learning-link { color: var(--red); font-size: 0.78rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px; }
-    .learning-link:active { opacity: 0.7; }
-    .learning-actions { display: flex; gap: 6px; }
-    .play-icon-overlay {
-        position: absolute; inset: 0;
-        display: flex; align-items: center; justify-content: center;
-        background: rgba(0,0,0,0.35);
-    }
-    .play-icon-overlay i { font-size: 2.8rem; color: rgba(255,255,255,0.9); filter: drop-shadow(0 0 12px rgba(0,0,0,0.5)); }
+        /* Search Bar */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            color: white;
+            font-size: 0.95rem;
+        }
 
-    /* ══════════════════
-       LOG ITEMS
-       ══════════════════ */
-    .log-item {
-        background: var(--s2); border-radius: 12px;
-        padding: 10px 12px; margin-bottom: 7px;
-        border-left: 2px solid var(--red);
-        font-size: 0.78rem; color: var(--t1);
-    }
+        /* Filters */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 5px 0 15px;
+            scrollbar-width: none;
+        }
+        .filter-tab {
+            background: var(--card-light);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .filter-tab i {
+            margin-right: 5px;
+        }
 
-    /* ══════════════════
-       ROLE CHIPS
-       ══════════════════ */
-    .role-chip {
-        background: var(--s2); border-radius: var(--r-full);
-        padding: 5px 12px; display: inline-flex; align-items: center; gap: 7px;
-        margin: 0 5px 6px 0; border: 1px solid var(--border);
-        font-size: 0.78rem; font-weight: 600; color: var(--t1);
-    }
-    .role-chip i { color: var(--red); cursor: pointer; }
+        /* Member Table/List */
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .member-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+        }
+        .member-card:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        .member-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, var(--primary), #a03232);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            overflow: hidden;
+        }
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .member-info {
+            flex: 1;
+        }
+        .member-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        .member-email {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .member-email i {
+            color: var(--primary);
+            font-size: 0.7rem;
+        }
+        .member-role-badge {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .role-ceo { background: #f1c40f30; color: #f1c40f; }
+        .role-manager { background: #3498db30; color: #3498db; }
+        .role-senior { background: #e67e2230; color: #e67e22; }
+        .role-member { background: #2ecc7130; color: #2ecc71; }
+        .role-web-developer { background: #9b59b630; color: #9b59b6; }
+        .role-cyber-security { background: #e67e2230; color: #e67e22; }
+        .role-designer { background: #1abc9c30; color: #1abc9c; }
+        .role-content-writer { background: #f39c1230; color: #f39c12; }
 
-    /* ══════════════════
-       PAYMENT BADGE
-       ══════════════════ */
-    .payment-badge {
-        display: inline-flex; align-items: center; gap: 5px;
-        background: var(--s3); border-radius: var(--r-lg);
-        padding: 4px 10px; font-size: 0.68rem; border: 1px solid var(--border);
-    }
-    .payment-cash  { color: var(--green); }
-    .payment-esewa { color: var(--blue); }
+        .member-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+            padding: 12px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .detail-item {
+            text-align: center;
+        }
+        .detail-item .label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .detail-item .value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
 
-    /* ══════════════════
-       SEARCH & FILTER
-       ══════════════════ */
-    .search-box { position: relative; margin-bottom: 12px; }
-    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--t3); font-size: 0.9rem; pointer-events: none; }
-    .search-box input {
-        width: 100%; padding: 11px 14px 11px 40px;
-        background: var(--s2); border: 1.5px solid var(--border);
-        border-radius: var(--r-md); color: var(--t1);
-        font-size: 0.88rem; font-family: 'Inter', sans-serif; outline: none;
-        transition: border-color 0.18s;
-    }
-    .search-box input:focus { border-color: var(--red); background: var(--s3); }
+        .member-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s;
+            min-width: 60px;
+        }
+        .action-btn.edit { background: var(--info); color: white; }
+        .action-btn.points { background: var(--warning); color: black; }
+        .action-btn.salary { background: var(--success); color: white; }
+        .action-btn.role { background: var(--primary); color: white; }
+        .action-btn.payment { background: var(--primary); color: white; }
+        .action-btn.delete { background: var(--danger); color: white; }
+        .action-btn.approve { background: var(--success); color: white; }
+        .action-btn.reject { background: var(--danger); color: white; }
+        .action-btn.copy { background: var(--info); color: white; padding: 5px 8px; font-size: 0.65rem; min-width: auto; }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
 
-    .filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
-    .filter-tabs::-webkit-scrollbar { display: none; }
-    .filter-tab {
-        background: var(--s2); padding: 6px 14px; border-radius: var(--r-full);
-        font-size: 0.73rem; font-weight: 600; white-space: nowrap;
-        border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; color: var(--t2);
-    }
-    .filter-tab.active { background: var(--red); border-color: var(--red); color: white; }
-    .filter-tab:active { transform: scale(0.93); }
+        /* Meetings & Tasks list cards */
+        .item-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .item-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-soft);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        .item-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .item-meta {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
 
-    /* ══════════════════
-       INPUT FIELDS
-       ══════════════════ */
-    .input-field { margin-bottom: 14px; }
-    .input-field label {
-        display: block; font-size: 0.68rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.07em; color: var(--t3); margin-bottom: 6px;
-    }
-    .input-wrapper { position: relative; display: flex; align-items: center; }
-    .input-wrapper i { position: absolute; left: 14px; color: var(--t3); font-size: 0.9rem; pointer-events: none; }
-    .input-wrapper input, .input-wrapper select, .input-wrapper textarea,
-    .input-field input:not([type=radio]), .input-field select, .input-field textarea {
-        width: 100%;
-        padding: 12px 14px 12px 14px;
-        background: var(--s2); border: 1.5px solid var(--border);
-        border-radius: var(--r-md); color: var(--t1);
-        font-size: 0.88rem; font-family: 'Inter', sans-serif; outline: none;
-        transition: border-color 0.18s, background 0.18s;
-    }
-    .input-wrapper input { padding-left: 40px; }
-    .input-wrapper select { padding-left: 40px; appearance: none; }
-    .input-field input:focus, .input-field select:focus, .input-field textarea:focus,
-    .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus { border-color: var(--red); background: var(--s3); }
-    .input-field textarea { resize: vertical; min-height: 70px; border-radius: var(--r-md); }
-    .input-wrapper select {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5a6a' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
-    }
-    select option { background: var(--s2); }
+        /* Submission card for approvals */
+        .submission-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .submission-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .submission-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-soft);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            overflow: hidden;
+        }
+        .submission-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .submission-info {
+            flex: 1;
+        }
+        .submission-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .submission-meta {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+        }
+        .submission-screenshot {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .submission-screenshot img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .submission-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
 
-    /* ══════════════════
-       BUTTONS
-       ══════════════════ */
-    .btn {
-        height: 48px; width: 100%; border: none;
-        border-radius: var(--r-full); padding: 0 20px;
-        font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700;
-        cursor: pointer; transition: all 0.18s;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        letter-spacing: 0.01em;
-    }
-    .btn:active { transform: scale(0.96); }
-    .btn { background: var(--red); color: white; box-shadow: 0 4px 16px var(--red-glow); }
-    .btn:active { box-shadow: none; }
-    .btn-success { background: var(--green); color: white; box-shadow: none; }
-    .btn-warning { background: var(--amber); color: #000; box-shadow: none; }
-    .btn-outline { background: var(--s2); border: 1.5px solid var(--border); color: var(--t2); box-shadow: none; }
-    .btn-outline:active { border-color: var(--red); color: var(--red); background: var(--red-dim); }
-    .btn-sm { height: 36px; font-size: 0.78rem; padding: 0 14px; width: auto; border-radius: 10px; box-shadow: none; }
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid var(--primary);
+            animation: slideUp 0.3s ease;
+        }
+        .modal h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
 
-    /* ══════════════════
-       BOTTOM NAV
-       ══════════════════ */
-    .admin-nav {
-        flex-shrink: 0;
-        background: rgba(8,11,16,0.97);
-        backdrop-filter: blur(20px);
-        border-top: 1px solid var(--border);
-        display: flex; justify-content: space-around;
-        padding: 8px 2px 14px; gap: 1px;
-        position: relative; z-index: 10;
-    }
-    .nav-item {
-        display: flex; flex-direction: column; align-items: center;
-        color: var(--t3); font-size: 0.55rem; font-weight: 700;
-        cursor: pointer; padding: 6px 8px;
-        border-radius: 12px; transition: all 0.18s; flex: 1;
-        text-transform: uppercase; letter-spacing: 0.04em; gap: 3px;
-        -webkit-user-select: none;
-    }
-    .nav-item i { font-size: 1.15rem; transition: all 0.2s; }
-    .nav-item.active { color: var(--red); }
-    .nav-item.active i { filter: drop-shadow(0 0 6px var(--red-glow)); transform: translateY(-1px); }
-    .nav-item:active { background: var(--red-dim); transform: scale(0.9); }
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .quick-action {
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 12px 5px;
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-action:hover {
+            border-color: var(--primary);
+            transform: scale(0.95);
+        }
+        .quick-action i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        .quick-action span {
+            font-size: 0.65rem;
+            display: block;
+        }
 
-    /* ══════════════════
-       MODALS
-       ══════════════════ */
-    .modal-overlay {
-        position: fixed; inset: 0;
-        background: rgba(0,0,0,0.82);
-        backdrop-filter: blur(8px);
-        display: none; align-items: flex-end; justify-content: center;
-        z-index: 999; padding: 0;
-    }
-    .modal {
-        background: var(--s1);
-        border-radius: 28px 28px 0 0;
-        border: 1px solid var(--border); border-bottom: none;
-        padding: 20px; width: 100%; max-width: 480px;
-        max-height: 88vh; overflow-y: auto;
-        animation: modalIn 0.3s cubic-bezier(0.34,1.1,0.64,1) both;
-    }
-    @keyframes modalIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal h3 {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 1.05rem; font-weight: 800; color: var(--red);
-        margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
-    }
-    .modal-close {
-        float: right; cursor: pointer; color: var(--t2);
-        width: 30px; height: 30px;
-        background: var(--s2); border-radius: 9px;
-        display: inline-flex; align-items: center; justify-content: center;
-        font-size: 1rem; border: 1px solid var(--border); transition: all 0.15s;
-    }
-    .modal-close:active { background: var(--red-dim); color: var(--red); }
-    /* Drag handle on modals */
-    .modal::before {
-        content: ''; display: block;
-        width: 36px; height: 3px;
-        background: var(--s4); border-radius: 3px;
-        margin: -8px auto 16px;
-    }
+        /* Bottom Navigation - 7 items */
+        .admin-nav {
+            background: var(--card-bg);
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 4px 12px;
+            gap: 2px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.6rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 40px;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        .nav-item.active {
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
 
-    /* ══════════════════
-       TOAST
-       ══════════════════ */
-    .toast {
-        position: fixed; bottom: 82px; left: 14px; right: 14px; max-width: 440px;
-        margin: 0 auto; background: var(--s2);
-        border: 1px solid var(--border); border-radius: 18px;
-        padding: 12px 16px; display: none; align-items: center; gap: 10px;
-        z-index: 1001; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        animation: toastIn 0.28s cubic-bezier(0.34,1.2,0.64,1) both;
-    }
-    @keyframes toastIn { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .toast.success { border-color: rgba(46,204,113,0.4); }
-    .toast.success i { color: var(--green); }
-    .toast.error { border-color: rgba(231,76,60,0.4); }
-    .toast.error i { color: var(--red); }
-    .toast span { font-size: 0.85rem; color: var(--t1); }
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 40px;
+            padding: 14px 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            animation: slideUp 0.3s ease;
+        }
 
-    /* ══════════════════
-       IMAGE UPLOAD
-       ══════════════════ */
-    .upload-area {
-        border: 2px dashed var(--border); border-radius: var(--r-lg);
-        padding: 28px; text-align: center; cursor: pointer; transition: all 0.18s;
-    }
-    .upload-area:active { border-color: var(--red); background: var(--red-dim); }
-    .upload-area i { font-size: 2.5rem; color: var(--red); display: block; margin-bottom: 8px; }
-    .upload-preview {
-        width: 90px; height: 90px; margin: 0 auto 16px;
-        border-radius: 50%; overflow: hidden; border: 3px solid var(--red);
-    }
-    .upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    /* ══════════════════
-       MISC UTILITIES
-       ══════════════════ */
-    .badge {
-        background: var(--red-dim); color: var(--red);
-        padding: 3px 9px; border-radius: var(--r-full);
-        font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-    }
-    .empty-state {
-        text-align: center; padding: 32px 16px; color: var(--t3); font-size: 0.85rem;
-    }
-    .empty-state i { font-size: 2.2rem; display: block; margin-bottom: 10px; color: var(--s4); }
-    .learning-resource-link {
-        color: var(--blue); text-decoration: none; font-size: 0.78rem;
-        font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
-    }
-    .image-view-modal img { max-width: 100%; max-height: 70vh; border-radius: 14px; }
-    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fadeIn  { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-</style>
+        /* Logs */
+        .log-item {
+            background: var(--card-light);
+            padding: 12px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Role Management */
+        .role-chip {
+            background: var(--card-light);
+            border-radius: 40px;
+            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 5px 5px 0;
+            border: 1px solid var(--border);
+        }
+        .role-chip i {
+            color: var(--danger);
+            cursor: pointer;
+        }
+        .role-chip i:hover {
+            color: var(--primary);
+        }
+
+        /* Payment badge */
+        .payment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--card-light);
+            border-radius: 16px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            border: 1px solid var(--border);
+        }
+        .payment-cash { color: var(--success); }
+        .payment-esewa { color: var(--info); }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .member-actions {
+                flex-wrap: wrap;
+            }
+            .action-btn {
+                flex: auto;
+                width: calc(50% - 4px);
+            }
+        }
+
+        /* Image Upload Modal */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        .upload-preview {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+        }
+        .upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Image view modal */
+        .image-view-modal img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 16px;
+        }
+
+        /* Learning card enhancements */
+        .learning-resource-link {
+            color: var(--info);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 5px;
+        }
+        .learning-resource-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── SMOOTH TRANSITIONS ── */
+        #authSection { transition: opacity 0.3s ease; }
+        #adminPanel { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+        /* ── GOOGLE AUTH CARD ── */
+        .auth-card {
+            background: #14181f;
+            border-radius: 28px;
+            padding: 36px 24px;
+            border: 1px solid #2c3a47;
+            width: 100%;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+        }
+        .auth-logo-wrap {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 32px rgba(231,76,60,0.35);
+        }
+        .auth-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem; font-weight: 800;
+            text-align: center; color: #ecf0f1; margin-bottom: 6px;
+        }
+        .auth-subtitle { text-align: center; color: #7f8c8d; font-size: 0.88rem; margin-bottom: 28px; }
+        .btn-google {
+            width: 100%; height: 52px;
+            background: #1e2630;
+            border: 1.5px solid #2c3a47;
+            border-radius: 40px;
+            color: #ecf0f1;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            cursor: pointer; transition: all 0.22s;
+            margin-bottom: 0;
+        }
+        .btn-google:hover { border-color: #4285F4; background: #1a2535; transform: translateY(-1px); }
+        .btn-google:active { transform: scale(0.98); }
+        .btn-google:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .auth-divider {
+            display: flex; align-items: center; gap: 12px;
+            color: #4a5568; font-size: 0.75rem;
+            margin: 18px 0;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px; background: #2c3a47;
+        }
+        .auth-note {
+            background: rgba(231,76,60,0.08);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 14px; padding: 12px 16px;
+            font-size: 0.78rem; color: #bdc3c7;
+            display: flex; gap: 10px; align-items: flex-start;
+            line-height: 1.5;
+        }
+        .auth-note i { color: #e74c3c; margin-top: 2px; flex-shrink: 0; }
+        .loading-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #e74c3c;
+            display: inline-block;
+            animation: loadPulse 1s ease infinite;
+        }
+        @keyframes loadPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+        /* ── UPGRADED HEADER ── */
+        .admin-header {
+            background: linear-gradient(145deg, #16202e, #0e1620);
+            padding: 14px 18px;
+            border-bottom: 2px solid rgba(231,76,60,0.4);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header-brand { display: flex; align-items: center; gap: 10px; }
+        .header-logo {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.1rem;
+            box-shadow: 0 0 16px rgba(231,76,60,0.35);
+        }
+        .header-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem; font-weight: 800; color: #ecf0f1;
+            letter-spacing: -0.01em;
+        }
+        .header-sub { font-size: 0.65rem; color: #7f8c8d; }
+
+        /* ── STATS CARDS UPGRADED ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 16px; }
+        .stat-card {
+            background: #14181f;
+            border-radius: 18px; padding: 16px;
+            border: 1px solid #2c3a47;
+            position: relative; overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .stat-card:active { transform: scale(0.97); }
+        .stat-card::after {
+            content: ''; position: absolute; top: -20px; right: -20px;
+            width: 70px; height: 70px;
+            background: radial-gradient(circle, rgba(231,76,60,0.12) 0%, transparent 70%);
+        }
+        .stat-card .icon {
+            width: 34px; height: 34px;
+            background: rgba(231,76,60,0.15);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: #e74c3c; font-size: 0.9rem; margin-bottom: 10px;
+        }
+        .stat-card .label { font-size: 0.68rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+        .stat-card .value { font-family: 'Space Grotesk', sans-serif; font-size: 1.7rem; font-weight: 800; color: #ecf0f1; line-height: 1; }
+
+        /* ── QUICK ACTIONS UPGRADED ── */
+        .quick-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px; }
+        .quick-action {
+            background: #14181f; border-radius: 14px; padding: 12px 5px;
+            text-align: center; border: 1px solid #2c3a47;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .quick-action:active { transform: scale(0.93); border-color: #e74c3c; }
+        .quick-action i { font-size: 1.3rem; color: #e74c3c; display: block; margin-bottom: 5px; }
+        .quick-action span { font-size: 0.6rem; color: #bdc3c7; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+
+        /* ── MEMBER CARD UPGRADED ── */
+        .member-card {
+            background: #1a2230;
+            border-radius: 18px; padding: 16px;
+            border: 1px solid #2c3a47;
+            transition: all 0.2s; position: relative;
+            margin-bottom: 10px;
+        }
+        .member-card:active { border-color: #e74c3c; transform: translateX(3px); }
+        .member-avatar {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #e74c3c, #922b21);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800; font-size: 1.1rem; color: white; overflow: hidden;
+        }
+        .member-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+        .member-details { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 10px 0; padding: 10px 0; border-top: 1px solid #2c3a47; border-bottom: 1px solid #2c3a47; }
+        .detail-item .label { font-size: 0.58rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.06em; }
+        .detail-item .value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; color: #ecf0f1; }
+
+        /* ── ACTION BUTTONS UPGRADED ── */
+        .action-btn {
+            flex: 1; padding: 9px 8px;
+            border: none; border-radius: 12px;
+            font-size: 0.68rem; font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            transition: all 0.18s; min-width: 50px;
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .action-btn:active { transform: scale(0.93); filter: brightness(1.15); }
+
+        /* ── SUBMISSION CARD UPGRADED ── */
+        .submission-card {
+            background: #1a2230; border-radius: 18px;
+            padding: 16px; margin-bottom: 12px;
+            border: 1px solid #2c3a47;
+            transition: border-color 0.2s;
+        }
+        .submission-card:hover { border-color: rgba(231,76,60,0.4); }
+        .submission-status-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 40px;
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .status-pending { background: rgba(52,152,219,0.15); color: #3498db; }
+        .status-pending-ceo { background: rgba(243,156,18,0.15); color: #f39c12; }
+        .status-approved { background: rgba(46,204,113,0.15); color: #2ecc71; }
+        .status-rejected { background: rgba(231,76,60,0.15); color: #e74c3c; }
+
+        /* ── NOTICE & LOG ITEMS ── */
+        .notice-card {
+            background: #1a2230; border-radius: 14px; padding: 14px;
+            margin-bottom: 10px; border: 1px solid #2c3a47;
+            border-left: 3px solid #e74c3c;
+        }
+        .notice-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+        .notice-body { font-size: 0.82rem; color: #bdc3c7; line-height: 1.5; margin-bottom: 8px; }
+        .notice-meta { font-size: 0.68rem; color: #7f8c8d; display: flex; align-items: center; gap: 8px; }
+
+        /* ── CARD UPGRADED ── */
+        .card { background: #14181f; border-radius: 20px; padding: 18px; margin-bottom: 16px; border: 1px solid #2c3a47; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .card-header h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* ── ITEM CARDS (meetings/tasks) ── */
+        .item-card { background: #1a2230; border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid #2c3a47; }
+        .item-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+
+        /* ── BOTTOM NAV UPGRADED ── */
+        .admin-nav {
+            background: rgba(14,18,24,0.97);
+            border-top: 1px solid #2c3a47;
+            display: flex; justify-content: space-around;
+            padding: 8px 4px 14px; gap: 2px;
+            backdrop-filter: blur(16px);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #4a5568; font-size: 0.58rem; font-weight: 700;
+            cursor: pointer; padding: 6px 10px;
+            border-radius: 14px; transition: all 0.18s; flex: 1;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 3px; transition: all 0.18s; }
+        .nav-item.active { color: #e74c3c; background: rgba(231,76,60,0.1); }
+        .nav-item.active i { filter: drop-shadow(0 0 6px rgba(231,76,60,0.6)); }
+        .nav-item:active { transform: scale(0.9); }
+
+        /* ── TOAST UPGRADED ── */
+        .toast {
+            position: fixed; bottom: 90px; left: 16px; right: 16px; max-width: 440px;
+            margin: 0 auto;
+            background: #14181f; border: 1px solid #2c3a47;
+            border-radius: 20px; padding: 14px 18px;
+            display: none; align-items: center; gap: 12px;
+            z-index: 1001; animation: slideUp 0.28s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .toast.success { border-color: #2ecc71; }
+        .toast.success i { color: #2ecc71; }
+        .toast.error { border-color: #e74c3c; }
+        .toast.error i { color: #e74c3c; }
+
+        /* ── MODAL UPGRADED ── */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: flex-end; justify-content: center; z-index: 1000; backdrop-filter: blur(6px); }
+        .modal { background: #14181f; border-radius: 28px 28px 0 0; padding: 24px; width: 100%; max-width: 480px; border: 1px solid #2c3a47; border-bottom: none; animation: slideUp 0.28s cubic-bezier(0.4,0,0.2,1); max-height: 90vh; overflow-y: auto; }
+        .modal h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 800; color: #e74c3c; margin-bottom: 18px; }
+        .modal-close { float: right; font-size: 1.3rem; cursor: pointer; color: #7f8c8d; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; background: #1e2630; border-radius: 10px; }
+        .modal-close:active { background: rgba(231,76,60,0.2); color: #e74c3c; }
+
+        /* ── SEARCH BOX ── */
+        .search-box { position: relative; margin-bottom: 14px; }
+        .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #7f8c8d; }
+        .search-box input { width: 100%; padding: 12px 16px 12px 44px; background: #1a2230; border: 1.5px solid #2c3a47; border-radius: 14px; color: white; font-size: 0.9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; }
+        .search-box input:focus { border-color: #e74c3c; }
+
+        /* ── INPUT FIELDS ── */
+        .input-field { margin-bottom: 16px; }
+        .input-field label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7f8c8d; margin-bottom: 6px; }
+        .input-wrapper input, .input-wrapper select, .input-wrapper textarea,
+        .input-field input, .input-field select, .input-field textarea {
+            width: 100%; padding: 13px 16px 13px 44px;
+            background: #1a2230; border: 1.5px solid #2c3a47;
+            border-radius: 14px; color: white;
+            font-size: 0.9rem; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .input-field input, .input-field select, .input-field textarea { padding: 13px 16px; }
+        .input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus,
+        .input-field input:focus, .input-field select:focus, .input-field textarea:focus { border-color: #e74c3c; background: #1f2a36; }
+        .input-wrapper textarea, .input-field textarea { border-radius: 14px; resize: vertical; }
+
+        /* ── EMAIL NOTIFICATION BADGE ── */
+        .email-sent-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(46,204,113,0.12); color: #2ecc71;
+            border: 1px solid rgba(46,204,113,0.25);
+            border-radius: 40px; padding: 3px 10px;
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            margin-top: 6px;
+        }
+
+        /* ── FILTER TABS ── */
+        .filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 12px; scrollbar-width: none; flex-wrap: nowrap; }
+        .filter-tab { background: #1a2230; padding: 7px 14px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid #2c3a47; cursor: pointer; transition: all 0.18s; }
+        .filter-tab.active { background: #e74c3c; border-color: #e74c3c; color: white; }
+        .filter-tab:active { transform: scale(0.95); }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -756,17 +1104,15 @@
                     <div class="header-sub" id="adminHeaderSub">Command Center</div>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="admin-badge" id="adminRoleBadge" onclick="openImageUploadModal()">
-                    <div class="badge-avatar">
-                        <img id="adminAvatarImg" src="" style="display:none;">
-                        <span id="adminAvatarText">A</span>
-                    </div>
-                    <span class="badge-role" id="adminRole">Admin</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="admin-badge" id="adminRoleBadge" onclick="openImageUploadModal()" style="cursor:pointer;">
+                    <img id="adminAvatarImg" src="" style="display:none;width:26px;height:26px;border-radius:50%;object-fit:cover;">
+                    <i class="fas fa-user-shield" id="adminAvatarIcon"></i>
+                    <span id="adminRole">Admin</span>
                 </div>
-                <div class="sign-out-btn" onclick="adminSignOut()" title="Sign Out">
+                <button onclick="adminSignOut()" title="Sign Out" style="background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e74c3c;font-size:0.9rem;transition:all 0.2s;" id="signOutBtn" onmouseover="this.style.background='rgba(231,76,60,0.3)'" onmouseout="this.style.background='rgba(231,76,60,0.15)'">
                     <i class="fas fa-sign-out-alt"></i>
-                </div>
+                </button>
             </div>
         </div>
 
@@ -775,11 +1121,11 @@
             <!-- Auth Section -->
             <div id="authSection" class="auth-section">
                 <div class="auth-card">
-                    <div class="auth-icon-wrap">
+                    <div class="auth-logo-wrap">
                         <i class="fas fa-crown"></i>
                     </div>
-                    <div class="auth-heading">Admin Panel</div>
-                    <div class="auth-sub">DarkRoot Command Center<br>Sign in to manage your team</div>
+                    <div class="auth-title">Admin Panel</div>
+                    <div class="auth-subtitle">DarkRoot Command Center</div>
 
                     <button class="btn-google" id="adminGoogleBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -791,18 +1137,17 @@
                         Continue with Google
                     </button>
 
-                    <div class="auth-divider"><span>Secure · Role-based Access</span></div>
+                    <div class="auth-divider"><span>Secure Admin Access</span></div>
 
                     <div class="auth-note">
                         <i class="fas fa-shield-alt"></i>
-                        Only members with <strong>CEO</strong> or <strong>Manager</strong> role can access this panel. Regular members will be denied access automatically.
+                        Only <strong style="color:#ecf0f1;">CEO</strong> or <strong style="color:#ecf0f1;">Manager</strong>
                     </div>
                 </div>
             </div>
 
             <!-- Admin Panel (hidden until logged in) -->
-            <div id="adminPanel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
-                <div class="admin-main">
+            <div id="adminPanel" class="admin-panel">
                 <!-- Stats Overview -->
                 <div class="stats-grid" id="statsOverview">
                     <div class="stat-card">
@@ -855,7 +1200,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3><i class="fas fa-users-cog"></i> Member Management</h3>
-                                <span class="badge" id="memberCount" style="font-size:0.7rem;padding:4px 10px;">0</span>
+                                <span class="badge" id="memberCount">0</span>
                             </div>
 
                             <div class="search-box">
@@ -885,7 +1230,7 @@
                                 <!-- Roles will appear here -->
                             </div>
                             <div class="input-field" style="display: none;" id="addRoleInput">
-                                <input type="text" id="newRoleName" placeholder="Enter role name (e.g., 'QA Tester')" >
+                                <input type="text" id="newRoleName" placeholder="Enter role name (e.g., 'QA Tester')" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                                     <button class="btn btn-success" onclick="saveNewRole()" style="flex:1;">Save</button>
                                     <button class="btn btn-outline" onclick="hideAddRole()" style="flex:1;">Cancel</button>
@@ -897,7 +1242,7 @@
                         <div class="card" id="logsCard">
                             <div class="card-header">
                                 <h3><i class="fas fa-history"></i> Recent Activity</h3>
-                                <button class="action-btn" onclick="clearLogs()" style="background: var(--amber);">
+                                <button class="action-btn" onclick="clearLogs()" style="background: var(--warning);">
                                     <i class="fas fa-trash"></i> Clear
                                 </button>
                             </div>
@@ -954,15 +1299,13 @@
                             
                             <div class="input-field">
                                 <label>Title</label>
-                                <input type="text" id="noticeTitleInput" placeholder="Announcement title…">
-                            </div>
-                            <div class="input-field">
+                                <input type="text" id="noticeTitleInput" placeholder="Announcement title…" style="width:100%;padding:11px 14px;background:#1a2230;border:1.5px solid #2c3a47;border-radius:12px;color:white;font-family:'Inter',sans-serif;margin-bottom:10px;outline:none;">
                                 <label>Message</label>
-                                <textarea id="noticeInput" placeholder="Write your announcement…" rows="3"></textarea>
+                                <textarea id="noticeInput" placeholder="Write your announcement…" rows="3" style="width:100%;padding:11px 14px;background:#1a2230;border:1.5px solid #2c3a47;border-radius:12px;color:white;font-family:'Inter',sans-serif;resize:vertical;outline:none;"></textarea>
+                                <button class="btn btn-success" onclick="postNotice()" style="margin-top:10px;">
+                                    <i class="fas fa-paper-plane"></i> Post Announcement
+                                </button>
                             </div>
-                            <button class="btn btn-success" onclick="postNotice()">
-                                <i class="fas fa-paper-plane"></i> Post Announcement
-                            </button>
 
                             <div id="noticesList" style="margin-top: 20px;"></div>
                         </div>
@@ -973,7 +1316,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3><i class="fas fa-credit-card"></i> Payment Methods</h3>
-                                <select id="paymentTypeFilter" style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:6px 12px;color:var(--t1);font-size:0.8rem;outline:none;">
+                                <select id="paymentTypeFilter" style="background: var(--card-light); border: 1px solid var(--border); border-radius: 20px; padding: 5px 10px; color: white;">
                                     <option value="all">All types</option>
                                     <option value="cash">Cash</option>
                                     <option value="esewa">eSewa</option>
@@ -983,22 +1326,21 @@
                         </div>
                     </div>
 
-                    <!-- Learning View (Admin) -->
-                    <div id="adminLearningView" style="display:none;">
+                    <!-- Learning View (Admin) - Now shows all resources -->
+                    <div id="adminLearningView" style="display: none;">
                         <div class="card">
                             <div class="card-header">
-                                <h3><i class="fas fa-graduation-cap"></i> Learning</h3>
-                                <button class="btn btn-sm" onclick="openLearningModal()">
-                                    <i class="fas fa-plus"></i> Add
+                                <h3><i class="fas fa-graduation-cap"></i> Learning Resources</h3>
+                                <button class="action-btn edit" onclick="openLearningModal()" style="width: auto; padding: 8px 16px;">
+                                    <i class="fas fa-plus"></i> Add Resource
                                 </button>
                             </div>
-                            <div id="adminLearningList"></div>
+                            <div id="adminLearningList" class="member-list"></div>
                         </div>
                     </div>
                 </div>
             </div>
-                </div><!-- /admin-main -->
-            </div><!-- /adminPanel -->
+        </div>
 
         <!-- Bottom Navigation (7 items) -->
         <div class="admin-nav" id="adminNav" style="display: none;">
@@ -1042,7 +1384,7 @@
     <!-- Modals (all existing modals remain unchanged) -->
     <div class="modal-overlay" id="editMemberModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('editMemberModal')">&times;</div>
+            <span class="modal-close" onclick="closeModal('editMemberModal')">&times;</span>
             <h3><i class="fas fa-user-edit"></i> Edit Member</h3>
             <div id="editMemberContent"></div>
         </div>
@@ -1050,31 +1392,31 @@
 
     <div class="modal-overlay" id="addMemberModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('addMemberModal')">&times;</div>
+            <span class="modal-close" onclick="closeModal('addMemberModal')">&times;</span>
             <h3><i class="fas fa-user-plus"></i> Add New Member</h3>
             <div class="input-field">
                 <label>Full Name</label>
-                <input type="text" id="newMemberName" placeholder="John Doe" >
+                <input type="text" id="newMemberName" placeholder="John Doe" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Email (Gmail)</label>
-                <input type="email" id="newMemberEmail" placeholder="member@gmail.com" >
+                <input type="email" id="newMemberEmail" placeholder="member@gmail.com" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Password</label>
-                <input type="password" id="newMemberPassword" placeholder="••••••••" >
+                <input type="password" id="newMemberPassword" placeholder="••••••••" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Role</label>
-                <select id="newMemberRole" ></select>
+                <select id="newMemberRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></select>
             </div>
             <div class="input-field">
                 <label>Initial Points</label>
-                <input type="number" id="newMemberPoints" value="0" >
+                <input type="number" id="newMemberPoints" value="0" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Initial Salary ($)</label>
-                <input type="number" id="newMemberSalary" value="0" >
+                <input type="number" id="newMemberSalary" value="0" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <!-- Payment method fields -->
             <div class="input-field">
@@ -1083,7 +1425,7 @@
                     <label><input type="radio" name="newPaymentType" value="cash" checked> Cash</label>
                     <label><input type="radio" name="newPaymentType" value="esewa"> eSewa</label>
                 </div>
-                <input type="text" id="newEsewaId" placeholder="eSewa ID (if eSewa)" style="width: 100%; padding: 12px; background: var(--s2); border: 1px solid var(--border); border-radius: 16px; color: white; display: none;">
+                <input type="text" id="newEsewaId" placeholder="eSewa ID (if eSewa)" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white; display: none;">
             </div>
             <button class="btn" onclick="createNewMember()">
                 <i class="fas fa-check"></i> Create Member
@@ -1094,7 +1436,7 @@
     <!-- Edit Payment Modal -->
     <div class="modal-overlay" id="editPaymentModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('editPaymentModal')">&times;</div>
+            <span class="modal-close" onclick="closeModal('editPaymentModal')">&times;</span>
             <h3><i class="fas fa-credit-card"></i> Edit Payment Method</h3>
             <input type="hidden" id="editPaymentUid">
             <div class="input-field">
@@ -1103,7 +1445,7 @@
                     <label><input type="radio" name="editPaymentType" value="cash"> Cash</label>
                     <label><input type="radio" name="editPaymentType" value="esewa"> eSewa</label>
                 </div>
-                <input type="text" id="editEsewaId" placeholder="eSewa ID" >
+                <input type="text" id="editEsewaId" placeholder="eSewa ID" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <button class="btn" onclick="savePaymentMethod()">Save</button>
         </div>
@@ -1112,28 +1454,28 @@
     <!-- Meeting Modal -->
     <div class="modal-overlay" id="meetingModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('meetingModal')">&times;</span>
+            <span class="modal-close" onclick="closeModal('meetingModal')">&times;</span>
             <h3 id="meetingModalTitle">Add Meeting</h3>
             <input type="hidden" id="meetingId">
             <div class="input-field">
                 <label>Title</label>
-                <input type="text" id="meetingTitle" placeholder="Meeting title" >
+                <input type="text" id="meetingTitle" placeholder="Meeting title" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Description</label>
-                <textarea id="meetingDescription" placeholder="Description" rows="2" ></textarea>
+                <textarea id="meetingDescription" placeholder="Description" rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
             </div>
             <div class="input-field">
                 <label>Date</label>
-                <input type="date" id="meetingDate" >
+                <input type="date" id="meetingDate" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Time</label>
-                <input type="time" id="meetingTime" >
+                <input type="time" id="meetingTime" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Location / Link</label>
-                <input type="text" id="meetingLocation" placeholder="Location or video link" >
+                <input type="text" id="meetingLocation" placeholder="Location or video link" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <button class="btn" onclick="saveMeeting()">
                 <i class="fas fa-save"></i> Save Meeting
@@ -1144,20 +1486,20 @@
     <!-- Task Modal -->
     <div class="modal-overlay" id="taskModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('taskModal')">&times;</span>
+            <span class="modal-close" onclick="closeModal('taskModal')">&times;</span>
             <h3 id="taskModalTitle">Add Task</h3>
             <input type="hidden" id="taskId">
             <div class="input-field">
                 <label>Title</label>
-                <input type="text" id="taskTitle" placeholder="Task title" >
+                <input type="text" id="taskTitle" placeholder="Task title" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Description</label>
-                <textarea id="taskDescription" placeholder="Description" rows="2" ></textarea>
+                <textarea id="taskDescription" placeholder="Description" rows="2" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
             </div>
             <div class="input-field">
                 <label>Points</label>
-                <input type="number" id="taskPoints" placeholder="Points awarded" min="1" >
+                <input type="number" id="taskPoints" placeholder="Points awarded" min="1" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <button class="btn" onclick="saveTask()">
                 <i class="fas fa-save"></i> Save Task
@@ -1168,12 +1510,12 @@
     <!-- Image Upload Modal -->
     <div class="modal-overlay" id="imageUploadModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('imageUploadModal')">&times;</div>
+            <span class="modal-close" onclick="closeModal('imageUploadModal')">&times;</span>
             <h3><i class="fas fa-camera"></i> Update Profile Photo</h3>
             <div class="upload-preview" id="uploadPreview">
                 <img src="" style="display: none;" id="previewImg">
-                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--s2);" id="previewPlaceholder">
-                    <i class="fas fa-user" style="font-size: 2rem; color: var(--t3);"></i>
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--card-light);" id="previewPlaceholder">
+                    <i class="fas fa-user" style="font-size: 2rem; color: var(--text-muted);"></i>
                 </div>
             </div>
             <div class="upload-area" onclick="document.getElementById('fileInput').click()">
@@ -1191,21 +1533,21 @@
     <!-- Edit User Modal (Admin) -->
     <div class="modal-overlay" id="editUserModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('editUserModal')">&times;</div>
+            <span class="modal-close" onclick="closeModal('editUserModal')">&times;</span>
             <h3><i class="fas fa-user-edit"></i> Edit User</h3>
             <div style="display: flex; flex-direction: column; gap: var(--space-md);" id="editUserForm">
                 <input type="hidden" id="editUserId">
                 <div class="input-field">
                     <label>Points</label>
-                    <input type="number" id="editUserPoints" class="chat-input" placeholder="Points" >
+                    <input type="number" id="editUserPoints" class="chat-input" placeholder="Points" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                 </div>
                 <div class="input-field">
                     <label>Salary ($)</label>
-                    <input type="number" id="editUserSalary" class="chat-input" placeholder="Salary" >
+                    <input type="number" id="editUserSalary" class="chat-input" placeholder="Salary" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                 </div>
                 <div class="input-field">
                     <label>Role</label>
-                    <select id="editUserRole" class="chat-input" >
+                    <select id="editUserRole" class="chat-input" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                         <option value="Member">Member</option>
                         <option value="Senior">Senior</option>
                         <option value="Manager">Manager</option>
@@ -1223,20 +1565,20 @@
     <!-- Learning Modal -->
     <div class="modal-overlay" id="learningModal">
         <div class="modal">
-            <div class="modal-close" onclick="closeModal('learningModal')">&times;</span>
+            <span class="modal-close" onclick="closeModal('learningModal')">&times;</span>
             <h3 id="learningModalTitle">Add Learning Resource</h3>
             <input type="hidden" id="learningId">
             <div class="input-field">
                 <label>Title</label>
-                <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript" >
+                <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Description</label>
-                <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..." ></textarea>
+                <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;"></textarea>
             </div>
             <div class="input-field">
                 <label>Type</label>
-                <select id="learningType" >
+                <select id="learningType" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                     <option value="video">Video</option>
                     <option value="article">Article</option>
                     <option value="course">Course</option>
@@ -1244,11 +1586,11 @@
             </div>
             <div class="input-field">
                 <label>URL</label>
-                <input type="url" id="learningUrl" class="chat-input" placeholder="https://..." >
+                <input type="url" id="learningUrl" class="chat-input" placeholder="https://..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <div class="input-field">
                 <label>Thumbnail URL (optional)</label>
-                <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://..." >
+                <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://..." style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
             </div>
             <button class="btn" onclick="saveLearningResource()">Save</button>
         </div>
@@ -1467,7 +1809,7 @@
             if (!btn) return;
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="spin-dot"></span>&nbsp; Signing in…';
+                btn.innerHTML = '<span class="loading-dot"></span>&nbsp;&nbsp;Signing in…';
             } else {
                 btn.disabled = false;
                 btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google`;
@@ -1486,18 +1828,15 @@
 
         function showAdminPanel(data) {
             document.getElementById('authSection').style.display = 'none';
-            adminPanel.style.display = 'flex';
+            adminPanel.style.display = 'block';
             if (adminNav) adminNav.style.display = 'flex';
             adminRoleSpan.textContent = data.role;
             const sub = document.getElementById('adminHeaderSub');
-            if (sub) sub.textContent = data.name?.split(' ')[0] || 'Admin';
-            const avatarText = document.getElementById('adminAvatarText');
+            if (sub) sub.textContent = data.name || 'Admin';
             if (data.photoURL) {
-                const avatarImg = document.getElementById('adminAvatarImg');
-                if (avatarImg) { avatarImg.src = data.photoURL; avatarImg.style.display = 'block'; }
-                if (avatarText) avatarText.style.display = 'none';
-            } else if (avatarText) {
-                avatarText.textContent = (data.name || 'A').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+                adminAvatarIcon.style.display = 'none';
+                adminAvatarImg.src = data.photoURL;
+                adminAvatarImg.style.display = 'inline-block';
             }
         }
 
@@ -1652,7 +1991,7 @@
         function displayMembers(members) {
             const container = document.getElementById('memberListContainer');
             if (members.length === 0) {
-                container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--t3);"><i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 10px;"></i><p>No members found</p></div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 10px;"></i><p>No members found</p></div>`;
                 return;
             }
             container.innerHTML = '';
@@ -1730,17 +2069,17 @@
             content.innerHTML = `
                 <div class="input-field">
                     <label>Email</label>
-                    <div style="padding:10px 14px;background:var(--s2);border-radius:12px;border:1px solid var(--border);color:var(--t2);font-size:0.85rem;">
+                    <div style="padding: 12px; background: var(--card-light); border-radius: 16px; color: var(--primary);">
                         <i class="fas fa-envelope"></i> ${currentEmail}
                     </div>
                 </div>
                 <div class="input-field">
                     <label>New Name</label>
-                    <input type="text" id="editName" value="${currentName}" >
+                    <input type="text" id="editName" value="${currentName}" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                 </div>
                 <div class="input-field">
                     <label>Role</label>
-                    <select id="editRole" >
+                    <select id="editRole" style="width: 100%; padding: 12px; background: var(--card-light); border: 1px solid var(--border); border-radius: 16px; color: white;">
                         ${roleOptions}
                     </select>
                 </div>
@@ -1921,7 +2260,7 @@
             snapshot.forEach(child => meetings.push({ id: child.key, ...child.val() }));
             meetings.sort((a, b) => (a.dateTime || 0) - (b.dateTime || 0));
             if (meetings.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--t3);">No meetings scheduled.</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No meetings scheduled.</div>';
                 return;
             }
             meetings.forEach(meeting => {
@@ -1936,7 +2275,7 @@
                             <div class="item-meta">${dateStr} · ${meeting.location || 'TBD'}</div>
                         </div>
                     </div>
-                    ${meeting.description ? `<p style="font-size:0.8rem; color:var(--t2); margin:8px 0;">${meeting.description}</p>` : ''}
+                    ${meeting.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:8px 0;">${meeting.description}</p>` : ''}
                     <div class="item-actions">
                         <button class="action-btn edit" onclick="openMeetingModal('${meeting.id}')"><i class="fas fa-edit"></i> Edit</button>
                         <button class="action-btn delete" onclick="deleteMeeting('${meeting.id}')"><i class="fas fa-trash"></i> Delete</button>
@@ -2024,7 +2363,7 @@
             });
             allTasks.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
             if (allTasks.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--t3);">No tasks created.</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No tasks created.</div>';
                 return;
             }
             allTasks.forEach(task => {
@@ -2038,7 +2377,7 @@
                             <div class="item-meta">${task.points} points</div>
                         </div>
                     </div>
-                    ${task.description ? `<p style="font-size:0.8rem; color:var(--t2); margin:8px 0;">${task.description}</p>` : ''}
+                    ${task.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:8px 0;">${task.description}</p>` : ''}
                     <div class="item-actions">
                         <button class="action-btn edit" onclick="openTaskModal('${task.id}')"><i class="fas fa-edit"></i> Edit</button>
                         <button class="action-btn delete" onclick="deleteTask('${task.id}')"><i class="fas fa-trash"></i> Delete</button>
@@ -2241,7 +2580,7 @@
 
             const submissionsSnap = await db.ref('task_submissions').once('value');
             if (!submissionsSnap.exists()) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--t3);">No submissions yet.</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No submissions yet.</div>';
                 return;
             }
 
@@ -2258,7 +2597,7 @@
             filtered.sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--t3);">No submissions match the filter.</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No submissions match the filter.</div>';
                 return;
             }
 
@@ -2453,7 +2792,7 @@
             const container = document.getElementById('noticesList');
             container.innerHTML = '';
             if (!snapshot.exists()) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-bullhorn"></i>No announcements yet</div>';
+                container.innerHTML = '<p style="color: var(--text-muted);">No notices yet</p>';
                 return;
             }
             const notices = [];
@@ -2488,7 +2827,7 @@
             const container = document.getElementById('activityLogs');
             container.innerHTML = '';
             if (!snapshot.exists()) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i>No activity yet</div>';
+                container.innerHTML = '<p style="color: var(--text-muted);">No activity logs</p>';
                 return;
             }
             const logs = [];
@@ -2497,9 +2836,9 @@
                 const logEl = document.createElement('div');
                 logEl.className = 'log-item';
                 logEl.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:7px;"><i class="fas fa-circle" style="color:var(--red);font-size:0.45rem;flex-shrink:0;"></i><span>${log.action}${log.details ? ' — <span style="color:var(--t2);">'+log.details+'</span>' : ''}</span></div>
-                    <div style="font-size:0.62rem;color:var(--t3);margin-top:4px;padding-left:15px;">
-                        ${formatDate(log.timestamp)} · ${log.admin || log.name || 'System'}
+                    <div><i class="fas fa-circle" style="color: var(--primary); font-size: 0.5rem;"></i> ${log.action}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">
+                        ${formatDate(log.timestamp)} • ${log.admin || 'System'}
                     </div>
                 `;
                 container.appendChild(logEl);
@@ -2720,81 +3059,58 @@
             }
         };
 
-        // ==================== LEARNING MANAGEMENT ====================
-        function getYouTubeEmbedUrl(url) {
-            if (!url) return null;
-            // Handle youtu.be/xxxxx and youtube.com/watch?v=xxxxx and /embed/
-            let videoId = null;
-            const shortMatch = url.match(/youtu\.be\/([^?&]+)/);
-            const longMatch = url.match(/[?&]v=([^&]+)/);
-            const embedMatch = url.match(/embed\/([^?&]+)/);
-            if (shortMatch) videoId = shortMatch[1];
-            else if (longMatch) videoId = longMatch[1];
-            else if (embedMatch) videoId = embedMatch[1];
-            return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1` : null;
-        }
-
-        function buildLearningCard(res, isAdmin = true) {
-            const card = document.createElement('div');
-            card.className = 'learning-card';
-            const iconMap = { video: 'fa-video', article: 'fa-file-alt', course: 'fa-layer-group' };
-            const iconClass = iconMap[res.type] || 'fa-book';
-            const typeClass = res.type === 'video' ? 'type-video' : res.type === 'article' ? 'type-article' : 'type-course';
-
-            // Embed block: YouTube embed OR thumbnail OR icon placeholder
-            const embedUrl = res.type === 'video' ? getYouTubeEmbedUrl(res.url) : null;
-            let thumbHtml = '';
-            if (embedUrl) {
-                thumbHtml = `<iframe class="learning-embed" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
-            } else if (res.thumbnail) {
-                thumbHtml = `<div class="learning-thumb"><img src="${res.thumbnail}" alt="${res.title}" loading="lazy"><span class="learning-type-tag ${typeClass}">${res.type || 'resource'}</span><div class="play-icon-overlay"><i class="fas ${iconClass}"></i></div></div>`;
-            } else {
-                thumbHtml = `<div class="learning-thumb" style="display:flex;align-items:center;justify-content:center;"><i class="fas ${iconClass}" style="font-size:2.5rem;color:var(--red);opacity:0.5;"></i><span class="learning-type-tag ${typeClass}" style="position:absolute;top:10px;left:10px;">${res.type || 'resource'}</span></div>`;
-            }
-
-            const linkHtml = (res.url && res.type !== 'video') ? `<a href="${res.url}" target="_blank" class="learning-link"><i class="fas fa-external-link-alt"></i> Open</a>` : '<span></span>';
-            const adminActions = isAdmin ? `<div class="learning-actions"><button class="action-btn delete" onclick="deleteLearning('${res.id}')"><i class="fas fa-trash"></i></button></div>` : '';
-
-            card.innerHTML = `
-                ${thumbHtml}
-                <div class="learning-body">
-                    <div class="learning-title">${res.title || 'Untitled'}</div>
-                    ${res.description ? `<div class="learning-desc">${res.description}</div>` : ''}
-                    <div class="learning-footer">
-                        ${linkHtml}
-                        ${adminActions}
-                    </div>
-                </div>
-            `;
-            return card;
-        }
-
+        // ==================== LEARNING MANAGEMENT (FULL LIST) ====================
         function loadAdminLearning() {
             const container = document.getElementById('adminLearningList');
             if (!container) return;
             db.ref('learning').orderByChild('createdAt').once('value', (snap) => {
                 const resources = [];
-                snap.forEach(child => resources.push({ id: child.key, ...child.val() }));
+                snap.forEach(child => {
+                    const val = child.val();
+                    // Include all resources, even if URL missing (but show placeholder)
+                    resources.push({ id: child.key, ...val });
+                });
                 resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 container.innerHTML = '';
                 if (resources.length === 0) {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i>No learning resources yet</div>';
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No learning resources added.</div>';
                     return;
                 }
                 resources.forEach(res => {
-                    container.appendChild(buildLearningCard(res, true));
+                    const card = document.createElement('div');
+                    card.className = 'member-card';
+                    // Determine icon based on type
+                    let iconClass = 'fa-book';
+                    if (res.type === 'video') iconClass = 'fa-video';
+                    else if (res.type === 'article') iconClass = 'fa-file-alt';
+                    else if (res.type === 'course') iconClass = 'fa-layer-group';
+                    
+                    // Show link if URL exists
+                    const linkHtml = res.url ? 
+                        `<a href="${res.url}" target="_blank" class="learning-resource-link"><i class="fas fa-external-link-alt"></i> View</a>` : 
+                        '<span class="learning-resource-link" style="color: var(--text-muted);">No URL</span>';
+                    
+                    card.innerHTML = `
+                        <div class="member-card-header">
+                            <div class="member-avatar"><i class="fas ${iconClass}"></i></div>
+                            <div class="member-info">
+                                <div class="member-name">${res.title || 'Untitled'}</div>
+                                <div class="member-email">${res.type || 'resource'} · ${formatDate(res.createdAt)}</div>
+                            </div>
+                        </div>
+                        ${res.description ? `<p style="font-size:0.8rem; color:var(--text-secondary); margin:5px 0;">${res.description}</p>` : ''}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                            ${linkHtml}
+                            <div style="display: flex; gap: 5px;">
+                                <button class="action-btn edit" onclick="editLearningResource('${res.id}')" style="padding:5px 10px;"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')" style="padding:5px 10px;"><i class="fas fa-trash"></i> Del</button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
                 });
             });
         }
-
-        window.deleteLearning = async function(id) {
-            if (!confirm('Delete this resource?')) return;
-            await db.ref('learning/' + id).remove();
-            showToast('Resource deleted');
-            loadAdminLearning();
-        };
-
-
 
         window.openLearningModal = function(id = null) {
             document.getElementById('learningModalTitle').textContent = id ? 'Edit Learning Resource' : 'Add Learning Resource';
