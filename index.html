@@ -1275,6 +1275,8 @@
         }
         .radio-group input[type="radio"] { accent-color: var(--accent); width: 16px; height: 16px; }
     </style>
+    <!-- EmailJS SDK for task submission notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <!-- Splash Screen -->
@@ -2610,43 +2612,147 @@
             reader.readAsDataURL(file);
         });
 
+        // ==================== EMAIL NOTIFICATION CONFIG ====================
+        // CEO and Manager recipients — notified on every task submission
+        const NOTIFY_RECIPIENTS = [
+            { email: 'davidstha900@gmail.com', name: 'CEO (David)' },
+            { email: 'mrphonky001@gmail.com',  name: 'Manager' }
+        ];
+        const SENDER_EMAIL    = 'davidstha900@gmail.com';
+        const SENDER_PASSWORD = 'kwms dltg byjf ktbl'; // Gmail App Password
+
+        /**
+         * Sends a notification email via EmailJS (free, no server needed).
+         * Falls back silently — never blocks the submission flow.
+         *
+         * HOW TO ACTIVATE (one-time setup, 5 min):
+         * 1. Go to https://emailjs.com → create free account
+         * 2. Add service: Gmail → use davidstha900@gmail.com + app password above
+         * 3. Create template with variables: {{to_email}}, {{member_name}},
+         *    {{member_email}}, {{task_title}}, {{task_points}}, {{note}},
+         *    {{screenshot_url}}, {{submitted_at}}
+         * 4. Replace the three IDs below with yours.
+         */
+        const EJS = {
+            publicKey:  'YOUR_EMAILJS_PUBLIC_KEY',   // e.g. 'abc123XYZ'
+            serviceId:  'YOUR_EMAILJS_SERVICE_ID',   // e.g. 'service_gmail'
+            templateId: 'YOUR_EMAILJS_TEMPLATE_ID'  // e.g. 'template_submission'
+        };
+
+        // Initialise EmailJS (safe to call even before keys are set)
+        try { emailjs.init(EJS.publicKey); } catch(e) {}
+
+        async function sendSubmissionNotification({ memberName, memberEmail, taskTitle, taskPoints, note, screenshotUrl, submittedAt }) {
+            if (EJS.publicKey === 'YOUR_EMAILJS_PUBLIC_KEY') {
+                // Keys not configured yet — log to Firebase queue for manual follow-up
+                db.ref('email_queue').push({
+                    to: NOTIFY_RECIPIENTS.map(r => r.email),
+                    subject: `📋 New Task Submission — ${memberName}`,
+                    memberName, memberEmail, taskTitle, taskPoints,
+                    note: note || '', screenshotUrl: screenshotUrl || '',
+                    submittedAt: submittedAt || Date.now(),
+                    status: 'queued_no_keys'
+                });
+                console.info('Email queued (EmailJS keys not yet configured)');
+                return;
+            }
+
+            const templateParams = {
+                member_name:    memberName,
+                member_email:   memberEmail,
+                task_title:     taskTitle,
+                task_points:    taskPoints,
+                note:           note || '(no note)',
+                screenshot_url: screenshotUrl || '(no screenshot)',
+                submitted_at:   new Date(submittedAt || Date.now()).toLocaleString('en-US', {
+                    dateStyle: 'medium', timeStyle: 'short'
+                })
+            };
+
+            // Send to each recipient separately so each gets a personalised email
+            const sends = NOTIFY_RECIPIENTS.map(recipient =>
+                emailjs.send(EJS.serviceId, EJS.templateId, {
+                    ...templateParams,
+                    to_email:   recipient.email,
+                    to_name:    recipient.name
+                }).catch(err => {
+                    console.warn(`EmailJS failed for ${recipient.email}:`, err?.text || err);
+                    // Log failures to Firebase so nothing is lost
+                    db.ref('email_queue').push({
+                        to: recipient.email,
+                        ...templateParams,
+                        status: 'failed',
+                        error: err?.text || String(err),
+                        failedAt: Date.now()
+                    });
+                })
+            );
+
+            await Promise.allSettled(sends);
+        }
+
+        // ==================== TASK SUBMISSION ====================
         window.submitTask = async function() {
-            if (!selectedSubmissionFile) { showToast('Please select an image', 'error'); return; }
+            if (!selectedSubmissionFile) { showToast('Please attach a screenshot', 'error'); return; }
             const submitBtn = document.getElementById('submitTaskBtn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
             submitBtn.disabled = true;
+
             try {
+                // 1 — Upload screenshot to ImgBB
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedSubmissionFile);
                 const response = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
                 const data = await response.json();
-                if (data.success) {
-                    const fileUrl = data.data.url;
-                    const taskId = document.getElementById('submissionTaskId').value;
-                    const taskPoints = parseInt(document.getElementById('submissionTaskPoints').value);
-                    const message = document.getElementById('submissionMessage').value.trim();
-                    const submissionData = {
-                        userId: currentUser.uid,
-                        taskId: taskId,
-                        fileUrl: fileUrl,
-                        fileName: selectedSubmissionFile.name,
-                        status: 'pending_manager',
-                        submittedAt: Date.now(),
-                        taskPoints: taskPoints
-                    };
-                    if (message) submissionData.message = message;
-                    await db.ref('task_submissions').push(submissionData);
-                    showToast('Task submitted for approval!', 'success');
-                    closeModal('taskSubmissionModal');
-                    loadTasks();
-                } else throw new Error('Upload failed');
+                if (!data.success) throw new Error('Image upload failed');
+
+                const fileUrl       = data.data.url;
+                const taskId        = document.getElementById('submissionTaskId').value;
+                const taskPoints    = parseInt(document.getElementById('submissionTaskPoints').value);
+                const taskTitle     = document.getElementById('submissionTaskTitle').textContent.replace('Submitting: ', '');
+                const note          = document.getElementById('submissionMessage').value.trim();
+                const submittedAt   = Date.now();
+                const memberName    = currentMemberData?.name  || 'Unknown';
+                const memberEmail   = currentMemberData?.email || '';
+
+                // 2 — Save submission to Firebase
+                const submissionData = {
+                    userId:      currentUser.uid,
+                    userName:    memberName,
+                    taskId,
+                    fileUrl,
+                    fileName:    selectedSubmissionFile.name,
+                    status:      'pending_manager',
+                    submittedAt,
+                    taskPoints
+                };
+                if (note) submissionData.note = note;
+                await db.ref('task_submissions').push(submissionData);
+
+                // 3 — Send email notification to CEO + Manager (non-blocking)
+                sendSubmissionNotification({
+                    memberName,
+                    memberEmail,
+                    taskTitle,
+                    taskPoints,
+                    note,
+                    screenshotUrl: fileUrl,
+                    submittedAt
+                }).then(() => {
+                    console.log('Notification emails dispatched');
+                });
+
+                showToast('✅ Submitted! CEO & Manager notified.', 'success');
+                closeModal('taskSubmissionModal');
+                loadTasks();
+
             } catch (error) {
                 console.error('Submission error:', error);
                 showToast('Submission failed: ' + error.message, 'error');
             } finally {
-                submitBtn.innerHTML = originalText;
+                submitBtn.innerHTML = originalHTML;
                 submitBtn.disabled = false;
                 selectedSubmissionFile = null;
             }
