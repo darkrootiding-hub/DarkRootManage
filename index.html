@@ -1,23 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DarkRoot • Team Hub</title>
-    
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
-<link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot • Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="/about.jpg">
-<link rel="apple-touch-icon" sizes="180x180" href="/about.jpg">
-    <!-- Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    
-    <style>
-        /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
+<link rel="apple-touch-icon" sizes="180x180" href="/about.jpg"> <!-- Libraries --> <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script> <style> /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
         *, *::before, *::after {
             margin: 0; padding: 0;
             box-sizing: border-box;
@@ -1275,603 +1260,15 @@
         }
         .radio-group input[type="radio"] { accent-color: var(--accent); width: 16px; height: 16px; }
     </style>
-    <!-- EmailJS SDK for task submission notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
-<body>
-    <!-- Splash Screen -->
-    <div class="splash-screen" id="splashScreen">
-        <div class="splash-logo">
-            <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
-        </div>
-        <div class="splash-text">DarkRoot Hub</div>
-        <div class="splash-loader"></div>
-    </div>
-
-    <!-- Auth Section -->
-    <div id="authSection" class="auth-section" style="display:none;">
-        <div class="auth-card" id="loginCard">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
-                </div>
-                <h2>Welcome to DarkRoot</h2>
-                <p>Sign in with your Google account to continue</p>
-            </div>
-
-            <!-- Google Sign In Button -->
-            <button class="btn btn-google" id="googleSignInBtn">
-                <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Continue with Google
-            </button>
-
-            <div class="auth-divider">
-                <span>Secure · Fast · One tap</span>
-            </div>
-
-            <div class="auth-note">
-                <i class="fas fa-shield-alt"></i>
-                Your Google name, photo and email will be used to auto-fill your profile. No password needed.
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Dashboard -->
-    <div id="dashboardSection" class="dashboard" style="display: none;">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="header-left">
-                    <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
-                    <div class="greeting">
-                        <h1 id="greeting">Good morning</h1>
-                        <p id="date"></p>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="icon-btn" id="notificationsBtn">
-                        <i class="fas fa-bell"></i>
-                        <span class="notif-dot" id="notifDot" style="display:none;"></span>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-logo">
-                    <div class="sidebar-logo-icon">
-                        <img src="about.jpg" alt="DR" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
-                    </div>
-                    <span class="sidebar-logo-text">DarkRoot</span>
-                </div>
-            </div>
-            <div class="sidebar-user" id="sidebarUser">
-                <div class="user-profile">
-                    <div class="user-avatar" id="sidebarAvatar" onclick="openImageUploadModal()">
-                        <span id="sidebarAvatarText">DR</span>
-                        <img id="sidebarAvatarImg" style="display:none;">
-                        <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
-                    </div>
-                    <div class="user-info">
-                        <h4 id="sidebarName">Member</h4>
-                        <p id="sidebarEmail">—</p>
-                    </div>
-                </div>
-                <div class="user-stats">
-                    <div class="stat-item"><div class="value" id="sidebarPoints">0</div><div class="label">Points</div></div>
-                    <div class="stat-item"><div class="value" id="sidebarRank">#—</div><div class="label">Rank</div></div>
-                    <div class="stat-item"><div class="value" id="sidebarSalary">$0</div><div class="label">Salary</div></div>
-                </div>
-            </div>
-            <nav class="nav-menu" id="sidebarNav">
-                <div class="nav-section-label">Workspace</div>
-                <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-bar"></i><span>Dashboard</span></div>
-                <div class="nav-item" data-view="meetings"><i class="fas fa-handshake"></i><span>Meetings</span></div>
-                <div class="nav-item" data-view="tasks"><i class="fas fa-check-square"></i><span>Tasks</span></div>
-                <div class="nav-section-label" style="margin-top:8px;">Community</div>
-                <div class="nav-item" data-view="notices"><i class="fas fa-bullhorn"></i><span>Announcements</span></div>
-                <div class="nav-item" data-view="learning"><i class="fas fa-graduation-cap"></i><span>Learning</span></div>
-                <div class="nav-item" data-view="about"><i class="fas fa-info-circle"></i><span>About</span></div>
-                <div class="nav-section-label" style="margin-top:8px;" id="adminNavSection" style="display:none;">Admin</div>
-                <div class="nav-item" data-view="admin" id="adminNavItem" style="display:none;"><i class="fas fa-shield-alt"></i><span>Admin Panel</span></div>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Dashboard View -->
-            <div id="dashboardView">
-                <div class="stats-grid" id="statsGrid"></div>
-                <div class="ai-panel" id="aiPanel">
-                    <div class="ai-header">
-                        <i class="fas fa-robot"></i>
-                        <h3>AI Insights</h3>
-                    </div>
-                    <div id="aiInsights"></div>
-                </div>
-                <div class="section-header">
-                    <h2><i class="fas fa-users"></i> Team</h2>
-                    <span class="view-all" onclick="showView('members')">View All</span>
-                </div>
-                <div class="team-grid" id="teamGrid"></div>
-            </div>
-
-            <!-- Members View -->
-            <div id="membersView" style="display:none;">
-                <div id="teamMembersTab">
-                    <div class="section-header">
-                        <h2><i class="fas fa-users"></i> Team</h2>
-                    </div>
-                    <div class="member-tab-bar" id="memberRoleFilterPills">
-                        <div class="member-tab-pill active" data-role="all">All</div>
-                        <div class="member-tab-pill" data-role="CEO">CEO</div>
-                        <div class="member-tab-pill" data-role="Manager">Manager</div>
-                        <div class="member-tab-pill" data-role="Senior">Senior</div>
-                        <div class="member-tab-pill" data-role="Member">Member</div>
-                    </div>
-                    <div class="team-grid" id="membersGrid"></div>
-                </div>
-                <div id="teamLeaderboardTab" style="display:none;">
-                    <div class="section-header">
-                        <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
-                        <span class="badge badge-primary">All Members</span>
-                    </div>
-                    <div id="leaderboardList" class="leaderboard-list"></div>
-                </div>
-            </div>
-
-            <!-- Chat View -->
-            <div id="chatView" style="display:none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-comments"></i> Team Chat</h2>
-                </div>
-                <div class="chat-container" style="position:relative;">
-                    <div class="chat-messages" id="chatMessages"></div>
-                    <div class="typing-indicator" id="typingIndicator">
-                        <div class="typing-avatars" id="typingAvatars"></div>
-                        <span id="typingText"></span>
-                        <div class="typing-dots"><div></div><div></div><div></div></div>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="file" id="chatFileInput" accept="image/*" style="display:none;" onchange="handleChatFileSelect(event)">
-                        <button class="chat-attach-btn" onclick="document.getElementById('chatFileInput').click()" id="chatAttachBtn">
-                            <i class="fas fa-paperclip"></i>
-                        </button>
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message…" autocomplete="off" oninput="handleTyping()">
-                        <button class="chat-send-btn" id="chatSendBtn" disabled><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <button class="scroll-bottom-btn" id="scrollBottomBtn"><i class="fas fa-chevron-down"></i></button>
-                </div>
-            </div>
-
-            <!-- Ideas View -->
-            <div id="ideasView" style="display:none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-lightbulb"></i> Ideas</h2>
-                </div>
-                <div class="card" style="margin-bottom:var(--s4);">
-                    <h3 style="font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:var(--s3);">Share an Idea</h3>
-                    <textarea id="ideaInput" class="chat-input" style="height:90px;padding:var(--s3);resize:none;line-height:1.5;width:100%;" placeholder="What's your idea?"></textarea>
-                    <button class="btn btn-primary" onclick="postIdea()" style="margin-top:var(--s3);">
-                        <i class="fas fa-lightbulb"></i> Post Idea
-                    </button>
-                </div>
-                <div id="ideasList"></div>
-            </div>
-
-
-            <!-- Notices View -->
-            <div id="noticesView" style="display:none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-bullhorn"></i> Announcements</h2>
-                    <button class="btn btn-primary btn-sm" id="addNoticeBtn" style="display:none;" onclick="openNoticeModal()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div id="noticesList"></div>
-            </div>
-
-            <!-- Profile View -->
-            <div id="profileView" style="display:none;">
-                <div class="profile-hero">
-                    <div class="profile-avatar-wrap" onclick="openImageUploadModal()" style="position:relative;">
-                        <span id="profileAvatarText" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;height:100%;width:100%;"></span>
-                        <img id="profileAvatarImg" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
-                        <div class="avatar-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.2s;"><i class="fas fa-camera" style="color:white;font-size:1.3rem;"></i></div>
-                    </div>
-                    <h3 id="profileName" style="margin-bottom:6px;margin-top:4px;">Member</h3>
-                    <span class="badge badge-primary" id="profileRole">Member</span>
-                </div>
-                <div class="profile-info-grid">
-                    <div class="info-row"><span class="label"><i class="fas fa-envelope" style="color:var(--accent);margin-right:6px;"></i>Email</span><span class="value" id="profileEmail">—</span></div>
-                    <div class="info-row"><span class="label"><i class="fas fa-star" style="color:var(--warning);margin-right:6px;"></i>Points</span><span class="value" style="color:var(--accent);" id="profilePoints">0</span></div>
-                    <div class="info-row"><span class="label"><i class="fas fa-wallet" style="color:var(--success);margin-right:6px;"></i>Salary</span><span class="value" id="profileSalary">$0</span></div>
-                    <div class="info-row"><span class="label"><i class="fas fa-calendar" style="color:var(--text-3);margin-right:6px;"></i>Joined</span><span class="value" id="profileJoinDate">—</span></div>
-                    <div class="info-row"><span class="label"><i class="fas fa-circle" style="color:var(--success);margin-right:6px;font-size:0.5rem;"></i>Status</span><span class="value" style="color:var(--success);" id="profileStatus">Active</span></div>
-                    <div class="info-row"><span class="label"><i class="fas fa-credit-card" style="color:var(--text-3);margin-right:6px;"></i>Payment</span><span class="value" id="paymentMethodDisplay">Cash</span></div>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:var(--s3);">
-                    <button class="btn btn-outline" onclick="openEditNameModal()"><i class="fas fa-pen"></i> Edit Name</button>
-                    <button class="btn btn-outline" onclick="openPaymentModal()"><i class="fas fa-credit-card"></i> Payment Method</button>
-                    <button class="btn btn-outline" onclick="showView('analytics')"><i class="fas fa-chart-bar"></i> My Analytics</button>
-                    <button class="btn btn-outline" id="logoutBtn" style="border-color:var(--danger);color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-                </div>
-            </div>
-
-            <!-- Analytics View -->
-            <div id="analyticsView" style="display:none;">
-                <div class="section-header"><h2><i class="fas fa-chart-bar"></i> Analytics</h2></div>
-                <div class="chart-container"><canvas id="analyticsChart"></canvas></div>
-                <div class="stats-grid" style="margin-top:var(--s4);">
-                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-value">1.2k</div><div class="stat-label">Views</div></div>
-                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-download"></i></div><div class="stat-value">340</div><div class="stat-label">Downloads</div></div>
-                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-share"></i></div><div class="stat-value">89</div><div class="stat-label">Shares</div></div>
-                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">4.5h</div><div class="stat-label">Avg Time</div></div>
-                </div>
-            </div>
-
-            <!-- Meetings View -->
-            <div id="meetingsView" style="display:none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-handshake"></i> Meetings</h2>
-                    <button class="btn btn-primary btn-sm" id="addMeetingBtn" style="display:none;" onclick="openMeetingModal()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div id="meetingsList"></div>
-            </div>
-
-            <!-- Tasks View -->
-            <div id="tasksView" style="display:none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-check-square"></i> Tasks</h2>
-                    <button class="btn btn-primary btn-sm" id="addTaskBtn" style="display:none;" onclick="openTaskModal()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div id="tasksList"></div>
-            </div>
-
-            <!-- Admin View -->
-            <div id="adminView" style="display:none;">
-                <div class="section-header"><h2><i class="fas fa-shield-alt"></i> Admin Panel</h2></div>
-                <div class="tab-bar">
-                    <div class="tab active" data-admin-tab="leaderboard">Ranks</div>
-                    <div class="tab" data-admin-tab="users">Members</div>
-                    <div class="tab" data-admin-tab="learning">Learning</div>
-                </div>
-                <div id="adminLeaderboardTab">
-                    <div class="card">
-                        <div class="card-header"><h3>Custom Ranks</h3></div>
-                        <p style="font-size:0.8rem;color:var(--text-3);margin-bottom:var(--s4);">Set a rank number per member. Leave blank to order by points.</p>
-                        <div id="rankList"></div>
-                        <button class="rank-save-btn" onclick="saveAllRanks()"><i class="fas fa-save"></i> Save Ranks</button>
-                        <button class="rank-reset-btn" onclick="resetAllRanks()"><i class="fas fa-undo"></i> Reset to Points</button>
-                    </div>
-                </div>
-                <div id="adminUsersTab" style="display:none;">
-                    <div class="search-box"><i class="fas fa-search"></i><input type="text" id="adminUserSearch" placeholder="Search members…"></div>
-                    <div id="adminUserList"></div>
-                </div>
-                <div id="adminLearningTab" style="display:none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Learning Resources</h3>
-                            <button class="btn btn-primary btn-sm" onclick="openLearningModal()"><i class="fas fa-plus"></i> Add</button>
-                        </div>
-                        <div id="adminLearningList"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Learning View -->
-            <div id="learningView" style="display:none;">
-                <div class="section-header"><h2><i class="fas fa-graduation-cap"></i> Learning</h2></div>
-                <div id="learningList" class="learning-grid"></div>
-            </div>
-
-            <!-- About View -->
-            <div id="aboutView" style="display:none;">
-                <div class="section-header"><h2><i class="fas fa-info-circle"></i> About DarkRoot</h2></div>
-                <div class="about-card">
-                    <h3><i class="fas fa-users" style="color:var(--accent);margin-right:8px;"></i>Our Team</h3>
-                    <p>DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. Our primary goal is to build a strong, disciplined, and high-performance team environment.</p>
-                </div>
-                <div class="about-card">
-                    <h3><i class="fas fa-rocket" style="color:var(--accent);margin-right:8px;"></i>Development & Skill-Building Phase</h3>
-                    <p>All members are required to complete tasks in the <strong>Task Section</strong>. Performance will be strictly evaluated based on task completion, consistency, and discipline.</p>
-                    <p>Starting from <strong>March 19</strong>, DarkRoot uses a performance-based system where <strong>1 DarkRoot Point = 0.5 NPR</strong>. Points are earned only after successful completion of assigned tasks.</p>
-                    <p>Salary distribution will be implemented after one month based on total points earned, performance consistency, and overall contribution.</p>
-                    <p style="font-weight:700;color:var(--danger);">No task completion = No points = No salary.</p>
-                </div>
-            </div>
-        </main>
-
-        <!-- Bottom Navigation (Learn replaces Notices) -->
-        <nav class="bottom-nav" id="bottomNav">
-            <div class="nav-item-bottom active" data-view="dashboard">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item-bottom" data-view="members">
-                <i class="fas fa-users"></i>
-                <span>Team</span>
-            </div>
-            <div class="nav-item-bottom" data-view="chat">
-                <i class="fas fa-comments"></i>
-                <span>Chat</span>
-            </div>
-            <div class="nav-item-bottom" data-view="ideas">
-                <i class="fas fa-lightbulb"></i>
-                <span>Ideas</span>
-            </div>
-            <div class="nav-item-bottom" data-view="learning">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Learn</span>
-            </div>
-            <div class="nav-item-bottom" data-view="profile">
-                <i class="fas fa-user"></i>
-                <span>Me</span>
-            </div>
-            <div class="nav-item-bottom" id="adminBottomNav" data-view="admin" style="display: none;">
-                <i class="fas fa-shield-alt"></i>
-                <span>Admin</span>
-            </div>
-        </nav>
-    </div>
-
-    <!-- Modals -->
-    <div class="modal-overlay" id="imageUploadModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Update Profile Photo</h3>
-                <div class="modal-close" onclick="closeModal('imageUploadModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div class="image-upload-modal">
-                <div class="upload-preview" id="uploadPreview">
-                    <img src="" style="display: none;" id="previewImg">
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="previewPlaceholder">
-                        <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i>
-                    </div>
-                </div>
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Tap to select photo</p>
-                </div>
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                <div style="display: flex; gap: var(--s3); margin-top: var(--s6);">
-                    <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('imageUploadModal')">Cancel</button>
-                    <button class="btn btn-primary" style="flex: 1;" onclick="uploadImage()" id="uploadBtn">Upload</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="taskSubmissionModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Submit Task</h3>
-                <div class="modal-close" onclick="closeModal('taskSubmissionModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div class="image-upload-modal">
-                <p id="submissionTaskTitle" style="font-weight: 600; margin-bottom: var(--s4);"></p>
-                <div class="upload-preview" id="submissionUploadPreview">
-                    <img src="" style="display: none;" id="submissionPreviewImg">
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="submissionPreviewPlaceholder">
-                        <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i>
-                    </div>
-                </div>
-                <div class="upload-area" onclick="document.getElementById('submissionFileInput').click()">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Upload screenshot (image only)</p>
-                </div>
-                <input type="file" id="submissionFileInput" accept="image/*" style="display: none;">
-                <input type="hidden" id="submissionTaskId">
-                <input type="hidden" id="submissionTaskPoints">
-                <div style="margin: var(--s4) 0;">
-                    <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--s3); resize: vertical; width: 100%;" placeholder="Add a message (optional)"></textarea>
-                </div>
-                <div style="margin: var(--s4) 0; text-align: center;">
-                    <button class="btn btn-success" style="width: 100%; background: #25D366; color: white;" onclick="window.open('https://wa.me/9779764598332', '_blank', 'width=600,height=600')">
-                        <i class="fa-brands fa-whatsapp"></i> Share via WhatsApp
-                    </button>
-                </div>
-                <div style="display: flex; gap: var(--s3); margin-top: var(--s6);">
-                    <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('taskSubmissionModal')">Cancel</button>
-                    <button class="btn btn-primary" style="flex: 1;" onclick="submitTask()" id="submitTaskBtn">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="noticeModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>New Announcement</h3>
-                <div class="modal-close" onclick="closeModal('noticeModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:var(--s4);">
-                <input type="text" id="noticeTitle" placeholder="Notice title…">
-                <textarea id="noticeContent" class="chat-input" style="height: 100px; padding: var(--s4);" placeholder="Announcement text"></textarea>
-                <button class="btn btn-primary" onclick="postNotice()">Post</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="editNameModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Edit Your Name</h3>
-                <div class="modal-close" onclick="closeModal('editNameModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: var(--s4);">
-                <input type="text" id="editNameInput" placeholder="New name">
-                <button class="btn btn-primary" onclick="updateName()">Update</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Payment Method</h3>
-                <div class="modal-close" onclick="closeModal('paymentModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: var(--s4);">
-                <div style="display: flex; gap: var(--s6); align-items: center;">
-                    <label><input type="radio" name="paymentType" value="cash" checked> Cash</label>
-                    <label><input type="radio" name="paymentType" value="esewa"> eSewa</label>
-                </div>
-                <div id="esewaIdField" style="display: none;">
-                    <label class="input-label">eSewa ID (mobile number)</label>
-                    <input type="text" id="esewaIdInput" placeholder="98XXXXXXXX">
-                </div>
-                <button class="btn btn-primary" onclick="savePaymentInfo()">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="editUserModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Edit User</h3>
-                <div class="modal-close" onclick="closeModal('editUserModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: var(--s4);" id="editUserForm">
-                <input type="hidden" id="editUserId">
-                <div class="input-group">
-                    <label class="input-label">Points</label>
-                    <input type="number" id="editUserPoints" class="chat-input" placeholder="Points">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Salary</label>
-                    <input type="number" id="editUserSalary" class="chat-input" placeholder="Salary">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Role</label>
-                    <select id="editUserRole" class="chat-input">
-                        <option value="Member">Member</option>
-                        <option value="Senior">Senior</option>
-                        <option value="Manager">Manager</option>
-                        <option value="CEO">CEO</option>
-                    </select>
-                </div>
-                <button class="btn btn-warning" id="blockUserBtn" style="display: none;" onclick="toggleBlockUser()">Block User</button>
-                <button class="btn btn-primary" onclick="saveUserEdit()">Save Changes</button>
-                <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="deleteConfirmModal">
-        <div class="modal" style="text-align: center;">
-            <div class="modal-header">
-                <h3>Delete Message</h3>
-                <div class="modal-close" onclick="closeModal('deleteConfirmModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <p style="margin:var(--s5) 0;color:var(--text-2);text-align:center;">Are you sure you want to delete this message?</p>
-            <div style="display: flex; gap: var(--s4);">
-                <button class="btn btn-outline" style="flex:1;" onclick="closeModal('deleteConfirmModal')">Cancel</button>
-                <button class="btn btn-danger" style="flex:1;" id="confirmDeleteBtn">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay image-view-modal" id="imageViewModal" onclick="closeModal('imageViewModal')">
-        <div class="modal" onclick="event.stopPropagation()">
-            <div class="modal-close" onclick="closeModal('imageViewModal')">
-                <i class="fas fa-times"></i>
-            </div>
-            <img id="imageViewSrc" src="" alt="Preview">
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="welcomeModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>👋 Welcome!</h3>
-                <div class="modal-close" onclick="closeModal('welcomeModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div style="text-align: center; padding: var(--s4) 0;">
-                <i class="fas fa-users" style="font-size: 3rem; color: var(--accent); margin-bottom: var(--s4);"></i>
-                <p style="font-size: 1.1rem; margin-bottom: var(--s4);">You've automatically joined our group.</p>
-                <p style="color: var(--text-2);">Start chatting and collaborating with your team!</p>
-                <button class="btn btn-primary" onclick="closeModal('welcomeModal')" style="margin-top: var(--s6);">Got it</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Learning Modal (for admin) -->
-    <div class="modal-overlay" id="learningModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="learningModalTitle">Add Learning Resource</h3>
-                <div class="modal-close" onclick="closeModal('learningModal')">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <input type="hidden" id="learningId">
-            <div class="input-field">
-                <label>Title</label>
-                <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript">
-            </div>
-            <div class="input-field">
-                <label>Description</label>
-                <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..."></textarea>
-            </div>
-            <div class="input-field">
-                <label>Type</label>
-                <select id="learningType" class="chat-input">
-                    <option value="video">Video</option>
-                    <option value="article">Article</option>
-                    <option value="course">Course</option>
-                </select>
-            </div>
-            <div class="input-field">
-                <label>URL</label>
-                <input type="url" id="learningUrl" class="chat-input" placeholder="https://...">
-            </div>
-            <div class="input-field">
-                <label>Thumbnail URL (optional)</label>
-                <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://...">
-            </div>
-            <button class="btn btn-primary" onclick="saveLearningResource()">Save</button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle" id="toastIcon"></i>
-        <span id="toastMessage"></span>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-    <script>
-        // ==================== FIREBASE CONFIG ====================
+<body> <!-- Splash Screen --> <div class="splash-screen" id="splashScreen"> <div class="splash-logo"> <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
+        </div> <div class="splash-text">DarkRoot Hub</div> <div class="splash-loader"></div> </div> <!-- Auth Section --> <div id="authSection" class="auth-section" style="display:none;"> <div class="auth-card" id="loginCard"> <div class="auth-header"> <div class="auth-logo"> <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
+                </div> <h2>Welcome to DarkRoot</h2> <p>Sign in with your Google account to continue</p> </div> <!-- Google Sign In Button --> <button class="btn btn-google" id="googleSignInBtn"> <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;"> <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/> <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/> <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/> <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/> </svg> Continue with Google
+            </button> <div class="auth-divider"> <span>Secure · Fast · One tap</span> </div> <div class="auth-note"> <i class="fas fa-shield-alt"></i> Your Google name, photo and email will be used to auto-fill your profile. No password needed.
+            </div> </div> </div> <!-- Main Dashboard --> <div id="dashboardSection" class="dashboard" style="display: none;"> <!-- Header --> <header class="header"> <div class="header-content"> <div class="header-left"> <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div> <div class="greeting"> <h1 id="greeting">Good morning</h1> <p id="date"></p> </div> </div> <div class="header-right"> <div class="icon-btn" id="notificationsBtn"> <i class="fas fa-bell"></i> <span class="notif-dot" id="notifDot" style="display:none;"></span> </div> </div> </div> </header> <!-- Sidebar Overlay --> <div class="sidebar-overlay" id="sidebarOverlay"></div> <!-- Sidebar --> <div class="sidebar" id="sidebar"> <div class="sidebar-header"> <div class="sidebar-logo"> <div class="sidebar-logo-icon"> <img src="about.jpg" alt="DR" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
+                    </div> <span class="sidebar-logo-text">DarkRoot</span> </div> </div> <div class="sidebar-user" id="sidebarUser"> <div class="user-profile"> <div class="user-avatar" id="sidebarAvatar" onclick="openImageUploadModal()"> <span id="sidebarAvatarText">DR</span> <img id="sidebarAvatarImg" style="display:none;"> <div class="avatar-overlay"><i class="fas fa-camera"></i></div> </div> <div class="user-info"> <h4 id="sidebarName">Member</h4> <p id="sidebarEmail">—</p> </div> </div> <div class="user-stats"> <div class="stat-item"><div class="value" id="sidebarPoints">0</div><div class="label">Points</div></div> <div class="stat-item"><div class="value" id="sidebarRank">#—</div><div class="label">Rank</div></div> <div class="stat-item"><div class="value" id="sidebarSalary">$0</div><div class="label">Salary</div></div> </div> </div> <nav class="nav-menu" id="sidebarNav"> <div class="nav-section-label">Workspace</div> <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-bar"></i><span>Dashboard</span></div> <div class="nav-item" data-view="meetings"><i class="fas fa-handshake"></i><span>Meetings</span></div> <div class="nav-item" data-view="tasks"><i class="fas fa-check-square"></i><span>Tasks</span></div> <div class="nav-section-label" style="margin-top:8px;">Community</div> <div class="nav-item" data-view="notices"><i class="fas fa-bullhorn"></i><span>Announcements</span></div> <div class="nav-item" data-view="learning"><i class="fas fa-graduation-cap"></i><span>Learning</span></div> <div class="nav-item" data-view="about"><i class="fas fa-info-circle"></i><span>About</span></div> <div class="nav-section-label" style="margin-top:8px;" id="adminNavSection" style="display:none;">Admin</div> <div class="nav-item" data-view="admin" id="adminNavItem" style="display:none;"><i class="fas fa-shield-alt"></i><span>Admin Panel</span></div> </nav> </div> <!-- Main Content --> <main class="main-content" id="mainContent"> <!-- Dashboard View --> <div id="dashboardView"> <div class="stats-grid" id="statsGrid"></div> <div class="ai-panel" id="aiPanel"> <div class="ai-header"> <i class="fas fa-robot"></i> <h3>AI Insights</h3> </div> <div id="aiInsights"></div> </div> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> <span class="view-all" onclick="showView('members')">View All</span> </div> <div class="team-grid" id="teamGrid"></div> </div> <!-- Members View --> <div id="membersView" style="display:none;"> <div id="teamMembersTab"> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> </div> <div class="member-tab-bar" id="memberRoleFilterPills"> <div class="member-tab-pill active" data-role="all">All</div> <div class="member-tab-pill" data-role="CEO">CEO</div> <div class="member-tab-pill" data-role="Manager">Manager</div> <div class="member-tab-pill" data-role="Senior">Senior</div> <div class="member-tab-pill" data-role="Member">Member</div> </div> <div class="team-grid" id="membersGrid"></div> </div> <div id="teamLeaderboardTab" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-trophy"></i> Leaderboard</h2> <span class="badge badge-primary">All Members</span> </div> <div id="leaderboardList" class="leaderboard-list"></div> </div> </div> <!-- Chat View --> <div id="chatView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-comments"></i> Team Chat</h2> </div> <div class="chat-container" style="position:relative;"> <div class="chat-messages" id="chatMessages"></div> <div class="typing-indicator" id="typingIndicator"> <div class="typing-avatars" id="typingAvatars"></div> <span id="typingText"></span> <div class="typing-dots"><div></div><div></div><div></div></div> </div> <div class="chat-input-area"> <input type="file" id="chatFileInput" accept="image/*" style="display:none;" onchange="handleChatFileSelect(event)"> <button class="chat-attach-btn" onclick="document.getElementById('chatFileInput').click()" id="chatAttachBtn"> <i class="fas fa-paperclip"></i> </button> <input type="text" class="chat-input" id="chatInput" placeholder="Type a message…" autocomplete="off" oninput="handleTyping()"> <button class="chat-send-btn" id="chatSendBtn" disabled><i class="fas fa-paper-plane"></i></button> </div> <button class="scroll-bottom-btn" id="scrollBottomBtn"><i class="fas fa-chevron-down"></i></button> </div> </div> <!-- Ideas View --> <div id="ideasView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-lightbulb"></i> Ideas</h2> </div> <div class="card" style="margin-bottom:var(--s4);"> <h3 style="font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:var(--s3);">Share an Idea</h3> <textarea id="ideaInput" class="chat-input" style="height:90px;padding:var(--s3);resize:none;line-height:1.5;width:100%;" placeholder="What's your idea?"></textarea> <button class="btn btn-primary" onclick="postIdea()" style="margin-top:var(--s3);"> <i class="fas fa-lightbulb"></i> Post Idea
+                    </button> </div> <div id="ideasList"></div> </div> <!-- Notices View --> <div id="noticesView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-bullhorn"></i> Announcements</h2> <button class="btn btn-primary btn-sm" id="addNoticeBtn" style="display:none;" onclick="openNoticeModal()"><i class="fas fa-plus"></i> Add</button> </div> <div id="noticesList"></div> </div> <!-- Profile View --> <div id="profileView" style="display:none;"> <div class="profile-hero"> <div class="profile-avatar-wrap" onclick="openImageUploadModal()" style="position:relative;"> <span id="profileAvatarText" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;height:100%;width:100%;"></span> <img id="profileAvatarImg" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"> <div class="avatar-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.2s;"><i class="fas fa-camera" style="color:white;font-size:1.3rem;"></i></div> </div> <h3 id="profileName" style="margin-bottom:6px;margin-top:4px;">Member</h3> <span class="badge badge-primary" id="profileRole">Member</span> </div> <div class="profile-info-grid"> <div class="info-row"><span class="label"><i class="fas fa-envelope" style="color:var(--accent);margin-right:6px;"></i>Email</span><span class="value" id="profileEmail">—</span></div> <div class="info-row"><span class="label"><i class="fas fa-star" style="color:var(--warning);margin-right:6px;"></i>Points</span><span class="value" style="color:var(--accent);" id="profilePoints">0</span></div> <div class="info-row"><span class="label"><i class="fas fa-wallet" style="color:var(--success);margin-right:6px;"></i>Salary</span><span class="value" id="profileSalary">$0</span></div> <div class="info-row"><span class="label"><i class="fas fa-calendar" style="color:var(--text-3);margin-right:6px;"></i>Joined</span><span class="value" id="profileJoinDate">—</span></div> <div class="info-row"><span class="label"><i class="fas fa-circle" style="color:var(--success);margin-right:6px;font-size:0.5rem;"></i>Status</span><span class="value" style="color:var(--success);" id="profileStatus">Active</span></div> <div class="info-row"><span class="label"><i class="fas fa-credit-card" style="color:var(--text-3);margin-right:6px;"></i>Payment</span><span class="value" id="paymentMethodDisplay">Cash</span></div> </div> <div style="display:flex;flex-direction:column;gap:var(--s3);"> <button class="btn btn-outline" onclick="openEditNameModal()"><i class="fas fa-pen"></i> Edit Name</button> <button class="btn btn-outline" onclick="openPaymentModal()"><i class="fas fa-credit-card"></i> Payment Method</button> <button class="btn btn-outline" onclick="showView('analytics')"><i class="fas fa-chart-bar"></i> My Analytics</button> <button class="btn btn-outline" id="logoutBtn" style="border-color:var(--danger);color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Sign Out</button> </div> </div> <!-- Analytics View --> <div id="analyticsView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-chart-bar"></i> Analytics</h2></div> <div class="chart-container"><canvas id="analyticsChart"></canvas></div> <div class="stats-grid" style="margin-top:var(--s4);"> <div class="stat-card"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-value">1.2k</div><div class="stat-label">Views</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-download"></i></div><div class="stat-value">340</div><div class="stat-label">Downloads</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-share"></i></div><div class="stat-value">89</div><div class="stat-label">Shares</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">4.5h</div><div class="stat-label">Avg Time</div></div> </div> </div> <!-- Meetings View --> <div id="meetingsView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-handshake"></i> Meetings</h2> <button class="btn btn-primary btn-sm" id="addMeetingBtn" style="display:none;" onclick="openMeetingModal()"><i class="fas fa-plus"></i> Add</button> </div> <div id="meetingsList"></div> </div> <!-- Tasks View --> <div id="tasksView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-check-square"></i> Tasks</h2> <button class="btn btn-primary btn-sm" id="addTaskBtn" style="display:none;" onclick="openTaskModal()"><i class="fas fa-plus"></i> Add</button> </div> <div id="tasksList"></div> </div> <!-- Admin View --> <div id="adminView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-shield-alt"></i> Admin Panel</h2></div> <div class="tab-bar"> <div class="tab active" data-admin-tab="leaderboard">Ranks</div> <div class="tab" data-admin-tab="users">Members</div> <div class="tab" data-admin-tab="learning">Learning</div> </div> <div id="adminLeaderboardTab"> <div class="card"> <div class="card-header"><h3>Custom Ranks</h3></div> <p style="font-size:0.8rem;color:var(--text-3);margin-bottom:var(--s4);">Set a rank number per member. Leave blank to order by points.</p> <div id="rankList"></div> <button class="rank-save-btn" onclick="saveAllRanks()"><i class="fas fa-save"></i> Save Ranks</button> <button class="rank-reset-btn" onclick="resetAllRanks()"><i class="fas fa-undo"></i> Reset to Points</button> </div> </div> <div id="adminUsersTab" style="display:none;"> <div class="search-box"><i class="fas fa-search"></i><input type="text" id="adminUserSearch" placeholder="Search members…"></div> <div id="adminUserList"></div> </div> <div id="adminLearningTab" style="display:none;"> <div class="card"> <div class="card-header"> <h3>Learning Resources</h3> <button class="btn btn-primary btn-sm" onclick="openLearningModal()"><i class="fas fa-plus"></i> Add</button> </div> <div id="adminLearningList"></div> </div> </div> </div> <!-- Learning View --> <div id="learningView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-graduation-cap"></i> Learning</h2></div> <div id="learningList" class="learning-grid"></div> </div> <!-- About View --> <div id="aboutView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-info-circle"></i> About DarkRoot</h2></div> <div class="about-card"> <h3><i class="fas fa-users" style="color:var(--accent);margin-right:8px;"></i>Our Team</h3> <p>DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. Our primary goal is to build a strong, disciplined, and high-performance team environment.</p> </div> <div class="about-card"> <h3><i class="fas fa-rocket" style="color:var(--accent);margin-right:8px;"></i>Development & Skill-Building Phase</h3> <p>All members are required to complete tasks in the <strong>Task Section</strong>. Performance will be strictly evaluated based on task completion, consistency, and discipline.</p> <p>Starting from <strong>March 19</strong>, DarkRoot uses a performance-based system where <strong>1 DarkRoot Point = 0.5 NPR</strong>. Points are earned only after successful completion of assigned tasks.</p> <p>Salary distribution will be implemented after one month based on total points earned, performance consistency, and overall contribution.</p> <p style="font-weight:700;color:var(--danger);">No task completion = No points = No salary.</p> </div> </div> </main> <!-- Bottom Navigation (Learn replaces Notices) --> <nav class="bottom-nav" id="bottomNav"> <div class="nav-item-bottom active" data-view="dashboard"> <i class="fas fa-home"></i> <span>Home</span> </div> <div class="nav-item-bottom" data-view="members"> <i class="fas fa-users"></i> <span>Team</span> </div> <div class="nav-item-bottom" data-view="chat"> <i class="fas fa-comments"></i> <span>Chat</span> </div> <div class="nav-item-bottom" data-view="ideas"> <i class="fas fa-lightbulb"></i> <span>Ideas</span> </div> <div class="nav-item-bottom" data-view="learning"> <i class="fas fa-graduation-cap"></i> <span>Learn</span> </div> <div class="nav-item-bottom" data-view="profile"> <i class="fas fa-user"></i> <span>Me</span> </div> <div class="nav-item-bottom" id="adminBottomNav" data-view="admin" style="display: none;"> <i class="fas fa-shield-alt"></i> <span>Admin</span> </div> </nav> </div> <!-- Modals --> <div class="modal-overlay" id="imageUploadModal"> <div class="modal"> <div class="modal-header"> <h3>Update Profile Photo</h3> <div class="modal-close" onclick="closeModal('imageUploadModal')"> <i class="fas fa-times"></i> </div> </div> <div class="image-upload-modal"> <div class="upload-preview" id="uploadPreview"> <img src="" style="display: none;" id="previewImg"> <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="previewPlaceholder"> <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i> </div> </div> <div class="upload-area" onclick="document.getElementById('fileInput').click()"> <i class="fas fa-cloud-upload-alt"></i> <p>Tap to select photo</p> </div> <input type="file" id="fileInput" accept="image/*" style="display: none;"> <div style="display: flex; gap: var(--s3); margin-top: var(--s6);"> <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('imageUploadModal')">Cancel</button> <button class="btn btn-primary" style="flex: 1;" onclick="uploadImage()" id="uploadBtn">Upload</button> </div> </div> </div> </div> <div class="modal-overlay" id="taskSubmissionModal"> <div class="modal"> <div class="modal-header"> <h3>Submit Task</h3> <div class="modal-close" onclick="closeModal('taskSubmissionModal')"> <i class="fas fa-times"></i> </div> </div> <div class="image-upload-modal"> <p id="submissionTaskTitle" style="font-weight: 600; margin-bottom: var(--s4);"></p> <div class="upload-preview" id="submissionUploadPreview"> <img src="" style="display: none;" id="submissionPreviewImg"> <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="submissionPreviewPlaceholder"> <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i> </div> </div> <div class="upload-area" onclick="document.getElementById('submissionFileInput').click()"> <i class="fas fa-cloud-upload-alt"></i> <p>Upload screenshot (image only)</p> </div> <input type="file" id="submissionFileInput" accept="image/*" style="display: none;"> <input type="hidden" id="submissionTaskId"> <input type="hidden" id="submissionTaskPoints"> <div style="margin: var(--s4) 0;"> <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--s3); resize: vertical; width: 100%;" placeholder="Add a message (optional)"></textarea> </div> <div style="margin: var(--s4) 0; text-align: center;"> <button class="btn btn-success" style="width: 100%; background: #25D366; color: white;" onclick="window.open('https://wa.me/9779764598332', '_blank', 'width=600,height=600')"> <i class="fa-brands fa-whatsapp"></i> Share via WhatsApp
+                    </button> </div> <div style="display: flex; gap: var(--s3); margin-top: var(--s6);"> <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('taskSubmissionModal')">Cancel</button> <button class="btn btn-primary" style="flex: 1;" onclick="submitTask()" id="submitTaskBtn">Submit</button> </div> </div> </div> </div> <div class="modal-overlay" id="noticeModal"> <div class="modal"> <div class="modal-header"> <h3>New Announcement</h3> <div class="modal-close" onclick="closeModal('noticeModal')"> <i class="fas fa-times"></i> </div> </div> <div style="display:flex;flex-direction:column;gap:var(--s4);"> <input type="text" id="noticeTitle" placeholder="Notice title…"> <textarea id="noticeContent" class="chat-input" style="height: 100px; padding: var(--s4);" placeholder="Announcement text"></textarea> <button class="btn btn-primary" onclick="postNotice()">Post</button> </div> </div> </div> <div class="modal-overlay" id="editNameModal"> <div class="modal"> <div class="modal-header"> <h3>Edit Your Name</h3> <div class="modal-close" onclick="closeModal('editNameModal')"> <i class="fas fa-times"></i> </div> </div> <div style="display: flex; flex-direction: column; gap: var(--s4);"> <input type="text" id="editNameInput" placeholder="New name"> <button class="btn btn-primary" onclick="updateName()">Update</button> </div> </div> </div> <div class="modal-overlay" id="paymentModal"> <div class="modal"> <div class="modal-header"> <h3>Payment Method</h3> <div class="modal-close" onclick="closeModal('paymentModal')"> <i class="fas fa-times"></i> </div> </div> <div style="display: flex; flex-direction: column; gap: var(--s4);"> <div style="display: flex; gap: var(--s6); align-items: center;"> <label><input type="radio" name="paymentType" value="cash" checked> Cash</label> <label><input type="radio" name="paymentType" value="esewa"> eSewa</label> </div> <div id="esewaIdField" style="display: none;"> <label class="input-label">eSewa ID (mobile number)</label> <input type="text" id="esewaIdInput" placeholder="98XXXXXXXX"> </div> <button class="btn btn-primary" onclick="savePaymentInfo()">Save</button> </div> </div> </div> <div class="modal-overlay" id="editUserModal"> <div class="modal"> <div class="modal-header"> <h3>Edit User</h3> <div class="modal-close" onclick="closeModal('editUserModal')"> <i class="fas fa-times"></i> </div> </div> <div style="display: flex; flex-direction: column; gap: var(--s4);" id="editUserForm"> <input type="hidden" id="editUserId"> <div class="input-group"> <label class="input-label">Points</label> <input type="number" id="editUserPoints" class="chat-input" placeholder="Points"> </div> <div class="input-group"> <label class="input-label">Salary</label> <input type="number" id="editUserSalary" class="chat-input" placeholder="Salary"> </div> <div class="input-group"> <label class="input-label">Role</label> <select id="editUserRole" class="chat-input"> <option value="Member">Member</option> <option value="Senior">Senior</option> <option value="Manager">Manager</option> <option value="CEO">CEO</option> </select> </div> <button class="btn btn-warning" id="blockUserBtn" style="display: none;" onclick="toggleBlockUser()">Block User</button> <button class="btn btn-primary" onclick="saveUserEdit()">Save Changes</button> <button class="btn btn-danger" onclick="confirmDeleteUser()">Delete User</button> </div> </div> </div> <div class="modal-overlay" id="deleteConfirmModal"> <div class="modal" style="text-align: center;"> <div class="modal-header"> <h3>Delete Message</h3> <div class="modal-close" onclick="closeModal('deleteConfirmModal')"> <i class="fas fa-times"></i> </div> </div> <p style="margin:var(--s5) 0;color:var(--text-2);text-align:center;">Are you sure you want to delete this message?</p> <div style="display: flex; gap: var(--s4);"> <button class="btn btn-outline" style="flex:1;" onclick="closeModal('deleteConfirmModal')">Cancel</button> <button class="btn btn-danger" style="flex:1;" id="confirmDeleteBtn">Delete</button> </div> </div> </div> <div class="modal-overlay image-view-modal" id="imageViewModal" onclick="closeModal('imageViewModal')"> <div class="modal" onclick="event.stopPropagation()"> <div class="modal-close" onclick="closeModal('imageViewModal')"> <i class="fas fa-times"></i> </div> <img id="imageViewSrc" src="" alt="Preview"> </div> </div> <div class="modal-overlay" id="welcomeModal"> <div class="modal"> <div class="modal-header"> <h3>Welcome to DarkRoot</h3> <div class="modal-close" onclick="closeModal('welcomeModal')"> <i class="fas fa-times"></i> </div> </div> <div style="text-align: center; padding: var(--s4) 0;"> <i class="fas fa-users" style="font-size: 3rem; color: var(--accent); margin-bottom: var(--s4);"></i> <p style="font-size: 1.1rem; margin-bottom: var(--s4);">You've automatically joined our group.</p> <p style="color: var(--text-2);">Start chatting and collaborating with your team!</p> <button class="btn btn-primary" onclick="closeModal('welcomeModal')" style="margin-top: var(--s6);">Got it</button> </div> </div> </div> <!-- New Learning Modal (for admin) --> <div class="modal-overlay" id="learningModal"> <div class="modal"> <div class="modal-header"> <h3 id="learningModalTitle">Add Learning Resource</h3> <div class="modal-close" onclick="closeModal('learningModal')"> <i class="fas fa-times"></i> </div> </div> <input type="hidden" id="learningId"> <div class="input-field"> <label>Title</label> <input type="text" id="learningTitle" class="chat-input" placeholder="e.g., Intro to JavaScript"> </div> <div class="input-field"> <label>Description</label> <textarea id="learningDescription" class="chat-input" rows="3" placeholder="Short description..."></textarea> </div> <div class="input-field"> <label>Type</label> <select id="learningType" class="chat-input"> <option value="video">Video</option> <option value="article">Article</option> <option value="course">Course</option> </select> </div> <div class="input-field"> <label>URL</label> <input type="url" id="learningUrl" class="chat-input" placeholder="https://..."> </div> <div class="input-field"> <label>Thumbnail URL (optional)</label> <input type="url" id="learningThumbnail" class="chat-input" placeholder="https://..."> </div> <button class="btn btn-primary" onclick="saveLearningResource()">Save</button> </div> </div> <!-- Toast Notification --> <div class="toast" id="toast"> <i class="fas fa-check-circle" id="toastIcon"></i> <span id="toastMessage"></span> </div> <!-- Firebase SDK --> <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script> <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script> <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script> <script> // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
             apiKey: "AIzaSyB-OzgO_0ckjVoDG7nsbU0xxEn0H74goXI",
             authDomain: "darkteam-f9ccb.firebaseapp.com",
@@ -1981,23 +1378,11 @@
         // ==================== SKELETON LOADING ====================
         function showSkeletons() {
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
-                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
-                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
-                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div>
-            `;
+                <div class="stat-card skeleton"><div class="skeleton-stat"></div></div> <div class="stat-card skeleton"><div class="skeleton-stat"></div></div> <div class="stat-card skeleton"><div class="skeleton-stat"></div></div> <div class="stat-card skeleton"><div class="skeleton-stat"></div></div> `;
             document.getElementById('aiInsights').innerHTML = `
-                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
-                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
-                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
-                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div>
-            `;
+                <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div> <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div> <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div> <div class="insight-item skeleton"><div class="skeleton-text" style="height:36px;"></div></div> `;
             document.getElementById('teamGrid').innerHTML = `
-                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
-                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
-                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
-                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div>
-            `;
+                <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div> <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div> <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div> <div class="team-card skeleton"><div class="skeleton-avatar"></div><div class="skeleton-text"></div></div> `;
         }
 
         // ==================== WELCOME POPUP ====================
@@ -2013,15 +1398,15 @@
 
         window.updateName = async function() {
             const newName = document.getElementById('editNameInput').value.trim();
-            if (!newName) { showToast('Name cannot be empty', 'error'); return; }
+            if (!newName) { showToast('Please enter a name', 'error'); return; }
             try {
                 await db.ref('members/' + currentUser.uid).update({ name: newName });
                 currentMemberData.name = newName;
                 updateUIWithMemberData();
-                showToast('Name updated successfully!');
+                showToast('Name updated');
                 closeModal('editNameModal');
             } catch (error) {
-                showToast('Failed to update name', 'error');
+                showToast('Failed to update name. Please try again.', 'error');
             }
         };
 
@@ -2048,13 +1433,13 @@
         window.savePaymentInfo = async function() {
             const type = document.querySelector('input[name="paymentType"]:checked').value;
             const esewaId = type === 'esewa' ? document.getElementById('esewaIdInput').value.trim() : '';
-            if (type === 'esewa' && !esewaId) { showToast('Please enter eSewa ID', 'error'); return; }
+            if (type === 'esewa' && !esewaId) { showToast('Please enter your eSewa ID', 'error'); return; }
             const paymentMethod = { type, esewaId };
             await db.ref('members/' + currentUser.uid).update({ paymentMethod });
             currentMemberData.paymentMethod = paymentMethod;
             updatePaymentDisplay();
             closeModal('paymentModal');
-            showToast('Payment info updated');
+            showToast('Payment details saved');
         };
 
         function updatePaymentDisplay() {
@@ -2203,7 +1588,7 @@
             await db.ref('settings/blockedUsers').set(blocked);
             blockedUsers = new Set(blocked);
             updateBlockButton(uid);
-            showToast(blockedUsers.has(uid) ? 'User blocked' : 'User unblocked');
+            showToast(blockedUsers.has(uid) ? 'Member blocked' : 'Member unblocked');
         };
 
         function updateBlockButton(uid) {
@@ -2252,7 +1637,7 @@
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async () => {
                 await auth.signOut();
-                showToast('Signed out');
+                showToast('You have been signed out');
             });
         }
 
@@ -2302,12 +1687,12 @@
                     loadDashboardData();
                     showView('dashboard');
                     if (isNewLogin) { showWelcomePopup(); isNewLogin = false; }
-                    showToast('Welcome, ' + (currentMemberData.name?.split(' ')[0] || 'Member') + ' 👋');
+                    showToast('Welcome back, ' + (currentMemberData.name?.split(' ')[0] || 'Member'));
                 } catch (error) {
                     console.error(error);
                     splashScreen.style.display = 'none';
                     authSection.style.display = 'flex';
-                    showToast('Error loading profile. Please try again.', 'error');
+                    showToast('Could not load your profile. Please try again.', 'error');
                 }
             } else {
                 splashScreen.style.display = 'none';
@@ -2470,11 +1855,11 @@
                     await db.ref('members/' + currentUser.uid).update({ photoURL: imageUrl });
                     currentMemberData.photoURL = imageUrl;
                     updateProfilePicture(imageUrl);
-                    showToast('Profile photo updated!');
+                    showToast('Profile photo updated');
                     closeModal('imageUploadModal');
                 } else throw new Error('Upload failed');
             } catch (error) {
-                showToast('Upload failed', 'error');
+                showToast('Upload failed. Please try again.', 'error');
             } finally {
                 uploadBtn.innerHTML = originalText;
                 uploadBtn.disabled = false;
@@ -2486,7 +1871,7 @@
             const file = event.target.files[0];
             if (!file) return;
             if (blockedUsers.has(currentUser.uid)) {
-                showToast('You are blocked from sending messages', 'error');
+                showToast('You are not allowed to send messages', 'error');
                 document.getElementById('chatFileInput').value = '';
                 return;
             }
@@ -2503,11 +1888,11 @@
                 if (data.success) {
                     const imageUrl = data.data.url;
                     await sendImageMessage(imageUrl);
-                    showToast('Image uploaded', 'success');
+                    showToast('Image sent');
                 } else throw new Error('Upload failed');
             } catch (error) {
                 console.error('Upload error:', error);
-                showToast('Failed to upload image', 'error');
+                showToast('Could not send image. Please try again.', 'error');
             } finally {
                 attachBtn.innerHTML = originalHtml;
                 attachBtn.disabled = false;
@@ -2534,9 +1919,9 @@
             if (!messageToDelete) return;
             try {
                 await db.ref('chat_messages/' + messageToDelete).remove();
-                showToast('Message deleted', 'success');
+                showToast('Message deleted');
             } catch (error) {
-                showToast('Failed to delete message', 'error');
+                showToast('Could not delete message', 'error');
             }
             closeModal('deleteConfirmModal');
             messageToDelete = null;
@@ -2612,95 +1997,15 @@
             reader.readAsDataURL(file);
         });
 
-        // ==================== EMAIL NOTIFICATION CONFIG ====================
-        // CEO and Manager recipients — notified on every task submission
-        const NOTIFY_RECIPIENTS = [
-            { email: 'davidstha900@gmail.com', name: 'CEO (David)' },
-            { email: 'mrphonky001@gmail.com',  name: 'Manager' }
-        ];
-        const SENDER_EMAIL    = 'davidstha900@gmail.com';
-        const SENDER_PASSWORD = 'kwms dltg byjf ktbl'; // Gmail App Password
-
-        /**
-         * Sends a notification email via EmailJS (free, no server needed).
-         * Falls back silently — never blocks the submission flow.
-         *
-         * HOW TO ACTIVATE (one-time setup, 5 min):
-         * 1. Go to https://emailjs.com → create free account
-         * 2. Add service: Gmail → use davidstha900@gmail.com + app password above
-         * 3. Create template with variables: {{to_email}}, {{member_name}},
-         *    {{member_email}}, {{task_title}}, {{task_points}}, {{note}},
-         *    {{screenshot_url}}, {{submitted_at}}
-         * 4. Replace the three IDs below with yours.
-         */
-        const EJS = {
-            publicKey:  'UBlf5YSr6a8QbTCXl',   // e.g. 'abc123XYZ'
-            serviceId:  'service_jabm1t1',   // e.g. 'service_gmail'
-            templateId: 'template_opxwun6'  // e.g. 'template_submission'
-        };
-
-        // Initialise EmailJS (safe to call even before keys are set)
-        try { emailjs.init(EJS.publicKey); } catch(e) {}
-
-        async function sendSubmissionNotification({ memberName, memberEmail, taskTitle, taskPoints, note, screenshotUrl, submittedAt }) {
-            if (EJS.publicKey === 'YOUR_EMAILJS_PUBLIC_KEY') {
-                // Keys not configured yet — log to Firebase queue for manual follow-up
-                db.ref('email_queue').push({
-                    to: NOTIFY_RECIPIENTS.map(r => r.email),
-                    subject: `📋 New Task Submission — ${memberName}`,
-                    memberName, memberEmail, taskTitle, taskPoints,
-                    note: note || '', screenshotUrl: screenshotUrl || '',
-                    submittedAt: submittedAt || Date.now(),
-                    status: 'queued_no_keys'
-                });
-                console.info('Email queued (EmailJS keys not yet configured)');
-                return;
-            }
-
-            const templateParams = {
-                member_name:    memberName,
-                member_email:   memberEmail,
-                task_title:     taskTitle,
-                task_points:    taskPoints,
-                note:           note || '(no note)',
-                screenshot_url: screenshotUrl || '(no screenshot)',
-                submitted_at:   new Date(submittedAt || Date.now()).toLocaleString('en-US', {
-                    dateStyle: 'medium', timeStyle: 'short'
-                })
-            };
-
-            // Send to each recipient separately so each gets a personalised email
-            const sends = NOTIFY_RECIPIENTS.map(recipient =>
-                emailjs.send(EJS.serviceId, EJS.templateId, {
-                    ...templateParams,
-                    to_email:   recipient.email,
-                    to_name:    recipient.name
-                }).catch(err => {
-                    console.warn(`EmailJS failed for ${recipient.email}:`, err?.text || err);
-                    // Log failures to Firebase so nothing is lost
-                    db.ref('email_queue').push({
-                        to: recipient.email,
-                        ...templateParams,
-                        status: 'failed',
-                        error: err?.text || String(err),
-                        failedAt: Date.now()
-                    });
-                })
-            );
-
-            await Promise.allSettled(sends);
-        }
-
         // ==================== TASK SUBMISSION ====================
         window.submitTask = async function() {
             if (!selectedSubmissionFile) { showToast('Please attach a screenshot', 'error'); return; }
             const submitBtn = document.getElementById('submitTaskBtn');
             const originalHTML = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             submitBtn.disabled = true;
 
             try {
-                // 1 — Upload screenshot to ImgBB
                 const formData = new FormData();
                 formData.append('key', IMGBB_API_KEY);
                 formData.append('image', selectedSubmissionFile);
@@ -2708,49 +2013,31 @@
                 const data = await response.json();
                 if (!data.success) throw new Error('Image upload failed');
 
-                const fileUrl       = data.data.url;
-                const taskId        = document.getElementById('submissionTaskId').value;
-                const taskPoints    = parseInt(document.getElementById('submissionTaskPoints').value);
-                const taskTitle     = document.getElementById('submissionTaskTitle').textContent.replace('Submitting: ', '');
-                const note          = document.getElementById('submissionMessage').value.trim();
-                const submittedAt   = Date.now();
-                const memberName    = currentMemberData?.name  || 'Unknown';
-                const memberEmail   = currentMemberData?.email || '';
+                const fileUrl    = data.data.url;
+                const taskId     = document.getElementById('submissionTaskId').value;
+                const taskPoints = parseInt(document.getElementById('submissionTaskPoints').value);
+                const note       = document.getElementById('submissionMessage').value.trim();
 
-                // 2 — Save submission to Firebase
                 const submissionData = {
                     userId:      currentUser.uid,
-                    userName:    memberName,
+                    userName:    currentMemberData?.name || 'Unknown',
                     taskId,
                     fileUrl,
                     fileName:    selectedSubmissionFile.name,
                     status:      'pending_manager',
-                    submittedAt,
+                    submittedAt: Date.now(),
                     taskPoints
                 };
                 if (note) submissionData.note = note;
                 await db.ref('task_submissions').push(submissionData);
 
-                // 3 — Send email notification to CEO + Manager (non-blocking)
-                sendSubmissionNotification({
-                    memberName,
-                    memberEmail,
-                    taskTitle,
-                    taskPoints,
-                    note,
-                    screenshotUrl: fileUrl,
-                    submittedAt
-                }).then(() => {
-                    console.log('Notification emails dispatched');
-                });
-
-                showToast('✅ Submitted! CEO & Manager notified.', 'success');
+                showToast('Task submitted', 'success');
                 closeModal('taskSubmissionModal');
                 loadTasks();
 
             } catch (error) {
                 console.error('Submission error:', error);
-                showToast('Submission failed: ' + error.message, 'error');
+                showToast('Submission failed. Please try again.', 'error');
             } finally {
                 submitBtn.innerHTML = originalHTML;
                 submitBtn.disabled = false;
@@ -2759,12 +2046,12 @@
         };
 
         // ==================== IDEAS ====================
-        const IDEA_EMOJIS = ['👍','❤️','🔥','😂','😮','👏','💡','🎉'];
+        const IDEA_EMOJIS = ['','','','','','','',''];
 
         window.postIdea = async function() {
-            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from posting ideas', 'error'); return; }
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are not allowed to post ideas', 'error'); return; }
             const text = document.getElementById('ideaInput').value.trim();
-            if (!text) { showToast('Please enter your idea', 'error'); return; }
+            if (!text) { showToast('Please write your idea before posting', 'error'); return; }
             try {
                 await db.ref('ideas').push({
                     userId: currentUser.uid,
@@ -2776,9 +2063,9 @@
                     commentCount: 0
                 });
                 document.getElementById('ideaInput').value = '';
-                showToast('Idea posted!', 'success');
+                showToast('Idea posted', 'success');
                 loadIdeas();
-            } catch (error) { showToast('Failed to post idea', 'error'); }
+            } catch (error) { showToast('Could not post idea. Please try again.', 'error'); }
         };
 
         async function loadIdeas() {
@@ -2813,9 +2100,7 @@
                 if (count === 0) continue;
                 const iReacted = users[currentUser.uid] === true;
                 reactionMap[emoji] = { count, iReacted };
-                reactBtns += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${idea.id}', '${emoji}')">
-                    <span class="emoji">${emoji}</span><span class="count">${count}</span>
-                </button>`;
+                reactBtns += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${idea.id}', '${emoji}')"> <span class="emoji">${emoji}</span><span class="count">${count}</span> </button>`;
             }
             reactBtns += `<button class="reaction-add-btn" onclick="openEmojiPicker(event, '${idea.id}')">＋</button>`;
 
@@ -2826,38 +2111,12 @@
             div.className = 'idea-item';
             div.id = `idea-${idea.id}`;
             div.innerHTML = `
-                <div class="idea-header" style="justify-content: space-between;">
-                    <div style="display:flex;align-items:center;gap:var(--s3);">
-                        <div class="idea-avatar">${avatarHtml}</div>
-                        <div>
-                            <div class="idea-author">${idea.userName || 'Unknown'}</div>
-                            <div class="idea-time">${timeStr}</div>
-                        </div>
-                    </div>
-                    ${deleteBtn}
-                </div>
-                <div class="idea-text">${escapeHtml(idea.text)}</div>
-                <div class="idea-reactions-bar" id="reactions-${idea.id}">${reactBtns}</div>
-                <div class="idea-comments-section">
-                    <button class="comments-toggle-btn" onclick="toggleComments('${idea.id}', this)">
-                        <i class="fas fa-comment"></i> ${commentCount > 0 ? commentCount + ' comment' + (commentCount > 1 ? 's' : '') : 'Comment'}
-                    </button>
-                    <div class="comments-list" id="comments-${idea.id}">
-                        <div style="text-align:center;padding:8px;color:var(--text-3);font-size:0.8rem;" id="comments-loading-${idea.id}">Loading...</div>
-                        <div class="comment-input-row">
-                            <div class="comment-avatar">
-                                ${currentMemberData?.photoURL ? `<img src="${currentMemberData.photoURL}">` : getInitials(currentMemberData?.name || 'Me')}
-                            </div>
-                            <input class="comment-input-field" id="comment-input-${idea.id}" placeholder="Write a comment..." 
+                <div class="idea-header" style="justify-content: space-between;"> <div style="display:flex;align-items:center;gap:var(--s3);"> <div class="idea-avatar">${avatarHtml}</div> <div> <div class="idea-author">${idea.userName || 'Unknown'}</div> <div class="idea-time">${timeStr}</div> </div> </div> ${deleteBtn}
+                </div> <div class="idea-text">${escapeHtml(idea.text)}</div> <div class="idea-reactions-bar" id="reactions-${idea.id}">${reactBtns}</div> <div class="idea-comments-section"> <button class="comments-toggle-btn" onclick="toggleComments('${idea.id}', this)"> <i class="fas fa-comment"></i> ${commentCount > 0 ? commentCount + ' comment' + (commentCount > 1 ? 's' : '') : 'Comment'}
+                    </button> <div class="comments-list" id="comments-${idea.id}"> <div style="text-align:center;padding:8px;color:var(--text-3);font-size:0.8rem;" id="comments-loading-${idea.id}">Loading...</div> <div class="comment-input-row"> <div class="comment-avatar"> ${currentMemberData?.photoURL ? `<img src="${currentMemberData.photoURL}">` : getInitials(currentMemberData?.name || 'Me')}
+                            </div> <input class="comment-input-field" id="comment-input-${idea.id}" placeholder="Write a comment..." 
                                 onkeypress="if(event.key==='Enter') postComment('${idea.id}')"
-                                oninput="document.getElementById('comment-send-${idea.id}').disabled = !this.value.trim()">
-                            <button class="comment-send-btn" id="comment-send-${idea.id}" disabled onclick="postComment('${idea.id}')">
-                                <i class="fas fa-paper-plane" style="font-size:0.8rem;"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+                                oninput="document.getElementById('comment-send-${idea.id}').disabled = !this.value.trim()"> <button class="comment-send-btn" id="comment-send-${idea.id}" disabled onclick="postComment('${idea.id}')"> <i class="fas fa-paper-plane" style="font-size:0.8rem;"></i> </button> </div> </div> </div> `;
             return div;
         }
 
@@ -2889,9 +2148,7 @@
                 const count = Object.keys(users).length;
                 if (count === 0) continue;
                 const iReacted = users[currentUser.uid] === true;
-                html += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${ideaId}', '${emoji}')">
-                    <span class="emoji">${emoji}</span><span class="count">${count}</span>
-                </button>`;
+                html += `<button class="reaction-btn ${iReacted ? 'reacted' : ''}" onclick="toggleReaction('${ideaId}', '${emoji}')"> <span class="emoji">${emoji}</span><span class="count">${count}</span> </button>`;
             }
             html += `<button class="reaction-add-btn" onclick="openEmojiPicker(event, '${ideaId}')">＋</button>`;
             bar.innerHTML = html;
@@ -2997,13 +2254,7 @@
             const isAdmin = currentMemberData?.role === 'CEO' || currentMemberData?.role === 'Manager';
             const delBtn = (isOwn || isAdmin) ? `<button class="comment-delete-btn" onclick="deleteComment('${ideaId}','${c.id}')"><i class="fas fa-times"></i></button>` : '';
             el.innerHTML = `
-                <div class="comment-avatar">${avatarHtml}</div>
-                <div class="comment-bubble">
-                    <div class="comment-author">${escapeHtml(c.userName || 'Unknown')}</div>
-                    <div class="comment-text">${escapeHtml(c.text || '')}</div>
-                    <div class="comment-time">${timeStr}</div>
-                </div>
-                ${delBtn}
+                <div class="comment-avatar">${avatarHtml}</div> <div class="comment-bubble"> <div class="comment-author">${escapeHtml(c.userName || 'Unknown')}</div> <div class="comment-text">${escapeHtml(c.text || '')}</div> <div class="comment-time">${timeStr}</div> </div> ${delBtn}
             `;
             return el;
         }
@@ -3012,7 +2263,7 @@
             const input = document.getElementById(`comment-input-${ideaId}`);
             const text = input.value.trim();
             if (!text) return;
-            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from commenting', 'error'); return; }
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are not allowed to comment', 'error'); return; }
             const sendBtn = document.getElementById(`comment-send-${ideaId}`);
             sendBtn.disabled = true;
             try {
@@ -3030,7 +2281,7 @@
                 const toggleBtn = document.querySelector(`#idea-${ideaId} .comments-toggle-btn`);
                 if (toggleBtn) toggleBtn.innerHTML = `<i class="fas fa-comment-slash"></i> Hide`;
             } catch(err) {
-                showToast('Failed to post comment', 'error');
+                showToast('Could not post comment. Please try again.', 'error');
             } finally {
                 sendBtn.disabled = false;
             }
@@ -3041,7 +2292,7 @@
             try {
                 await db.ref(`idea_comments/${ideaId}/${commentId}`).remove();
                 await db.ref(`ideas/${ideaId}/commentCount`).transaction(count => Math.max((count || 1) - 1, 0));
-            } catch(err) { showToast('Failed to delete comment', 'error'); }
+            } catch(err) { showToast('Could not delete comment', 'error'); }
         };
 
         window.deleteIdea = async function(ideaId) {
@@ -3051,8 +2302,8 @@
                 await db.ref(`idea_comments/${ideaId}`).remove();
                 const el = document.getElementById(`idea-${ideaId}`);
                 if (el) el.remove();
-                showToast('Idea deleted');
-            } catch(err) { showToast('Failed to delete idea', 'error'); }
+                showToast('Idea removed');
+            } catch(err) { showToast('Could not remove idea', 'error'); }
         };
 
         // Real-time ideas feed
@@ -3111,11 +2362,7 @@
                 if (member.status === 'Active') active++;
             });
             document.getElementById('statsGrid').innerHTML = `
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value">${total}</div><div class="stat-label">Members</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-value">${(totalPoints/1000).toFixed(1)}K</div><div class="stat-label">Points</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-value">${topPoints}</div><div class="stat-label">Top</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">${active}</div><div class="stat-label">Active</div></div>
-            `;
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-value">${total}</div><div class="stat-label">Members</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-star"></i></div><div class="stat-value">${(totalPoints/1000).toFixed(1)}K</div><div class="stat-label">Points</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-trophy"></i></div><div class="stat-value">${topPoints}</div><div class="stat-label">Top</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">${active}</div><div class="stat-label">Active</div></div> `;
         }
 
         async function loadAIInsights() {
@@ -3137,14 +2384,7 @@
                     { icon: 'fa-clock', title: 'Active Rate', desc: `${activePercent}% active in last 24h (${activeMembers}/${totalMembers})` }
                 ];
                 container.innerHTML = insights.map(insight => `
-                    <div class="insight-item">
-                        <div class="insight-icon"><i class="fas ${insight.icon}"></i></div>
-                        <div class="insight-content">
-                            <div class="insight-title">${insight.title}</div>
-                            <div class="insight-desc">${insight.desc}</div>
-                        </div>
-                    </div>
-                `).join('');
+                    <div class="insight-item"> <div class="insight-icon"><i class="fas ${insight.icon}"></i></div> <div class="insight-content"> <div class="insight-title">${insight.title}</div> <div class="insight-desc">${insight.desc}</div> </div> </div> `).join('');
             } catch (error) {
                 console.error('Error loading insights:', error);
                 document.getElementById('aiInsights').innerHTML = '<div class="insight-item">Error loading insights</div>';
@@ -3166,26 +2406,8 @@
             container.innerHTML = members.reverse().map(member => {
                 const initials = getInitials(member.name);
                 return `
-                    <div class="team-card" onclick="showMemberProfile('${member.uid}')">
-                        <div class="team-card-header">
-                            <div class="team-avatar">
-                                ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
-                            </div>
-                            <div class="team-info">
-                                <div class="team-name">${member.name}</div>
-                                <div class="team-role">${member.role || 'Member'}</div>
-                            </div>
-                        </div>
-                        <div class="team-stats">
-                            <div class="team-stat"><div class="value">${member.points || 0}</div><div class="label">Points</div></div>
-                            <div class="team-stat"><div class="value">$${member.salary || 0}</div><div class="label">Salary</div></div>
-                        </div>
-                        <div class="team-footer">
-                            <span class="team-badge">${member.role || 'Member'}</span>
-                            <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span>
-                        </div>
-                    </div>
-                `;
+                    <div class="team-card" onclick="showMemberProfile('${member.uid}')"> <div class="team-card-header"> <div class="team-avatar"> ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                            </div> <div class="team-info"> <div class="team-name">${member.name}</div> <div class="team-role">${member.role || 'Member'}</div> </div> </div> <div class="team-stats"> <div class="team-stat"><div class="value">${member.points || 0}</div><div class="label">Points</div></div> <div class="team-stat"><div class="value">$${member.salary || 0}</div><div class="label">Salary</div></div> </div> <div class="team-footer"> <span class="team-badge">${member.role || 'Member'}</span> <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span> </div> </div> `;
             }).join('');
         }
 
@@ -3237,24 +2459,7 @@
             members.forEach(member => {
                 const initials = getInitials(member.name);
                 grid.innerHTML += `
-                    <div class="team-card" onclick="showMemberProfile('${member.uid}')">
-                        <div class="team-card-header">
-                            <div class="team-avatar">${member.photoURL ? `<img src="${member.photoURL}">` : initials}</div>
-                            <div class="team-info">
-                                <div class="team-name">${member.name}</div>
-                                <div class="team-role">${member.role || 'Member'}</div>
-                            </div>
-                        </div>
-                        <div class="team-stats">
-                            <div class="team-stat"><div class="value">${member.points || 0}</div><div class="label">Points</div></div>
-                            <div class="team-stat"><div class="value">$${member.salary || 0}</div><div class="label">Salary</div></div>
-                        </div>
-                        <div class="team-footer">
-                            <span class="team-badge">${member.role || 'Member'}</span>
-                            <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span>
-                        </div>
-                    </div>
-                `;
+                    <div class="team-card" onclick="showMemberProfile('${member.uid}')"> <div class="team-card-header"> <div class="team-avatar">${member.photoURL ? `<img src="${member.photoURL}">` : initials}</div> <div class="team-info"> <div class="team-name">${member.name}</div> <div class="team-role">${member.role || 'Member'}</div> </div> </div> <div class="team-stats"> <div class="team-stat"><div class="value">${member.points || 0}</div><div class="label">Points</div></div> <div class="team-stat"><div class="value">$${member.salary || 0}</div><div class="label">Salary</div></div> </div> <div class="team-footer"> <span class="team-badge">${member.role || 'Member'}</span> <span class="team-status"><i class="fas fa-circle"></i> ${member.status || 'Active'}</span> </div> </div> `;
             });
         }
 
@@ -3272,7 +2477,7 @@
                     }
                 } catch(e) {}
             }
-            if (!member || !member.name) { showToast('Could not load member profile', 'error'); return; }
+            if (!member || !member.name) { showToast('Could not load profile', 'error'); return; }
             const isAdmin = currentMemberData?.role === 'CEO' || currentMemberData?.role === 'Manager';
             const joinStr = member.joinDate ? moment(member.joinDate).format('MMM DD, YYYY') : '—';
             const blockLabel = blockedUsers.has(uid) ? 'Unblock User' : 'Block User';
@@ -3282,28 +2487,9 @@
             modal.className = 'modal-overlay';
             modal.style.display = 'flex';
             modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3>Member Profile</h3>
-                        <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div>
-                    </div>
-                    <div style="text-align:center;margin-bottom:var(--s5);">
-                        <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:var(--r-xl);margin:0 auto var(--s3);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:800;color:white;overflow:hidden;box-shadow:0 0 24px var(--accent-glow);">
-                            ${member.photoURL ? `<img src="${member.photoURL}" style="width:100%;height:100%;object-fit:cover;">` : getInitials(member.name)}
-                        </div>
-                        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text-1);margin-bottom:6px;">${member.name}</div>
-                        <span class="badge badge-primary">${member.role || 'Member'}</span>
-                    </div>
-                    <div class="profile-info-grid">
-                        <div class="info-row"><span class="label">Email</span><span class="value" style="font-size:0.78rem;word-break:break-all;">${member.email || '—'}</span></div>
-                        <div class="info-row"><span class="label">Points</span><span class="value" style="color:var(--accent);">⭐ ${member.points || 0}</span></div>
-                        <div class="info-row"><span class="label">Salary</span><span class="value">$${member.salary || 0}</span></div>
-                        <div class="info-row"><span class="label">Joined</span><span class="value">${joinStr}</span></div>
-                        <div class="info-row"><span class="label">Status</span><span class="value" style="color:var(--success);">${member.status || 'Active'}</span></div>
-                    </div>
-                    ${blockBtn}
-                </div>
-            `;
+                <div class="modal"> <div class="modal-header"> <h3>Member Profile</h3> <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div> </div> <div style="text-align:center;margin-bottom:var(--s5);"> <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:var(--r-xl);margin:0 auto var(--s3);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:800;color:white;overflow:hidden;box-shadow:0 0 24px var(--accent-glow);"> ${member.photoURL ? `<img src="${member.photoURL}" style="width:100%;height:100%;object-fit:cover;">` : getInitials(member.name)}
+                        </div> <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text-1);margin-bottom:6px;">${member.name}</div> <span class="badge badge-primary">${member.role || 'Member'}</span> </div> <div class="profile-info-grid"> <div class="info-row"><span class="label">Email</span><span class="value" style="font-size:0.78rem;word-break:break-all;">${member.email || '—'}</span></div> <div class="info-row"><span class="label">Points</span><span class="value" style="color:var(--accent);">${member.points || 0}</span></div> <div class="info-row"><span class="label">Salary</span><span class="value">$${member.salary || 0}</span></div> <div class="info-row"><span class="label">Joined</span><span class="value">${joinStr}</span></div> <div class="info-row"><span class="label">Status</span><span class="value" style="color:var(--success);">${member.status || 'Active'}</span></div> </div> ${blockBtn}
+                </div> `;
             document.body.appendChild(modal);
         };
 
@@ -3316,7 +2502,7 @@
             }
             await db.ref('settings/blockedUsers').set(blocked);
             blockedUsers = new Set(blocked);
-            showToast(blockedUsers.has(uid) ? 'User blocked' : 'User unblocked');
+            showToast(blockedUsers.has(uid) ? 'Member blocked' : 'Member unblocked');
             // Close current modal and refresh
             document.querySelector('.modal-overlay:last-child').remove();
         };
@@ -3351,15 +2537,8 @@
                 const memberDiv = document.createElement('div');
                 memberDiv.className = 'rank-member-row';
                 memberDiv.innerHTML = `
-                    <div class="leaderboard-avatar">
-                        ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <div style="font-size:0.88rem;font-weight:700;color:var(--text-1);">${member.name}</div>
-                        <div style="font-size:0.7rem;color:var(--text-3);">⭐ ${member.points || 0} pts</div>
-                    </div>
-                    <input type="number" id="rank-${member.uid}" value="${member.rank || ''}" placeholder="Auto" min="1" max="${allMembers.length}" style="width:64px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:var(--s2) var(--s3);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);outline:none;text-align:center;" oninput="this.style.borderColor='var(--accent)'">
-                `;
+                    <div class="leaderboard-avatar"> ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
+                    </div> <div style="flex:1;min-width:0;"> <div style="font-size:0.88rem;font-weight:700;color:var(--text-1);">${member.name}</div> <div style="font-size:0.7rem;color:var(--text-3);">${member.points || 0} pts</div> </div> <input type="number" id="rank-${member.uid}" value="${member.rank || ''}" placeholder="Auto" min="1" max="${allMembers.length}" style="width:64px;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:var(--s2) var(--s3);font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);outline:none;text-align:center;" oninput="this.style.borderColor='var(--accent)'"> `;
                 container.appendChild(memberDiv);
             });
         }
@@ -3376,12 +2555,12 @@
             const rankValues = Object.values(newRanks);
             const uniqueRanks = new Set(rankValues);
             if (rankValues.length !== uniqueRanks.size) {
-                showToast('Duplicate ranks are not allowed', 'error');
+                showToast('Each member must have a unique rank number', 'error');
                 return;
             }
             await db.ref('settings/ranks').set(newRanks);
             customRanks = newRanks;
-            showToast('Ranks saved successfully');
+            showToast('Ranks saved');
         };
 
         window.resetAllRanks = async function() {
@@ -3440,22 +2619,10 @@
                 
                 const initials = getInitials(member.name);
                 container.innerHTML += `
-                    <div class="leaderboard-item" onclick="showMemberProfile('${member.uid}')">
-                        <div class="leaderboard-rank ${rankClass}">
-                            ${rank === 1 ? '<i class="fas fa-crown"></i>' : rank}
-                        </div>
-                        <div class="leaderboard-avatar">
-                            ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
-                        </div>
-                        <div class="leaderboard-info">
-                            <div class="leaderboard-name">${member.name}</div>
-                            <div class="leaderboard-role">${member.role || 'Member'}</div>
-                        </div>
-                        <div class="leaderboard-points">
-                            <i class="fas fa-star"></i> ${member.points || 0}
-                        </div>
-                    </div>
-                `;
+                    <div class="leaderboard-item" onclick="showMemberProfile('${member.uid}')"> <div class="leaderboard-rank ${rankClass}"> ${rank === 1 ? '<i class="fas fa-crown"></i>' : rank}
+                        </div> <div class="leaderboard-avatar"> ${member.photoURL ? `<img src="${member.photoURL}">` : initials}
+                        </div> <div class="leaderboard-info"> <div class="leaderboard-name">${member.name}</div> <div class="leaderboard-role">${member.role || 'Member'}</div> </div> <div class="leaderboard-points"> <i class="fas fa-star"></i> ${member.points || 0}
+                        </div> </div> `;
             });
         }
 
@@ -3477,21 +2644,9 @@
             
             const container = document.getElementById('adminUserList');
             container.innerHTML = filtered.map(member => `
-                <div class="user-row">
-                    <div class="user-row-avatar">
-                        ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
-                    </div>
-                    <div class="user-row-info">
-                        <div class="user-row-name">
-                            ${member.name} 
-                        </div>
-                        <div class="user-row-email">${member.email}</div>
-                    </div>
-                    <div class="user-row-actions">
-                        <button class="btn btn-sm btn-outline" onclick="openEditUserModal('${member.uid}')"><i class="fas fa-edit"></i></button>
-                    </div>
-                </div>
-            `).join('');
+                <div class="user-row"> <div class="user-row-avatar"> ${member.photoURL ? `<img src="${member.photoURL}">` : getInitials(member.name)}
+                    </div> <div class="user-row-info"> <div class="user-row-name"> ${member.name} 
+                        </div> <div class="user-row-email">${member.email}</div> </div> <div class="user-row-actions"> <button class="btn btn-sm btn-outline" onclick="openEditUserModal('${member.uid}')"><i class="fas fa-edit"></i></button> </div> </div> `).join('');
         }
 
         adminUserSearch?.addEventListener('input', loadAdminUsers);
@@ -3512,16 +2667,8 @@
             notices.forEach(notice => {
                 const delBtn = isAdmin ? `<button onclick="deleteNotice('${notice.id}')" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:0.75rem;padding:2px 4px;"><i class="fas fa-trash"></i></button>` : '';
                 container.innerHTML += `
-                    <div class="notice-item">
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-                            <span class="notice-tag">Announcement</span>
-                            ${delBtn}
-                        </div>
-                        <div class="notice-title">${notice.title || 'Announcement'}</div>
-                        <div class="notice-content">${notice.text || ''}</div>
-                        <div class="notice-meta"><i class="fas fa-user-tie"></i> ${notice.postedBy || 'Admin'} · <i class="fas fa-clock"></i> ${formatDate(notice.timestamp)}</div>
-                    </div>
-                `;
+                    <div class="notice-item"> <div style="display:flex;justify-content:space-between;align-items:flex-start;"> <span class="notice-tag">Announcement</span> ${delBtn}
+                        </div> <div class="notice-title">${notice.title || 'Announcement'}</div> <div class="notice-content">${notice.text || ''}</div> <div class="notice-meta"><i class="fas fa-user-tie"></i> ${notice.postedBy || 'Admin'} · <i class="fas fa-clock"></i> ${formatDate(notice.timestamp)}</div> </div> `;
             });
         }
 
@@ -3529,7 +2676,7 @@
             if (!confirm('Delete this announcement?')) return;
             await db.ref('notices/' + id).remove();
             loadNotices();
-            showToast('Announcement deleted');
+            showToast('Announcement removed');
         };
 
         window.openNoticeModal = function() {
@@ -3625,14 +2772,9 @@
             const deleteBtn = isOwn ? `<button class="delete-msg-btn" onclick="promptDeleteMessage('${key}')"><i class="fas fa-trash"></i></button>` : '';
             const statusIcon = isOwn ? '<span class="message-status"><i class="fas fa-check"></i></span>' : '';
             messageDiv.innerHTML = `
-                <div class="message-avatar">${avatarHtml}</div>
-                <div class="message-bubble">
-                    <div class="message-sender">${isOwn ? 'You' : (msg.senderName || 'Unknown')}</div>
-                    ${contentHtml}
-                    <div class="message-time">${timeStr} ${statusIcon}</div>
-                    ${deleteBtn}
-                </div>
-            `;
+                <div class="message-avatar">${avatarHtml}</div> <div class="message-bubble"> <div class="message-sender">${isOwn ? 'You' : (msg.senderName || 'Unknown')}</div> ${contentHtml}
+                    <div class="message-time">${timeStr} ${statusIcon}</div> ${deleteBtn}
+                </div> `;
             return messageDiv;
         }
 
@@ -3640,7 +2782,7 @@
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
-            if (blockedUsers.has(currentUser.uid)) { showToast('You are blocked from sending messages', 'error'); return; }
+            if (blockedUsers.has(currentUser.uid)) { showToast('You are not allowed to send messages', 'error'); return; }
             try {
                 await db.ref('chat_messages').push({
                     senderId: currentUser.uid,
@@ -3680,17 +2822,9 @@
                 const isAdmin = currentMemberData?.role === 'CEO' || currentMemberData?.role === 'Manager';
                 const delBtn = isAdmin ? `<button onclick="deleteMeeting('${meeting.id}')" style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:0.75rem;"><i class="fas fa-trash"></i></button>` : '';
                 container.innerHTML += `
-                    <div class="meeting-card">
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span class="meeting-time-badge"><i class="fas fa-calendar"></i> ${dateStr}</span>
-                            ${delBtn}
-                        </div>
-                        <div class="meeting-title">${meeting.title}</div>
-                        <div class="meeting-desc">${meeting.description || ''}</div>
-                        <div class="notice-meta" style="margin-top:var(--s2);"><i class="fas fa-map-marker-alt"></i> ${locationHtml}</div>
-                        ${joinButton}
-                    </div>
-                `;
+                    <div class="meeting-card"> <div style="display:flex;justify-content:space-between;align-items:center;"> <span class="meeting-time-badge"><i class="fas fa-calendar"></i> ${dateStr}</span> ${delBtn}
+                        </div> <div class="meeting-title">${meeting.title}</div> <div class="meeting-desc">${meeting.description || ''}</div> <div class="notice-meta" style="margin-top:var(--s2);"><i class="fas fa-map-marker-alt"></i> ${locationHtml}</div> ${joinButton}
+                    </div> `;
             });
         }
 
@@ -3772,25 +2906,14 @@
                     if (task.description) {
                         const descId = `desc-${task.id}`;
                         descriptionHtml = `
-                            <div id="${descId}" class="task-description truncated">${task.description}</div>
-                            <span class="toggle-description" onclick="document.getElementById('${descId}').classList.toggle('truncated'); this.innerText = this.innerText === 'Read more' ? 'Show less' : 'Read more';">Read more</span>
-                        `;
+                            <div id="${descId}" class="task-description truncated">${task.description}</div> <span class="toggle-description" onclick="document.getElementById('${descId}').classList.toggle('truncated'); this.innerText = this.innerText === 'Read more' ? 'Show less' : 'Read more';">Read more</span> `;
                     }
 
                     container.innerHTML += `
-                        <div class="task-card">
-                            <div class="task-card-header">
-                                <div class="task-title">${task.title}</div>
-                                <span class="task-points-badge">⭐ ${task.points} pts</span>
-                            </div>
-                            ${descriptionHtml}
+                        <div class="task-card"> <div class="task-card-header"> <div class="task-title">${task.title}</div> <span class="task-points-badge">${task.points} pts</span> </div> ${descriptionHtml}
                             ${statusHtml}
-                            <div class="task-footer">
-                                <span class="task-deadline"><i class="fas fa-calendar"></i> ${task.deadline ? moment(task.deadline).format('MMM DD') : 'No deadline'}</span>
-                                ${actionHtml}
-                            </div>
-                        </div>
-                    `;
+                            <div class="task-footer"> <span class="task-deadline"><i class="fas fa-calendar"></i> ${task.deadline ? moment(task.deadline).format('MMM DD') : 'No deadline'}</span> ${actionHtml}
+                            </div> </div> `;
                 });
             } catch (error) {
                 console.error('Error in loadTasks:', error);
@@ -3870,25 +2993,14 @@
                 } else {
                     // Article or course: show thumbnail and link
                     mediaHtml = `
-                        <div class="learning-thumbnail">
-                            ${res.thumbnail ? `<img src="${res.thumbnail}" alt="${res.title}">` : `<i class="fas ${typeIcon}"></i>`}
-                        </div>
-                        <div class="learning-link">
-                            <a href="${res.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Resource</a>
-                        </div>
-                    `;
+                        <div class="learning-thumbnail"> ${res.thumbnail ? `<img src="${res.thumbnail}" alt="${res.title}">` : `<i class="fas ${typeIcon}"></i>`}
+                        </div> <div class="learning-link"> <a href="${res.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Resource</a> </div> `;
                 }
                 const card = document.createElement('div');
                 card.className = 'learning-card';
                 card.innerHTML = `
                     ${mediaHtml}
-                    <div class="learning-title">${res.title}</div>
-                    <div class="learning-description">${res.description || ''}</div>
-                    <div class="learning-meta">
-                        <span class="learning-type">${res.type || 'resource'}</span>
-                        <span><i class="far fa-clock"></i> ${formatDate(res.createdAt)}</span>
-                    </div>
-                `;
+                    <div class="learning-title">${res.title}</div> <div class="learning-description">${res.description || ''}</div> <div class="learning-meta"> <span class="learning-type">${res.type || 'resource'}</span> <span><i class="far fa-clock"></i> ${formatDate(res.createdAt)}</span> </div> `;
                 container.appendChild(card);
             });
         }
@@ -3914,18 +3026,7 @@
                 const card = document.createElement('div');
                 card.className = 'member-card';
                 card.innerHTML = `
-                    <div class="member-card-header">
-                        <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div>
-                        <div class="member-info">
-                            <div class="member-name">${res.title}</div>
-                            <div class="member-email">${res.type || 'resource'} · ${formatDate(res.createdAt)}</div>
-                        </div>
-                    </div>
-                    <div class="admin-learning-actions">
-                        <button class="action-btn edit" onclick="editLearningResource('${res.id}')"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                `;
+                    <div class="member-card-header"> <div class="member-avatar"><i class="fas ${res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group')}"></i></div> <div class="member-info"> <div class="member-name">${res.title}</div> <div class="member-email">${res.type || 'resource'} · ${formatDate(res.createdAt)}</div> </div> </div> <div class="admin-learning-actions"> <button class="action-btn edit" onclick="editLearningResource('${res.id}')"><i class="fas fa-edit"></i> Edit</button> <button class="action-btn delete" onclick="deleteLearningResource('${res.id}')"><i class="fas fa-trash"></i> Delete</button> </div> `;
                 container.appendChild(card);
             });
         }
@@ -3995,8 +3096,7 @@
             logs.reverse().forEach(log => {
                 const logEl = document.createElement('div');
                 logEl.className = 'log-item';
-                logEl.innerHTML = `<div><i class="fas fa-circle" style="color: var(--accent); font-size: 0.5rem;"></i> ${log.action}</div>
-                    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">${formatDate(log.timestamp)} • ${log.admin || 'System'}</div>`;
+                logEl.innerHTML = `<div><i class="fas fa-circle" style="color: var(--accent); font-size: 0.5rem;"></i> ${log.action}</div> <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">${formatDate(log.timestamp)} • ${log.admin || 'System'}</div>`;
                 container.appendChild(logEl);
             });
         }
@@ -4055,32 +3155,7 @@
             modal.style.display = 'flex';
             modal.id = 'meetingAddModal';
             modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3><i class="fas fa-handshake" style="color:var(--accent);margin-right:8px;"></i>Schedule Meeting</h3>
-                        <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:var(--s4);">
-                        <div class="input-group">
-                            <label class="input-label">Title</label>
-                            <input type="text" id="meetingTitle" placeholder="Meeting title…">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Date & Time</label>
-                            <input type="datetime-local" id="meetingDateTime">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Location / Link</label>
-                            <input type="text" id="meetingLocation" placeholder="Room or https://…">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Description</label>
-                            <textarea id="meetingDescription" placeholder="Agenda…" style="min-height:80px;"></textarea>
-                        </div>
-                        <button class="btn btn-primary" onclick="saveMeeting()"><i class="fas fa-calendar-plus"></i> Schedule</button>
-                    </div>
-                </div>
-            `;
+                <div class="modal"> <div class="modal-header"> <h3><i class="fas fa-handshake" style="color:var(--accent);margin-right:8px;"></i>Schedule Meeting</h3> <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div> </div> <div style="display:flex;flex-direction:column;gap:var(--s4);"> <div class="input-group"> <label class="input-label">Title</label> <input type="text" id="meetingTitle" placeholder="Meeting title…"> </div> <div class="input-group"> <label class="input-label">Date & Time</label> <input type="datetime-local" id="meetingDateTime"> </div> <div class="input-group"> <label class="input-label">Location / Link</label> <input type="text" id="meetingLocation" placeholder="Room or https://…"> </div> <div class="input-group"> <label class="input-label">Description</label> <textarea id="meetingDescription" placeholder="Agenda…" style="min-height:80px;"></textarea> </div> <button class="btn btn-primary" onclick="saveMeeting()"><i class="fas fa-calendar-plus"></i> Schedule</button> </div> </div> `;
             document.body.appendChild(modal);
         };
 
@@ -4095,7 +3170,7 @@
                 createdBy: currentMemberData?.name, createdAt: Date.now()
             });
             document.getElementById('meetingAddModal')?.remove();
-            showToast('Meeting scheduled!', 'success');
+            showToast('Meeting scheduled', 'success');
             loadMeetings();
         };
 
@@ -4103,7 +3178,7 @@
             if (!confirm('Delete this meeting?')) return;
             await db.ref('meetings/' + id).remove();
             loadMeetings();
-            showToast('Meeting deleted');
+            showToast('Meeting removed');
         };
 
         // ==================== TASK MODAL (ADMIN) ====================
@@ -4114,33 +3189,8 @@
             modal.style.display = 'flex';
             modal.id = 'taskAddModal';
             modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <h3><i class="fas fa-check-square" style="color:var(--accent);margin-right:8px;"></i>${isEdit ? 'Edit' : 'New'} Task</h3>
-                        <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:var(--s4);">
-                        <div class="input-group">
-                            <label class="input-label">Title</label>
-                            <input type="text" id="taskTitleInput" placeholder="Task title…" value="${existingData?.title || ''}">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Points</label>
-                            <input type="number" id="taskPointsInput" placeholder="Points" value="${existingData?.points || ''}">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Deadline</label>
-                            <input type="date" id="taskDeadlineInput" value="${existingData?.deadline ? new Date(existingData.deadline).toISOString().split('T')[0] : ''}">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Description</label>
-                            <textarea id="taskDescInput" placeholder="Task details…" style="min-height:80px;">${existingData?.description || ''}</textarea>
-                        </div>
-                        <button class="btn btn-primary" onclick="saveTask('${existingId || ''}')"><i class="fas fa-save"></i> ${isEdit ? 'Update' : 'Create'} Task</button>
-                        ${isEdit ? `<button class="btn btn-danger" style="background:var(--danger-dim);color:var(--danger);border:1px solid var(--danger);" onclick="deleteTask('${existingId}')"><i class="fas fa-trash"></i> Delete Task</button>` : ''}
-                    </div>
-                </div>
-            `;
+                <div class="modal"> <div class="modal-header"> <h3><i class="fas fa-check-square" style="color:var(--accent);margin-right:8px;"></i>${isEdit ? 'Edit' : 'New'} Task</h3> <div class="modal-close" onclick="this.closest('.modal-overlay').remove()"><i class="fas fa-times"></i></div> </div> <div style="display:flex;flex-direction:column;gap:var(--s4);"> <div class="input-group"> <label class="input-label">Title</label> <input type="text" id="taskTitleInput" placeholder="Task title…" value="${existingData?.title || ''}"> </div> <div class="input-group"> <label class="input-label">Points</label> <input type="number" id="taskPointsInput" placeholder="Points" value="${existingData?.points || ''}"> </div> <div class="input-group"> <label class="input-label">Deadline</label> <input type="date" id="taskDeadlineInput" value="${existingData?.deadline ? new Date(existingData.deadline).toISOString().split('T')[0] : ''}"> </div> <div class="input-group"> <label class="input-label">Description</label> <textarea id="taskDescInput" placeholder="Task details…" style="min-height:80px;">${existingData?.description || ''}</textarea> </div> <button class="btn btn-primary" onclick="saveTask('${existingId || ''}')"><i class="fas fa-save"></i> ${isEdit ? 'Update' : 'Create'} Task</button> ${isEdit ? `<button class="btn btn-danger" style="background:var(--danger-dim);color:var(--danger);border:1px solid var(--danger);" onclick="deleteTask('${existingId}')"><i class="fas fa-trash"></i> Delete Task</button>` : ''}
+                    </div> </div> `;
             document.body.appendChild(modal);
         };
 
@@ -4157,10 +3207,10 @@
             if (existingId) {
                 delete data.createdAt;
                 await db.ref('tasks/' + existingId).update(data);
-                showToast('Task updated!', 'success');
+                showToast('Task updated', 'success');
             } else {
                 await db.ref('tasks').push(data);
-                showToast('Task created!', 'success');
+                showToast('Task created', 'success');
             }
             document.getElementById('taskAddModal')?.remove();
             loadTasks();
@@ -4171,8 +3221,8 @@
             await db.ref('tasks/' + id).remove();
             document.getElementById('taskAddModal')?.remove();
             loadTasks();
-            showToast('Task deleted');
+            showToast('Task removed');
         };
     </script>
 </body>
-</html>  
+</html>
