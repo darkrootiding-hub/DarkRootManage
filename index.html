@@ -1769,6 +1769,13 @@
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
         // ==================== VIEW MANAGEMENT ====================
+        const ALL_VIEW_IDS = [
+            'dashboardView', 'membersView', 'ideasView', 'chatView',
+            'noticesView', 'profileView', 'analyticsView', 'meetingsView',
+            'tasksView', 'aboutView', 'learningView',
+            'checkinView', 'pollsView', 'mySubmissionsView', 'notesView', 'activityFeedView'
+        ];
+
         function showView(viewName) {
             ALL_VIEW_IDS.forEach(id => {
                 const el = document.getElementById(id);
