@@ -1573,10 +1573,9 @@
         </main>
         <nav class="bottom-nav" id="bottomNav">
             <div class="nav-item-bottom active" data-view="dashboard"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item-bottom" data-view="members"><i class="fas fa-users"></i><span>Team</span></div>
             <div class="nav-item-bottom" data-view="chat"><i class="fas fa-comments"></i><span>Chat</span></div>
-            <div class="nav-item-bottom" data-view="checkin"><i class="fas fa-clock"></i><span>Check-in</span></div>
-            <div class="nav-item-bottom" data-view="polls"><i class="fas fa-chart-bar"></i><span>Polls</span></div>
-            <div class="nav-item-bottom" data-view="mySubmissions"><i class="fas fa-inbox"></i><span>Status</span></div>
+            <div class="nav-item-bottom" data-view="tasks"><i class="fas fa-check-square"></i><span>Tasks</span></div>
             <div class="nav-item-bottom" data-view="profile"><i class="fas fa-user"></i><span>Me</span></div>
         </nav>
         </div><!-- Modals --> <div class="modal-overlay" id="imageUploadModal"> <div class="modal"> <div class="modal-header"> <h3>Update Profile Photo</h3> <div class="modal-close" onclick="closeModal('imageUploadModal')"> <i class="fas fa-times"></i> </div> </div> <div class="image-upload-modal"> <div class="upload-preview" id="uploadPreview"> <img src="" style="display: none;" id="previewImg"> <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="previewPlaceholder"> <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i> </div> </div> <div class="upload-area" onclick="document.getElementById('fileInput').click()"> <i class="fas fa-cloud-upload-alt"></i> <p>Tap to select photo</p> </div> <input type="file" id="fileInput" accept="image/*" style="display: none;"> <div style="display: flex; gap: var(--s3); margin-top: var(--s6);"> <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('imageUploadModal')">Cancel</button> <button class="btn btn-primary" style="flex: 1;" onclick="uploadImage()" id="uploadBtn">Upload</button> </div> </div> </div> </div> <div class="modal-overlay" id="taskSubmissionModal"> <div class="modal"> <div class="modal-header"> <h3>Submit Task</h3> <div class="modal-close" onclick="closeModal('taskSubmissionModal')"> <i class="fas fa-times"></i> </div> </div> <div class="image-upload-modal"> <p id="submissionTaskTitle" style="font-weight: 600; margin-bottom: var(--s4);"></p> <div class="upload-preview" id="submissionUploadPreview"> <img src="" style="display: none;" id="submissionPreviewImg"> <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--r-lg);" id="submissionPreviewPlaceholder"> <i class="fas fa-camera" style="font-size: 2rem; color: var(--text-3);"></i> </div> </div> <div class="upload-area" onclick="document.getElementById('submissionFileInput').click()"> <i class="fas fa-cloud-upload-alt"></i> <p>Upload screenshot (image only)</p> </div> <input type="file" id="submissionFileInput" accept="image/*" style="display: none;"> <input type="hidden" id="submissionTaskId"> <input type="hidden" id="submissionTaskPoints"> <div style="margin: var(--s4) 0;"> <textarea id="submissionMessage" class="chat-input" style="height: 80px; padding: var(--s3); resize: vertical; width: 100%;" placeholder="Add a message (optional)"></textarea> </div> <div style="margin: var(--s4) 0; text-align: center;"> <button class="btn btn-success" style="width: 100%; background: #25D366; color: white;" onclick="window.open('https://wa.me/9779764598332', '_blank', 'width=600,height=600')"> <i class="fa-brands fa-whatsapp"></i> Share via WhatsApp
@@ -1920,34 +1919,165 @@
         }
 
         // ==================== AUTH - GOOGLE ONLY ====================
-        splashScreen.style.display = 'flex';
-        authSection.style.display = 'none';
-        dashboardSection.style.display = 'none';
-
         const googleProvider = new firebase.auth.GoogleAuthProvider();
         googleProvider.addScope('profile');
         googleProvider.addScope('email');
         googleProvider.setCustomParameters({ prompt: 'select_account' });
 
+        // authPending=true keeps splash visible while Firebase resolves on load
+        let authPending = true;
+        splashScreen.style.display = 'flex';
+        authSection.style.display = 'none';
+        dashboardSection.style.display = 'none';
+
+        const GOOGLE_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+
+        function showAuthScreen() {
+            authPending = false;
+            splashScreen.style.display = 'none';
+            dashboardSection.style.display = 'none';
+            authSection.style.opacity = '0';
+            authSection.style.display = 'flex';
+            requestAnimationFrame(() => {
+                authSection.style.transition = 'opacity 0.3s ease';
+                authSection.style.opacity = '1';
+            });
+            const btn = document.getElementById('googleSignInBtn');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = GOOGLE_SVG + ' Continue with Google';
+            }
+        }
+
+        function showDashboard() {
+            authPending = false;
+            authSection.style.display = 'none';
+            splashScreen.style.display = 'none';
+            dashboardSection.style.opacity = '0';
+            dashboardSection.style.display = 'block';
+            requestAnimationFrame(() => {
+                dashboardSection.style.transition = 'opacity 0.35s ease';
+                dashboardSection.style.opacity = '1';
+            });
+        }
+
+        // ── Step 1: handle redirect result first (returns from mobile redirect flow)
+        auth.getRedirectResult().then(result => {
+            // result.user will be picked up by onAuthStateChanged — nothing extra needed
+            authPending = false;
+        }).catch(err => {
+            authPending = false;
+            if (err.code && !['auth/credential-already-in-use'].includes(err.code)) {
+                console.warn('Redirect result error:', err.code);
+            }
+        });
+
+        // ── Step 2: listen for auth state (handles both popup and redirect results)
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                authPending = false;
+                try {
+                    currentUser = user;
+                    const snapshot = await db.ref('members/' + user.uid).once('value');
+
+                    // Always sync Google profile silently
+                    const googleUpdates = { lastActive: Date.now() };
+                    if (user.displayName) googleUpdates.name = user.displayName;
+                    if (user.email)       googleUpdates.email = user.email;
+                    if (user.photoURL)    googleUpdates.photoURL = user.photoURL;
+
+                    if (snapshot.exists()) {
+                        currentMemberData = snapshot.val();
+                        const needsUpdate = Object.entries(googleUpdates).some(
+                            ([k, v]) => v && currentMemberData[k] !== v
+                        );
+                        if (needsUpdate) {
+                            db.ref('members/' + user.uid).update(googleUpdates); // non-blocking
+                            Object.assign(currentMemberData, googleUpdates);
+                        }
+                    } else {
+                        await createMemberRecord(user);
+                        return; // createMemberRecord calls showDashboard
+                    }
+
+                    await loadBlockedUsers();
+                    await loadCustomRanks();
+                    updateUIWithMemberData();
+                    showDashboard();
+                    showSkeletons();
+                    loadDashboardData();
+                    showView('dashboard');
+                    if (isNewLogin) { showWelcomePopup(); isNewLogin = false; }
+                    showToast('Welcome back, ' + (currentMemberData.name?.split(' ')[0] || 'Member'));
+                } catch (err) {
+                    console.error('Auth load error:', err);
+                    showAuthScreen();
+                    showToast('Could not load your profile. Please try again.', 'error');
+                }
+            } else {
+                // No user — only show auth if we're not waiting for a redirect
+                if (!authPending) showAuthScreen();
+            }
+        });
+
+        // ── Step 3: Google button — popup first, redirect fallback for mobile
         const googleBtn = document.getElementById('googleSignInBtn');
         if (googleBtn) {
             googleBtn.addEventListener('click', async () => {
+                if (authPending) return;
+                authPending = true;
+
+                googleBtn.disabled = true;
+                googleBtn.innerHTML = '<span class="loading"></span> Signing in...';
+                splashScreen.style.display = 'flex';
+                authSection.style.display = 'none';
+
                 try {
-                    googleBtn.disabled = true;
-                    googleBtn.innerHTML = '<span class="loading"></span> Signing in…';
-                    splashScreen.style.display = 'flex';
                     await auth.signInWithPopup(googleProvider);
                     isNewLogin = true;
-                } catch (error) {
-                    splashScreen.style.display = 'none';
-                    googleBtn.disabled = false;
-                    googleBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google`;
-                    if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                    // onAuthStateChanged fires → handles everything
+                } catch (popupErr) {
+                    const dismissed = [
+                        'auth/popup-closed-by-user',
+                        'auth/cancelled-popup-request',
+                        'auth/user-cancelled'
+                    ];
+                    if (dismissed.includes(popupErr.code)) {
+                        // User cancelled — go back to auth screen cleanly
+                        authPending = false;
+                        showAuthScreen();
+                        return;
+                    }
+                    // Popup blocked (common in Android WebView, Instagram browser, etc.)
+                    // Fall back to redirect — page will reload after Google auth
+                    if (
+                        popupErr.code === 'auth/popup-blocked' ||
+                        popupErr.code === 'auth/operation-not-supported-in-this-environment'
+                    ) {
+                        try {
+                            await auth.signInWithRedirect(googleProvider);
+                            // Page reloads — splash stays visible
+                        } catch (redirectErr) {
+                            authPending = false;
+                            showAuthScreen();
+                            showToast('Sign in failed. Please try again.', 'error');
+                        }
+                    } else {
+                        authPending = false;
+                        showAuthScreen();
                         showToast('Sign in failed. Please try again.', 'error');
+                        console.error('Google auth error:', popupErr.code);
                     }
                 }
             });
         }
+
+        // ── Fallback: if nothing has resolved after 8s, show auth screen
+        setTimeout(() => {
+            if (splashScreen.style.display === 'flex' && !auth.currentUser && !authPending) {
+                showAuthScreen();
+            }
+        }, 8000);
 
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async () => {
@@ -1956,74 +2086,7 @@
             });
         }
 
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                try {
-                    currentUser = user;
-                    const snapshot = await db.ref('members/' + user.uid).once('value');
-
-                    // Always sync latest Google profile data
-                    const googleUpdates = {};
-                    if (user.displayName) googleUpdates.name = user.displayName;
-                    if (user.email) googleUpdates.email = user.email;
-                    if (user.photoURL) googleUpdates.photoURL = user.photoURL;
-                    googleUpdates.lastActive = Date.now();
-
-                    if (snapshot.exists()) {
-                        currentMemberData = snapshot.val();
-                        // Auto-update name/photo/email from Google if changed
-                        const needsUpdate = Object.entries(googleUpdates).some(
-                            ([k, v]) => v && currentMemberData[k] !== v
-                        );
-                        if (needsUpdate) {
-                            await db.ref('members/' + user.uid).update(googleUpdates);
-                            Object.assign(currentMemberData, googleUpdates);
-                        }
-                    } else {
-                        // New user - create record with Google data auto-filled
-                        await createMemberRecord(user);
-                        isNewLogin = true;
-                        return;
-                    }
-
-                    await loadBlockedUsers();
-                    await loadCustomRanks();
-
-                    const isAdmin = currentMemberData.role === 'CEO' || currentMemberData.role === 'Manager';
-                    // Admin panel is in separate app (L5A)
-
-                    updateUIWithMemberData();
-                    splashScreen.style.display = 'none';
-                    authSection.style.display = 'none';
-                    dashboardSection.style.display = 'block';
-                    showSkeletons();
-                    loadDashboardData();
-                    showView('dashboard');
-                    if (isNewLogin) { showWelcomePopup(); isNewLogin = false; }
-                    showToast('Welcome back, ' + (currentMemberData.name?.split(' ')[0] || 'Member'));
-                } catch (error) {
-                    console.error(error);
-                    splashScreen.style.display = 'none';
-                    authSection.style.display = 'flex';
-                    showToast('Could not load your profile. Please try again.', 'error');
-                }
-            } else {
-                splashScreen.style.display = 'none';
-                authSection.style.display = 'flex';
-                dashboardSection.style.display = 'none';
-            }
-        });
-
-        // Fallback: show auth if Firebase takes too long
-        setTimeout(() => {
-            if (splashScreen.style.display === 'flex' && !auth.currentUser) {
-                splashScreen.style.display = 'none';
-                authSection.style.display = 'flex';
-            }
-        }, 6000);
-
         async function createMemberRecord(user) {
-            // Auto-fill everything available from Google account
             const memberData = {
                 name: user.displayName || user.email?.split('@')[0] || 'New Member',
                 email: user.email || '',
@@ -2035,12 +2098,11 @@
                 joinDate: Date.now(),
                 lastActive: Date.now(),
                 paymentMethod: { type: 'cash', esewaId: '' },
-                // Auto-detect from Google
                 googleUid: user.uid,
                 signInProvider: 'google.com'
             };
             await db.ref('members/' + user.uid).set(memberData);
-            await db.ref('activity_logs').push({
+            db.ref('activity_logs').push({
                 action: 'New member registered via Google',
                 name: memberData.name,
                 email: user.email,
@@ -2048,9 +2110,7 @@
             });
             currentMemberData = memberData;
             updateUIWithMemberData();
-            splashScreen.style.display = 'none';
-            authSection.style.display = 'none';
-            dashboardSection.style.display = 'block';
+            showDashboard();
             showSkeletons();
             loadDashboardData();
             showView('dashboard');
