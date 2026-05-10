@@ -1961,11 +1961,11 @@
             return PATH_MAP[clean] || 'dashboard';
         }
 
-        // Handle browser back/forward
+        // Handle browser back/forward — only when user is authenticated
         window.addEventListener('popstate', e => {
-            if (!auth.currentUser) return; // ignore if not logged in
+            if (!currentUser) return;
             const view = e.state?.view || routeFromPath(location.pathname);
-            showViewInternal(view); // show without pushing new history entry
+            try { showViewInternal(view); } catch(err) { showViewInternal('dashboard'); }
         });
 
         // ==================== VIEW MANAGEMENT ====================
@@ -2008,11 +2008,11 @@
                     break;
                 case 'members':
                     document.getElementById('membersView').style.display = 'block';
-                    loadMembers();
+                    showTeamTab('members');
                     break;
                 case 'chat':
                     document.getElementById('chatView').style.display = 'block';
-                    if (typeof setupChat === 'function') setupChat();
+                    loadChatMessages();
                     break;
                 case 'ideas':
                     document.getElementById('ideasView').style.display = 'block';
@@ -2558,7 +2558,10 @@
             typingTimeoutId = setTimeout(() => { typingRef.set(false); }, 2000);
         }
 
+        let typingListenerActive = false;
         function setupTypingListener() {
+            if (typingListenerActive) return;
+            typingListenerActive = true;
             if (typingRef) { typingRef.off(); typingRef = null; }
             typingRef = db.ref('typing/' + currentUser.uid);
             db.ref('typing').on('value', (snapshot) => {
@@ -3394,6 +3397,7 @@
 
 
         // ==================== CHAT LOADING ====================
+        let chatInitialized = false;
         function loadChatMessages() {
             const messagesContainer = document.getElementById('chatMessages');
             messagesContainer.innerHTML = '';
@@ -3424,16 +3428,21 @@
                 lastMessage = msg;
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
-            const chatInput = document.getElementById('chatInput');
-            const sendBtn = document.getElementById('chatSendBtn');
-            chatInput.addEventListener('input', () => {
-                sendBtn.disabled = chatInput.value.trim() === '';
-                handleTyping();
-            });
-            sendBtn.onclick = sendChatMessage;
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !sendBtn.disabled) sendChatMessage();
-            });
+
+            // Only bind input/send listeners once
+            if (!chatInitialized) {
+                chatInitialized = true;
+                const chatInput = document.getElementById('chatInput');
+                const sendBtn   = document.getElementById('chatSendBtn');
+                chatInput.addEventListener('input', () => {
+                    sendBtn.disabled = chatInput.value.trim() === '';
+                    handleTyping();
+                });
+                sendBtn.onclick = sendChatMessage;
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !sendBtn.disabled) sendChatMessage();
+                });
+            }
             setupTypingListener();
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
@@ -3792,7 +3801,7 @@
                 showToast('Learning resource saved');
                 closeModal('learningModal');
                 loadAdminLearning();
-                if (learningView.style.display !== 'none') loadLearningResources();
+                if (document.getElementById('learningView')?.style.display !== 'none') loadLearningResources();
             } catch (error) { showToast('Error saving', 'error'); }
         };
 
@@ -3805,7 +3814,7 @@
                 await db.ref('learning/' + id).remove();
                 showToast('Resource deleted');
                 loadAdminLearning();
-                if (learningView.style.display !== 'none') loadLearningResources();
+                if (document.getElementById('learningView')?.style.display !== 'none') loadLearningResources();
             }
         };
 
@@ -3848,25 +3857,34 @@
 
         // ==================== REAL-TIME UPDATES ====================
         db.ref('members').on('child_changed', () => {
-            if (membersView.style.display !== 'none') loadMembers();
-            if (dashboardView.style.display !== 'none') { loadTeamMembers(); loadStats(); }
-            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
+            if (document.getElementById('membersView')?.style.display !== 'none') loadMembers();
+            if (document.getElementById('dashboardView')?.style.display !== 'none') { loadTeamMembers(); loadStats(); }
+            if (document.getElementById('teamLeaderboardTab')?.style.display !== 'none') loadLeaderboard();
         });
         db.ref('members').on('child_added', () => {
-            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
-            if (membersView.style.display !== 'none') loadMembers();
+            if (document.getElementById('teamLeaderboardTab')?.style.display !== 'none') loadLeaderboard();
+            if (document.getElementById('membersView')?.style.display !== 'none') loadMembers();
         });
         db.ref('members').on('child_removed', () => {
-            if (document.getElementById('teamLeaderboardTab').style.display !== 'none') loadLeaderboard();
-            if (membersView.style.display !== 'none') loadMembers();
+            if (document.getElementById('teamLeaderboardTab')?.style.display !== 'none') loadLeaderboard();
+            if (document.getElementById('membersView')?.style.display !== 'none') loadMembers();
         });
-        db.ref('notices').on('child_added', () => { if (noticesView.style.display !== 'none') loadNotices(); });
-        db.ref('task_submissions').on('child_added', () => { if (tasksView.style.display !== 'none') loadTasks(); });
-        db.ref('task_submissions').on('child_changed', () => { if (tasksView.style.display !== 'none') loadTasks(); });
+        // Debounced real-time reloads — prevent race conditions
+        let noticesReloadTimer = null;
+        function scheduleNoticesReload() {
+            clearTimeout(noticesReloadTimer);
+            noticesReloadTimer = setTimeout(() => {
+                if (document.getElementById('noticesView').style.display !== 'none') loadNotices();
+            }, 400);
+        }
+        db.ref('notices').on('child_added',   scheduleNoticesReload);
+        db.ref('notices').on('child_removed', scheduleNoticesReload);
+        db.ref('task_submissions').on('child_added', () => { if (document.getElementById('tasksView')?.style.display !== 'none') loadTasks(); });
+        db.ref('task_submissions').on('child_changed', () => { if (document.getElementById('tasksView')?.style.display !== 'none') loadTasks(); });
         db.ref('settings/blockedUsers').on('value', (snapshot) => { blockedUsers = new Set(snapshot.exists() ? snapshot.val() : []); });
         db.ref('settings/ranks').on('value', (snapshot) => { customRanks = snapshot.exists() ? snapshot.val() : {}; });
         db.ref('learning').on('value', () => {
-            if (learningView.style.display !== 'none') loadLearningResources();
+            if (document.getElementById('learningView')?.style.display !== 'none') loadLearningResources();
 
         });
 
