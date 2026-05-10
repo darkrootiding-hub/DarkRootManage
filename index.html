@@ -1210,34 +1210,125 @@
         }
 
         /* ─── LEARNING CARDS ─── */
-        .learning-grid { display: flex; flex-direction: column; gap: var(--s3); }
+        /* ══════════════════════════════════
+           LEARNING CARDS — REDESIGNED
+           ══════════════════════════════════ */
+        .learning-grid { display: flex; flex-direction: column; gap: var(--s4); }
+
         .learning-card {
-            background: var(--surface-1); border: 1px solid var(--border);
-            border-radius: var(--r-lg); overflow: hidden;
-            transition: var(--t-fast);
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xl);
+            overflow: hidden;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
         }
-        .learning-card:active { border-color: var(--accent); }
-        .learning-thumbnail {
-            width: 100%; height: 150px;
-            background: var(--surface-3); position: relative; overflow: hidden;
+        .learning-card:hover {
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
         }
-        .learning-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
-        .learning-thumbnail i {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%,-50%);
-            font-size: 2.8rem; color: rgba(255,255,255,0.7);
+        .learning-card:active { transform: scale(0.985); }
+
+        /* Thumbnail / play area */
+        .lc-thumb {
+            position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */
+            background: #0a0a12; overflow: hidden;
         }
-        .learning-body { padding: var(--s4); }
-        .learning-title { font-size: 1rem; font-weight: 700; color: var(--text-1); margin-bottom: var(--s2); }
-        .learning-description { font-size: 0.82rem; color: var(--text-2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .learning-meta { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: 0.72rem; color: var(--text-3); }
-        .learning-type {
-            background: var(--accent-dim); color: var(--accent);
-            padding: 2px 8px; border-radius: var(--r-full); font-weight: 700; font-size: 0.65rem; text-transform: uppercase;
+        .lc-thumb img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.35s ease, opacity 0.2s ease;
         }
-        .learning-link a { color: var(--accent); text-decoration: none; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: var(--s3); }
-        .learning-video { width: 100%; height: 180px; border: none; border-radius: var(--r-md); }
+        .learning-card:hover .lc-thumb img { transform: scale(1.04); opacity: 0.85; }
+
+        /* gradient scrim */
+        .lc-thumb::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        /* play button */
+        .lc-play {
+            position: absolute; inset: 0; z-index: 2;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .lc-play-btn {
+            width: 54px; height: 54px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .learning-card:hover .lc-play-btn {
+            transform: scale(1.1);
+            background: white;
+        }
+        .lc-play-btn i {
+            color: #111; font-size: 1.2rem;
+            margin-left: 4px; /* optical center for play triangle */
+        }
+
+        /* type badge on thumb */
+        .lc-type-badge {
+            position: absolute; top: 10px; left: 10px; z-index: 3;
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px; padding: 4px 10px;
+            font-size: 0.62rem; font-weight: 700;
+            color: #fff; text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .lc-type-badge.video   { border-color: rgba(239,68,68,0.4);  color: #fca5a5; }
+        .lc-type-badge.article { border-color: rgba(59,130,246,0.4); color: #93c5fd; }
+        .lc-type-badge.course  { border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
+
+        /* icon placeholder when no thumbnail */
+        .lc-thumb-icon {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--surface-3), var(--surface-4));
+        }
+        .lc-thumb-icon i { font-size: 2.8rem; color: var(--text-3); }
+
+        /* card body */
+        .lc-body { padding: var(--s4) var(--s4) var(--s5); }
+        .lc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.97rem; font-weight: 700;
+            color: var(--text-1); line-height: 1.35;
+            margin-bottom: var(--s2);
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .lc-desc {
+            font-size: 0.78rem; color: var(--text-2); line-height: 1.55;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            margin-bottom: var(--s3);
+        }
+        .lc-footer {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .lc-meta {
+            display: flex; align-items: center; gap: var(--s3);
+            font-size: 0.68rem; color: var(--text-3);
+        }
+        .lc-meta i { font-size: 0.65rem; }
+        .lc-open-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--accent-dim); border: 1px solid var(--border-accent);
+            border-radius: var(--r-full); padding: 5px 13px;
+            font-size: 0.72rem; font-weight: 700; color: var(--accent);
+            text-decoration: none; transition: all 0.15s ease;
+            cursor: pointer;
+        }
+        .lc-open-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .lc-open-btn i { font-size: 0.65rem; }
+
         .admin-learning-actions { display: flex; gap: var(--s2); margin-top: var(--s3); }
+
 
         /* ─── RANK ADMIN ─── */
         .rank-save-btn, .rank-reset-btn {
@@ -3894,7 +3985,7 @@
             });
         }
 
-        // Helper function to extract YouTube video ID from URL
+        // ==================== LEARNING MANAGEMENT ====================
         function getYouTubeVideoId(url) {
             if (!url) return null;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -3902,55 +3993,84 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // ==================== LEARNING MANAGEMENT (FIXED: now shows all resources) ====================
+        function getYouTubeThumbnail(videoId) {
+            return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        }
+
         async function loadLearningResources() {
             const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
             const resources = [];
             snapshot.forEach(child => {
                 const val = child.val();
-                // Ensure each resource has a valid URL, otherwise skip
-                if (val && val.url) {
-                    resources.push({ id: child.key, ...val });
-                } else {
-                    console.warn('Skipping learning resource without URL:', child.key);
-                }
+                if (val && val.url) resources.push({ id: child.key, ...val });
             });
             resources.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
             const container = document.getElementById('learningList');
             if (!container) return;
             container.innerHTML = '';
+
             if (resources.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: var(--s8); color: var(--text-3);">No learning resources yet.</div>';
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i>No learning resources yet.</div>';
                 return;
             }
+
             resources.forEach(res => {
-                const typeIcon = res.type === 'video' ? 'fa-video' : (res.type === 'article' ? 'fa-file-alt' : 'fa-layer-group');
-                let mediaHtml = '';
-                if (res.type === 'video') {
-                    const videoId = getYouTubeVideoId(res.url);
-                    if (videoId) {
-                        // Embedded YouTube player
-                        mediaHtml = `<iframe class="learning-video" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                    } else {
-                        // Fallback to link
-                        mediaHtml = `<div class="learning-thumbnail"><i class="fas ${typeIcon}"></i></div><div class="learning-link"><a href="${res.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Video</a></div>`;
-                    }
+                const isVideo = res.type === 'video';
+                const isArticle = res.type === 'article';
+                const videoId = isVideo ? getYouTubeVideoId(res.url) : null;
+
+                // Determine thumbnail
+                let thumbSrc = res.thumbnail || '';
+                if (!thumbSrc && videoId) thumbSrc = getYouTubeThumbnail(videoId);
+
+                // Type badge
+                const typeLabel = (res.type || 'resource').toUpperCase();
+                const typeClass = res.type || 'resource';
+                const typeIcon = isVideo ? 'fa-play' : (isArticle ? 'fa-file-alt' : 'fa-layer-group');
+
+                // Thumbnail HTML
+                let thumbContent = '';
+                if (thumbSrc) {
+                    thumbContent = `<img src="${thumbSrc}" alt="${escapeHtml(res.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="lc-thumb-icon" style="display:none;"><i class="fas ${typeIcon}"></i></div>`;
                 } else {
-                    // Article or course: show thumbnail and link
-                    mediaHtml = `
-                        <div class="learning-thumbnail"> ${res.thumbnail ? `<img src="${res.thumbnail}" alt="${res.title}">` : `<i class="fas ${typeIcon}"></i>`}
-                        </div> <div class="learning-link"> <a href="${res.url}" target="_blank"><i class="fas fa-external-link-alt"></i> Open Resource</a> </div> `;
+                    thumbContent = `<div class="lc-thumb-icon"><i class="fas ${typeIcon}"></i></div>`;
                 }
+
+                // Play button (always shown for video, arrow for others)
+                const playIconClass = isVideo ? 'fa-play' : 'fa-arrow-right';
+                const playHtml = `<div class="lc-play"><div class="lc-play-btn"><i class="fas ${playIconClass}"></i></div></div>`;
+
+                const dateStr = res.createdAt ? moment(res.createdAt).format('MMM DD') : '';
+
                 const card = document.createElement('div');
                 card.className = 'learning-card';
+                card.onclick = () => window.open(res.url, '_blank');
                 card.innerHTML = `
-                    ${mediaHtml}
-                    <div class="learning-title">${res.title}</div> <div class="learning-description">${res.description || ''}</div> <div class="learning-meta"> <span class="learning-type">${res.type || 'resource'}</span> <span><i class="far fa-clock"></i> ${formatDate(res.createdAt)}</span> </div> `;
+                    <div class="lc-thumb">
+                        ${thumbContent}
+                        <span class="lc-type-badge ${typeClass}"><i class="fas ${typeIcon}"></i> ${typeLabel}</span>
+                        ${playHtml}
+                    </div>
+                    <div class="lc-body">
+                        <div class="lc-title">${escapeHtml(res.title)}</div>
+                        ${res.description ? `<div class="lc-desc">${escapeHtml(res.description)}</div>` : ''}
+                        <div class="lc-footer">
+                            <div class="lc-meta">
+                                ${dateStr ? `<span><i class="far fa-calendar"></i> ${dateStr}</span>` : ''}
+                            </div>
+                            <span class="lc-open-btn" onclick="event.stopPropagation();window.open('${res.url}','_blank')">
+                                Open <i class="fas fa-external-link-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                `;
                 container.appendChild(card);
             });
         }
 
-        async function loadAdminLearning() {
+                async function loadAdminLearning() {
             const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
             const resources = [];
             snapshot.forEach(child => {
