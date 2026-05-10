@@ -2178,6 +2178,126 @@
 
 
 
+
+        // ==================== VIEW MANAGEMENT ====================
+        const ALL_VIEW_IDS = [
+            'dashboardView', 'membersView', 'ideasView', 'chatView',
+            'noticesView', 'profileView', 'analyticsView', 'meetingsView',
+            'tasksView', 'aboutView', 'learningView',
+            'checkinView', 'pollsView', 'mySubmissionsView', 'notesView', 'activityFeedView'
+        ];
+
+        // Internal: show view without touching history
+        function showViewInternal(viewName) {
+            ALL_VIEW_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+
+            // Update nav active state
+            document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll(`[data-view="${viewName}"]`).forEach(item => {
+                item.classList.add('active');
+            });
+
+            // Close sidebar if open
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('sidebarOverlay');
+            if (sb && sb.classList.contains('open')) {
+                sb.classList.remove('open');
+                if (ov) ov.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            // Update page title
+            const titles = {
+                dashboard: 'Home', members: 'Team', chat: 'Chat',
+                ideas: 'Ideas', notices: 'Announcements', profile: 'Profile',
+                analytics: 'Analytics', meetings: 'Meetings', tasks: 'Tasks',
+                learning: 'Learning', about: 'About', checkin: 'Check-in',
+                polls: 'Polls', mySubmissions: 'My Submissions',
+                notes: 'Notes', activityFeed: 'Team Activity',
+            };
+            document.title = (titles[viewName] || 'DarkRoot') + ' · DarkRoot Hub';
+
+            // Load the requested view
+            switch (viewName) {
+                case 'dashboard':
+                    document.getElementById('dashboardView').style.display = 'block';
+                    loadDashboardData();
+                    break;
+                case 'members':
+                    document.getElementById('membersView').style.display = 'block';
+                    showTeamTab('members');
+                    break;
+                case 'chat':
+                    document.getElementById('chatView').style.display = 'block';
+                    loadChatMessages();
+                    break;
+                case 'ideas':
+                    document.getElementById('ideasView').style.display = 'block';
+                    setupIdeasListener();
+                    break;
+                case 'notices':
+                    document.getElementById('noticesView').style.display = 'block';
+                    loadNotices();
+                    break;
+                case 'profile':
+                    document.getElementById('profileView').style.display = 'block';
+                    break;
+                case 'analytics':
+                    document.getElementById('analyticsView').style.display = 'block';
+                    if (typeof initAnalyticsChart === 'function') initAnalyticsChart();
+                    break;
+                case 'meetings':
+                    document.getElementById('meetingsView').style.display = 'block';
+                    loadMeetings();
+                    break;
+                case 'tasks':
+                    document.getElementById('tasksView').style.display = 'block';
+                    loadTasks();
+                    break;
+                case 'learning':
+                    document.getElementById('learningView').style.display = 'block';
+                    loadLearningResources();
+                    break;
+                case 'about':
+                    document.getElementById('aboutView').style.display = 'block';
+                    break;
+                case 'checkin':
+                    document.getElementById('checkinView').style.display = 'block';
+                    initCheckin();
+                    break;
+                case 'polls':
+                    document.getElementById('pollsView').style.display = 'block';
+                    loadPolls();
+                    break;
+                case 'mySubmissions':
+                    document.getElementById('mySubmissionsView').style.display = 'block';
+                    loadMySubmissions('all');
+                    break;
+                case 'notes':
+                    document.getElementById('notesView').style.display = 'block';
+                    closeNoteEditor();
+                    loadNotesList();
+                    break;
+                case 'activityFeed':
+                    document.getElementById('activityFeedView').style.display = 'block';
+                    loadActivityFeed();
+                    break;
+                default:
+                    document.getElementById('dashboardView').style.display = 'block';
+                    loadDashboardData();
+            }
+        }
+
+        // Public: show view
+        function showView(viewName) {
+            showViewInternal(viewName);
+        }
+
         // Team tabs
         function showTeamTab(tabName) {
             const membersTab = document.getElementById('teamMembersTab');
