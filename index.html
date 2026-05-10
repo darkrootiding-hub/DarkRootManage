@@ -64,6 +64,62 @@
             --t-slow: 400ms cubic-bezier(0.34,1.56,0.64,1);
         }
 
+        /* ─── LIGHT THEME ─── */
+        [data-theme="light"] {
+            --bg: #f0f0f8;
+            --surface-0: #f8f8ff;
+            --surface-1: #ffffff;
+            --surface-2: #f0f0f8;
+            --surface-3: #e4e4f0;
+            --surface-4: #d4d4e8;
+            --border: rgba(0,0,0,0.08);
+            --border-accent: rgba(99,102,241,0.3);
+            --text-1: #1a1a2e;
+            --text-2: #4a4a6a;
+            --text-3: #8888aa;
+            --text-inv: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --accent-dim: rgba(99,102,241,0.1);
+            --accent-glow: rgba(99,102,241,0.2);
+            --success-dim: rgba(16,185,129,0.1);
+            --warning-dim: rgba(245,158,11,0.1);
+            --danger-dim: rgba(239,68,68,0.1);
+        }
+        [data-theme="light"] .header {
+            background: rgba(240,240,248,0.92);
+        }
+        [data-theme="light"] .bottom-nav {
+            background: rgba(255,255,255,0.95);
+        }
+        [data-theme="light"] .sidebar {
+            background: var(--surface-1);
+            border-right: 1px solid var(--border);
+        }
+        [data-theme="light"] .chat-container,
+        [data-theme="light"] .chat-input-area,
+        [data-theme="light"] .chat-header-bar {
+            background: #f8f8ff;
+        }
+        [data-theme="light"] .message-bubble {
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.08);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        [data-theme="light"] .message-own .message-bubble {
+            background: linear-gradient(135deg, #5b5ef4, #7c5cf6);
+        }
+        [data-theme="light"] .code-editor-area {
+            background: #1e1e2e !important;
+        }
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--surface-3); }
+
+        /* ─── THEME TRANSITION ─── */
+        *, *::before, *::after { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease; }
+        /* But NOT layout/position transitions — those should stay instant */
+        .btn, .nav-item, .team-card, .modal { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease, transform var(--t-fast), box-shadow var(--t-fast); }
+
         body {
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
             background: var(--bg);
@@ -370,8 +426,9 @@
 
         /* ─── MAIN CONTENT ─── */
         .main-content { padding: var(--s4); }
-        /* Chat view gets no extra padding to maximize space */
+        /* Chat and Studio view get no extra padding to maximize space */
         #chatView { margin: -16px; }
+        #studioView { margin: -16px; overflow: hidden; }
 
         /* ─── SECTION HEADER ─── */
         .section-header {
@@ -2108,6 +2165,295 @@
         }
         .ai-header i { color: var(--accent); }
 
+        /* ═══════════════════════════════════
+           CODE STUDIO
+           ═══════════════════════════════════ */
+        .studio-layout {
+            display: flex; flex-direction: column;
+            height: calc(100vh - 72px);
+            margin: -16px;
+            overflow: hidden;
+        }
+        .studio-topbar {
+            display: flex; align-items: center; gap: var(--s2);
+            padding: 10px 14px;
+            background: var(--surface-1);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0; z-index: 10;
+        }
+        .studio-project-name {
+            flex: 1; font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700; font-size: 0.92rem; color: var(--text-1);
+            background: none; border: none; outline: none;
+            -webkit-user-select: text; user-select: text;
+        }
+        .studio-project-name::placeholder { color: var(--text-3); }
+        .studio-btn {
+            height: 34px; padding: 0 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            background: var(--surface-2); color: var(--text-2);
+            font-family: inherit; font-size: 0.78rem; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 5px;
+            transition: var(--t-fast); white-space: nowrap;
+        }
+        .studio-btn:active { background: var(--surface-3); }
+        .studio-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white; border-color: transparent;
+        }
+        .studio-btn.run-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white; border-color: transparent;
+        }
+        .studio-btn.danger-btn {
+            background: var(--danger-dim); color: var(--danger); border-color: var(--danger);
+        }
+        .studio-tabs {
+            display: flex; background: var(--surface-0);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .studio-tab {
+            padding: 8px 16px;
+            font-size: 0.75rem; font-weight: 700;
+            color: var(--text-3); cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--t-fast); letter-spacing: 0.05em;
+            text-transform: uppercase; user-select: none;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .studio-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .studio-tab .tab-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        .studio-tab:nth-child(1) .tab-dot { background: #f97316; }
+        .studio-tab:nth-child(2) .tab-dot { background: #3b82f6; }
+        .studio-tab:nth-child(3) .tab-dot { background: #f59e0b; }
+        .studio-editor-wrap {
+            flex: 1; position: relative; overflow: hidden;
+        }
+        .studio-editor-pane {
+            display: none; height: 100%;
+            flex-direction: column;
+        }
+        .studio-editor-pane.active { display: flex; }
+        .studio-editor-area {
+            flex: 1; resize: none; border: none; outline: none;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px; line-height: 1.65;
+            padding: 16px; tab-size: 2;
+            background: #1a1a2e; color: #e2e8f0;
+            -webkit-user-select: text; user-select: text;
+            overflow-y: auto; overflow-x: auto;
+            white-space: pre; word-break: normal;
+        }
+        [data-theme="light"] .studio-editor-area {
+            background: #1e1e2e; color: #e2e8f0;
+        }
+        .studio-preview-pane {
+            display: none; height: 100%; flex-direction: column;
+        }
+        .studio-preview-pane.active { display: flex; }
+        .studio-preview-bar {
+            display: flex; align-items: center; gap: var(--s2);
+            padding: 6px 14px;
+            background: var(--surface-1);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.72rem; color: var(--text-3);
+            flex-shrink: 0;
+        }
+        .studio-preview-bar .preview-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--success); animation: livePulse 2s infinite;
+        }
+        @keyframes livePulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .studio-iframe {
+            flex: 1; border: none; background: #fff;
+        }
+        .studio-projects-list {
+            padding: 16px; overflow-y: auto;
+            flex: 1;
+        }
+        .studio-project-card {
+            background: var(--surface-1); border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: 14px 16px;
+            margin-bottom: 10px; cursor: pointer;
+            transition: var(--t-fast);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .studio-project-card:active { transform: scale(0.98); border-color: var(--accent); }
+        .studio-project-icon {
+            width: 44px; height: 44px; border-radius: var(--r-md);
+            background: linear-gradient(135deg, var(--accent-dim), rgba(139,92,246,0.1));
+            border: 1px solid var(--border-accent);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+        }
+        .studio-project-info { flex: 1; min-width: 0; }
+        .studio-project-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700; font-size: 0.92rem; color: var(--text-1);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .studio-project-meta {
+            font-size: 0.7rem; color: var(--text-3); margin-top: 3px;
+        }
+        .studio-project-actions { display: flex; gap: 6px; }
+        .studio-action-btn {
+            width: 32px; height: 32px; border: none; border-radius: var(--r-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; cursor: pointer; transition: var(--t-fast);
+        }
+        .studio-action-btn.edit { background: var(--accent-dim); color: var(--accent); }
+        .studio-action-btn.delete { background: var(--danger-dim); color: var(--danger); }
+        .studio-action-btn:active { transform: scale(0.9); }
+        .studio-empty {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 48px 24px; text-align: center;
+            color: var(--text-3);
+        }
+        .studio-empty i { font-size: 3rem; margin-bottom: 16px; color: var(--accent); opacity: 0.4; }
+        .studio-empty h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-2); margin-bottom: 8px; }
+        .studio-empty p { font-size: 0.82rem; line-height: 1.6; }
+        #studioView { padding: 0 !important; }
+
+        /* ── line numbers hint ── */
+        .studio-editor-area::selection { background: rgba(99,102,241,0.35); }
+
+        /* ═══════════════════════════════════
+           PROFILE — REDESIGN
+           ═══════════════════════════════════ */
+        .profile-cover {
+            height: 110px; border-radius: var(--r-xl) var(--r-xl) 0 0;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            position: relative; overflow: hidden;
+        }
+        .profile-cover::after {
+            content: ''; position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .profile-card-wrap {
+            background: var(--surface-1); border: 1px solid var(--border);
+            border-radius: var(--r-xl); overflow: hidden;
+            margin-bottom: var(--s4);
+        }
+        .profile-identity {
+            padding: 0 var(--s5) var(--s5);
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+        }
+        .profile-avatar-ring {
+            width: 88px; height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            padding: 3px;
+            margin-top: -44px; margin-bottom: var(--s3);
+            box-shadow: 0 0 0 4px var(--surface-1), var(--shadow-accent);
+            position: relative; cursor: pointer;
+        }
+        .profile-avatar-inner {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: var(--surface-2);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+        }
+        .profile-avatar-inner img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-avatar-inner span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem; font-weight: 800; color: white;
+        }
+        .profile-avatar-overlay {
+            position: absolute; inset: 0; border-radius: 50%;
+            background: rgba(0,0,0,0.45);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .profile-avatar-ring:active .profile-avatar-overlay { opacity: 1; }
+        .profile-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem; font-weight: 800; color: var(--text-1);
+            margin-bottom: 4px;
+        }
+        .profile-role-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 12px; border-radius: var(--r-full);
+            font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em;
+            text-transform: uppercase; margin-bottom: var(--s3);
+        }
+        .profile-bio-text {
+            font-size: 0.82rem; color: var(--text-2); line-height: 1.6;
+            margin-bottom: var(--s3);
+        }
+        .profile-stats-row {
+            display: flex; gap: var(--s2); width: 100%;
+            margin-bottom: var(--s4);
+        }
+        .profile-stat-box {
+            flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-md); padding: var(--s3) var(--s2);
+            text-align: center;
+        }
+        .profile-stat-box .val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem; font-weight: 800; color: var(--accent);
+        }
+        .profile-stat-box .lbl {
+            font-size: 0.58rem; font-weight: 700; color: var(--text-3);
+            text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px;
+        }
+
+        /* Theme toggle in profile */
+        .theme-toggle-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: var(--s3) var(--s4);
+            border-bottom: 1px solid var(--border);
+        }
+        .theme-toggle-label {
+            display: flex; align-items: center; gap: var(--s3);
+            font-size: 0.85rem; font-weight: 600; color: var(--text-2);
+        }
+        .theme-toggle-label i { color: var(--accent); width: 16px; text-align: center; }
+        .toggle-switch {
+            position: relative; width: 46px; height: 26px; cursor: pointer;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute; inset: 0;
+            background: var(--surface-3); border-radius: 13px;
+            border: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+        .toggle-thumb {
+            position: absolute; top: 3px; left: 3px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem;
+        }
+        .toggle-switch input:checked ~ .toggle-track { background: var(--accent); border-color: var(--accent); }
+        .toggle-switch input:checked ~ .toggle-thumb { transform: translateX(20px); }
+
+        /* Profile action list */
+        .profile-action-list { padding: var(--s3) 0; }
+        .profile-action-item {
+            display: flex; align-items: center; gap: var(--s3);
+            padding: var(--s3) var(--s4); cursor: pointer;
+            transition: background var(--t-fast);
+        }
+        .profile-action-item:active { background: var(--surface-2); }
+        .profile-action-icon {
+            width: 36px; height: 36px; border-radius: var(--r-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; flex-shrink: 0;
+        }
+        .profile-action-text { flex: 1; }
+        .profile-action-text .title { font-size: 0.88rem; font-weight: 600; color: var(--text-1); }
+        .profile-action-text .subtitle { font-size: 0.7rem; color: var(--text-3); margin-top: 1px; }
+        .profile-action-arrow { color: var(--text-3); font-size: 0.75rem; }
+
     </style>
 </head>
 <body> <!-- Splash Screen --> <div class="splash-screen" id="splashScreen"> <div class="splash-logo"> <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
@@ -2123,8 +2469,74 @@
                 <div class="nav-item" data-view="notes"><i class="fas fa-sticky-note"></i><span>Notes</span></div>
                 <div class="nav-section-label" style="margin-top:8px;">Community</div>
                 <div class="nav-item" data-view="polls"><i class="fas fa-chart-bar"></i><span>Polls</span></div>
-                <div class="nav-item" data-view="activityFeed"><i class="fas fa-bolt"></i><span>Activity</span></div> </nav> </div> <!-- Main Content --> <main class="main-content" id="mainContent"> <!-- Dashboard View --> <div id="dashboardView"> <div class="stats-grid" id="statsGrid"></div> <div class="ai-panel" id="aiPanel"> <div class="ai-header"> <i class="fas fa-robot"></i> <h3>AI Insights</h3> </div> <div id="aiInsights"></div> </div> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> <span class="view-all" onclick="showView('members')">View All</span> </div> <div class="team-grid" id="teamGrid"></div> </div> <!-- Members View --> <div id="membersView" style="display:none;"> <div id="teamMembersTab"> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> </div> <div class="member-tab-bar" id="memberRoleFilterPills"> <div class="member-tab-pill active" data-role="all">All</div> <div class="member-tab-pill" data-role="CEO">CEO</div> <div class="member-tab-pill" data-role="Manager">Manager</div> <div class="member-tab-pill" data-role="Senior">Senior</div> <div class="member-tab-pill" data-role="Member">Member</div> </div> <div class="team-grid" id="membersGrid"></div> </div> <div id="teamLeaderboardTab" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-trophy"></i> Leaderboard</h2> <span class="badge badge-primary">All Members</span> </div> <div id="leaderboardList" class="leaderboard-list"></div> </div> </div> <!-- Chat View --> <div id="chatView" style="display:none;"> <div class="chat-container" style="position:relative;"> <div class="chat-header-bar"> <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.92rem;color:var(--text-1);display:flex;align-items:center;gap:8px;"><i class="fas fa-comments" style="color:var(--accent);font-size:0.85rem;"></i>Team Chat</span> <span class="badge badge-success" style="display:flex;align-items:center;gap:4px;font-size:0.6rem;"><i class="fas fa-circle" style="font-size:0.4rem;"></i>Live</span> </div> <div class="chat-messages" id="chatMessages"></div> <div class="typing-indicator" id="typingIndicator"> <div class="typing-avatars" id="typingAvatars"></div> <span id="typingText"></span> <div class="typing-dots"><div></div><div></div><div></div></div> </div> <div class="chat-input-area"> <input type="file" id="chatFileInput" accept="image/*" style="display:none;" onchange="handleChatFileSelect(event)"> <button class="chat-attach-btn" onclick="document.getElementById('chatFileInput').click()" id="chatAttachBtn"> <i class="fas fa-paperclip"></i> </button> <input type="text" class="chat-input" id="chatInput" placeholder="Type a message…" autocomplete="off" oninput="handleTyping()"> <button class="chat-send-btn" id="chatSendBtn" disabled><i class="fas fa-paper-plane"></i></button> </div> <button class="scroll-bottom-btn" id="scrollBottomBtn"><i class="fas fa-chevron-down"></i></button> </div> </div> <!-- Ideas View --> <div id="ideasView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-lightbulb"></i> Ideas</h2> </div> <div class="card" style="margin-bottom:var(--s4);"> <h3 style="font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:var(--s3);">Share an Idea</h3> <textarea id="ideaInput" class="chat-input" style="height:90px;padding:var(--s3);resize:none;line-height:1.5;width:100%;" placeholder="What's your idea?"></textarea> <button class="btn btn-primary" onclick="postIdea()" style="margin-top:var(--s3);"> <i class="fas fa-lightbulb"></i> Post Idea
-                    </button> </div> <div id="ideasList"></div> </div> <!-- Notices View --> <div id="noticesView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-bullhorn"></i> Announcements</h2> </div> <div id="noticesList"></div> </div> <!-- Profile View --> <div id="profileView" style="display:none;"> <div class="profile-hero"> <div class="profile-avatar-wrap" onclick="openImageUploadModal()" style="position:relative;"> <span id="profileAvatarText" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;height:100%;width:100%;"></span> <img id="profileAvatarImg" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"> <div class="avatar-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.2s;"><i class="fas fa-camera" style="color:white;font-size:1.3rem;"></i></div> </div> <h3 id="profileName" style="margin-bottom:6px;margin-top:4px;">Member</h3> <span class="badge badge-primary" id="profileRole">Member</span> </div> <div class="profile-info-grid"> <div class="info-row"><span class="label"><i class="fas fa-envelope" style="color:var(--accent);margin-right:6px;"></i>Email</span><span class="value" id="profileEmail">—</span></div> <div class="info-row"><span class="label"><i class="fas fa-star" style="color:var(--warning);margin-right:6px;"></i>Points</span><span class="value" style="color:var(--accent);" id="profilePoints">0</span></div> <div class="info-row"><span class="label"><i class="fas fa-wallet" style="color:var(--success);margin-right:6px;"></i>Salary</span><span class="value" id="profileSalary">$0</span></div> <div class="info-row"><span class="label"><i class="fas fa-calendar" style="color:var(--text-3);margin-right:6px;"></i>Joined</span><span class="value" id="profileJoinDate">—</span></div> <div class="info-row"><span class="label"><i class="fas fa-circle" style="color:var(--success);margin-right:6px;font-size:0.5rem;"></i>Status</span><span class="value" style="color:var(--success);" id="profileStatus">Active</span></div> <div class="info-row"><span class="label"><i class="fas fa-credit-card" style="color:var(--text-3);margin-right:6px;"></i>Payment</span><span class="value" id="paymentMethodDisplay">Cash</span></div> </div> <div style="display:flex;flex-direction:column;gap:var(--s3);"> <button class="btn btn-outline" onclick="openEditNameModal()"><i class="fas fa-pen"></i> Edit Name</button> <button class="btn btn-outline" onclick="openPaymentModal()"><i class="fas fa-credit-card"></i> Payment Method</button> <button class="btn btn-outline" onclick="showView('analytics')"><i class="fas fa-chart-bar"></i> My Analytics</button> <button class="btn btn-outline" id="logoutBtn" style="border-color:var(--danger);color:var(--danger);"><i class="fas fa-sign-out-alt"></i> Sign Out</button> </div> </div> <!-- Analytics View --> <div id="analyticsView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-chart-bar"></i> Analytics</h2></div> <div class="chart-container"><canvas id="analyticsChart"></canvas></div> <div class="stats-grid" style="margin-top:var(--s4);"> <div class="stat-card"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-value">1.2k</div><div class="stat-label">Views</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-download"></i></div><div class="stat-value">340</div><div class="stat-label">Downloads</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-share"></i></div><div class="stat-value">89</div><div class="stat-label">Shares</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">4.5h</div><div class="stat-label">Avg Time</div></div> </div> </div> <!-- Meetings View --> <div id="meetingsView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-handshake"></i> Meetings</h2> </div> <div id="meetingsList"></div> </div> <!-- Tasks View --> <div id="tasksView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-check-square"></i> Tasks</h2> </div> <div id="tasksList"></div> </div> <!-- Learning View --> <div id="learningView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-graduation-cap"></i> Learning</h2></div> <div id="learningList" class="learning-grid"></div> </div> <!-- About View --> <div id="aboutView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-info-circle"></i> About DarkRoot</h2></div> <div class="about-card"> <h3><i class="fas fa-users" style="color:var(--accent);margin-right:8px;"></i>Our Team</h3> <p>DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. Our primary goal is to build a strong, disciplined, and high-performance team environment.</p> </div> <div class="about-card"> <h3><i class="fas fa-rocket" style="color:var(--accent);margin-right:8px;"></i>Development & Skill-Building Phase</h3> <p>All members are required to complete tasks in the <strong>Task Section</strong>. Performance will be strictly evaluated based on task completion, consistency, and discipline.</p> <p>Starting from <strong>March 19</strong>, DarkRoot uses a performance-based system where <strong>1 DarkRoot Point = 0.5 NPR</strong>. Points are earned only after successful completion of assigned tasks.</p> <p>Salary distribution will be implemented after one month based on total points earned, performance consistency, and overall contribution.</p> <p style="font-weight:700;color:var(--danger);">No task completion = No points = No salary.</p> </div> </div> 
+                <div class="nav-item" data-view="activityFeed"><i class="fas fa-bolt"></i><span>Activity</span></div>
+                <div class="nav-section-label" style="margin-top:8px;">Create</div>
+                <div class="nav-item" data-view="studio"><i class="fas fa-code"></i><span>Code Studio</span></div> </nav> </div> <!-- Main Content --> <main class="main-content" id="mainContent"> <!-- Dashboard View --> <div id="dashboardView"> <div class="stats-grid" id="statsGrid"></div> <div class="ai-panel" id="aiPanel"> <div class="ai-header"> <i class="fas fa-robot"></i> <h3>AI Insights</h3> </div> <div id="aiInsights"></div> </div> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> <span class="view-all" onclick="showView('members')">View All</span> </div> <div class="team-grid" id="teamGrid"></div> </div> <!-- Members View --> <div id="membersView" style="display:none;"> <div id="teamMembersTab"> <div class="section-header"> <h2><i class="fas fa-users"></i> Team</h2> </div> <div class="member-tab-bar" id="memberRoleFilterPills"> <div class="member-tab-pill active" data-role="all">All</div> <div class="member-tab-pill" data-role="CEO">CEO</div> <div class="member-tab-pill" data-role="Manager">Manager</div> <div class="member-tab-pill" data-role="Senior">Senior</div> <div class="member-tab-pill" data-role="Member">Member</div> </div> <div class="team-grid" id="membersGrid"></div> </div> <div id="teamLeaderboardTab" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-trophy"></i> Leaderboard</h2> <span class="badge badge-primary">All Members</span> </div> <div id="leaderboardList" class="leaderboard-list"></div> </div> </div> <!-- Chat View --> <div id="chatView" style="display:none;"> <div class="chat-container" style="position:relative;"> <div class="chat-header-bar"> <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.92rem;color:var(--text-1);display:flex;align-items:center;gap:8px;"><i class="fas fa-comments" style="color:var(--accent);font-size:0.85rem;"></i>Team Chat</span> <span class="badge badge-success" style="display:flex;align-items:center;gap:4px;font-size:0.6rem;"><i class="fas fa-circle" style="font-size:0.4rem;"></i>Live</span> </div> <div class="chat-messages" id="chatMessages"></div> <div class="typing-indicator" id="typingIndicator"> <div class="typing-avatars" id="typingAvatars"></div> <span id="typingText"></span> <div class="typing-dots"><div></div><div></div><div></div></div> </div> <div class="chat-input-area"> <input type="file" id="chatFileInput" accept="image/*" style="display:none;" onchange="handleChatFileSelect(event)"> <button class="chat-attach-btn" onclick="document.getElementById('chatFileInput').click()" id="chatAttachBtn"> <i class="fas fa-paperclip"></i> </button> <input type="text" class="chat-input" id="chatInput" placeholder="Type a message…" autocomplete="off" oninput="handleTyping()"> <button class="chat-send-btn" id="chatSendBtn" disabled><i class="fas fa-paper-plane"></i></button> </div> <button class="scroll-bottom-btn" id="scrollBottomBtn"><i class="fas fa-chevron-down"></i></button> </div> </div> <!-- Ideas View --> <div id="ideasView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-lightbulb"></i> Ideas</h2> </div> <div class="card" style="margin-bottom:var(--s4);"> <h3 style="font-family:'Space Grotesk',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text-1);margin-bottom:var(--s3);">Share an Idea</h3> <textarea id="ideaInput" class="chat-input" style="height:90px;padding:var(--s3);resize:none;line-height:1.5;width:100%;" placeholder="What's your idea?"></textarea> <button class="btn btn-primary" onclick="postIdea()" style="margin-top:var(--s3);"> <i class="fas fa-lightbulb"></i> Post Idea
+                    </button> </div> <div id="ideasList"></div> </div> <!-- Notices View --> <div id="noticesView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-bullhorn"></i> Announcements</h2> </div> <div id="noticesList"></div> </div> <!-- Profile View --> <div id="profileView" style="display:none;">
+            <div class="profile-card-wrap">
+                <div class="profile-cover" id="profileCover"></div>
+                <div class="profile-identity">
+                    <div class="profile-avatar-ring" onclick="openImageUploadModal()">
+                        <div class="profile-avatar-inner">
+                            <span id="profileAvatarText"></span>
+                            <img id="profileAvatarImg" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                        </div>
+                        <div class="profile-avatar-overlay"><i class="fas fa-camera" style="color:white;font-size:1.1rem;"></i></div>
+                    </div>
+                    <div class="profile-name" id="profileName">Member</div>
+                    <span class="profile-role-badge badge badge-primary" id="profileRole">Member</span>
+                    <div class="profile-stats-row">
+                        <div class="profile-stat-box"><div class="val" id="profilePoints">0</div><div class="lbl">Points</div></div>
+                        <div class="profile-stat-box"><div class="val" id="profileRankStat">#—</div><div class="lbl">Rank</div></div>
+                        <div class="profile-stat-box"><div class="val" id="profileSalary">$0</div><div class="lbl">Salary</div></div>
+                    </div>
+                </div>
+
+                <!-- Theme toggle -->
+                <div class="theme-toggle-row">
+                    <div class="theme-toggle-label"><i class="fas fa-moon" id="themeIcon"></i><span id="themeLabel">Dark Mode</span></div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="themeToggleInput" onchange="toggleTheme()">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb">🌙</div>
+                    </label>
+                </div>
+
+                <!-- Profile info rows -->
+                <div class="profile-action-list">
+                    <div class="profile-action-item" onclick="openEditNameModal()">
+                        <div class="profile-action-icon" style="background:var(--accent-dim);color:var(--accent);"><i class="fas fa-pen"></i></div>
+                        <div class="profile-action-text"><div class="title">Edit Name</div><div class="subtitle" id="profileEmailSub">—</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                    <div class="profile-action-item" onclick="openPaymentModal()">
+                        <div class="profile-action-icon" style="background:var(--success-dim);color:var(--success);"><i class="fas fa-credit-card"></i></div>
+                        <div class="profile-action-text"><div class="title">Payment Method</div><div class="subtitle" id="paymentMethodDisplay">Cash</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                    <div class="profile-action-item" onclick="showView('analytics')">
+                        <div class="profile-action-icon" style="background:var(--warning-dim);color:var(--warning);"><i class="fas fa-chart-bar"></i></div>
+                        <div class="profile-action-text"><div class="title">My Analytics</div><div class="subtitle">View your performance</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                    <div class="profile-action-item" onclick="showView('studio')">
+                        <div class="profile-action-icon" style="background:rgba(99,102,241,0.15);color:var(--accent);"><i class="fas fa-code"></i></div>
+                        <div class="profile-action-text"><div class="title">Code Studio</div><div class="subtitle">Your HTML/CSS/JS projects</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                    <div class="profile-action-item" onclick="showView('checkin')">
+                        <div class="profile-action-icon" style="background:rgba(16,185,129,0.12);color:var(--success);"><i class="fas fa-clock"></i></div>
+                        <div class="profile-action-text"><div class="title">Daily Check-in</div><div class="subtitle" id="profileJoinDate">—</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                    <div class="profile-action-item" id="logoutBtn" style="margin-top:8px;">
+                        <div class="profile-action-icon" style="background:var(--danger-dim);color:var(--danger);"><i class="fas fa-sign-out-alt"></i></div>
+                        <div class="profile-action-text"><div class="title" style="color:var(--danger);">Sign Out</div><div class="subtitle">Sign out of your account</div></div>
+                        <i class="fas fa-chevron-right profile-action-arrow"></i>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Analytics View --> <div id="analyticsView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-chart-bar"></i> Analytics</h2></div> <div class="chart-container"><canvas id="analyticsChart"></canvas></div> <div class="stats-grid" style="margin-top:var(--s4);"> <div class="stat-card"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-value">1.2k</div><div class="stat-label">Views</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-download"></i></div><div class="stat-value">340</div><div class="stat-label">Downloads</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-share"></i></div><div class="stat-value">89</div><div class="stat-label">Shares</div></div> <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">4.5h</div><div class="stat-label">Avg Time</div></div> </div> </div> <!-- Meetings View --> <div id="meetingsView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-handshake"></i> Meetings</h2> </div> <div id="meetingsList"></div> </div> <!-- Tasks View --> <div id="tasksView" style="display:none;"> <div class="section-header"> <h2><i class="fas fa-check-square"></i> Tasks</h2> </div> <div id="tasksList"></div> </div> <!-- Learning View --> <div id="learningView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-graduation-cap"></i> Learning</h2></div> <div id="learningList" class="learning-grid"></div> </div> <!-- About View --> <div id="aboutView" style="display:none;"> <div class="section-header"><h2><i class="fas fa-info-circle"></i> About DarkRoot</h2></div> <div class="about-card"> <h3><i class="fas fa-users" style="color:var(--accent);margin-right:8px;"></i>Our Team</h3> <p>DarkRoot is a collaborative team platform focused on task management, structured workflow, and professional growth. Our primary goal is to build a strong, disciplined, and high-performance team environment.</p> </div> <div class="about-card"> <h3><i class="fas fa-rocket" style="color:var(--accent);margin-right:8px;"></i>Development & Skill-Building Phase</h3> <p>All members are required to complete tasks in the <strong>Task Section</strong>. Performance will be strictly evaluated based on task completion, consistency, and discipline.</p> <p>Starting from <strong>March 19</strong>, DarkRoot uses a performance-based system where <strong>1 DarkRoot Point = 0.5 NPR</strong>. Points are earned only after successful completion of assigned tasks.</p> <p>Salary distribution will be implemented after one month based on total points earned, performance consistency, and overall contribution.</p> <p style="font-weight:700;color:var(--danger);">No task completion = No points = No salary.</p> </div> </div> 
             <!-- CHECK-IN VIEW -->
             <div id="checkinView" style="display:none;">
                 <div class="section-header"><h2><i class="fas fa-clock"></i> Daily Check-in</h2></div>
@@ -2199,6 +2611,60 @@
             <div id="activityFeedView" style="display:none;">
                 <div class="section-header"><h2><i class="fas fa-bolt"></i> Team Activity</h2><span class="badge badge-success" style="display:flex;align-items:center;gap:4px;"><i class="fas fa-circle" style="font-size:0.4rem;"></i> Live</span></div>
                 <div class="card"><div id="activityFeedList"></div></div>
+            </div>
+
+            <!-- CODE STUDIO VIEW -->
+            <div id="studioView" style="display:none;">
+                <!-- Project list screen -->
+                <div id="studioProjectsScreen" class="studio-layout">
+                    <div class="studio-topbar">
+                        <i class="fas fa-code" style="color:var(--accent);font-size:1rem;"></i>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:0.95rem;color:var(--text-1);flex:1;margin-left:4px;">Code Studio</span>
+                        <button class="studio-btn primary" onclick="openNewProject()"><i class="fas fa-plus"></i> New Project</button>
+                    </div>
+                    <div class="studio-projects-list" id="studioProjectsList">
+                        <div class="studio-empty">
+                            <i class="fas fa-code"></i>
+                            <h3>No Projects Yet</h3>
+                            <p>Create your first HTML/CSS/JS project and bring your ideas to life.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Editor screen -->
+                <div id="studioEditorScreen" style="display:none;" class="studio-layout">
+                    <div class="studio-topbar">
+                        <button class="studio-btn" onclick="closeStudioEditor()"><i class="fas fa-arrow-left"></i></button>
+                        <input type="text" class="studio-project-name" id="studioProjectNameInput" placeholder="Project name…">
+                        <button class="studio-btn run-btn" onclick="runStudioCode()"><i class="fas fa-play"></i> Run</button>
+                        <button class="studio-btn primary" onclick="saveStudioProject()"><i class="fas fa-save"></i> Save</button>
+                        <button class="studio-btn danger-btn" id="studioDeleteBtn" onclick="deleteStudioProject()" style="display:none;"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="studio-tabs">
+                        <div class="studio-tab active" onclick="switchStudioTab('html',this)"><span class="tab-dot"></span>HTML</div>
+                        <div class="studio-tab" onclick="switchStudioTab('css',this)"><span class="tab-dot"></span>CSS</div>
+                        <div class="studio-tab" onclick="switchStudioTab('js',this)"><span class="tab-dot"></span>JS</div>
+                        <div class="studio-tab" onclick="switchStudioTab('preview',this)" style="margin-left:auto;"><i class="fas fa-eye" style="font-size:0.7rem;margin-right:4px;"></i>Preview</div>
+                    </div>
+                    <div class="studio-editor-wrap">
+                        <div class="studio-editor-pane active" id="studioHtmlPane">
+                            <textarea class="studio-editor-area" id="studioHtmlEditor" placeholder="<!-- Write your HTML here -->" spellcheck="false"></textarea>
+                        </div>
+                        <div class="studio-editor-pane" id="studioCssPane">
+                            <textarea class="studio-editor-area" id="studioCssEditor" placeholder="/* Write your CSS here */" spellcheck="false"></textarea>
+                        </div>
+                        <div class="studio-editor-pane" id="studioJsPane">
+                            <textarea class="studio-editor-area" id="studioJsEditor" placeholder="// Write your JavaScript here" spellcheck="false"></textarea>
+                        </div>
+                        <div class="studio-preview-pane" id="studioPreviewPane">
+                            <div class="studio-preview-bar">
+                                <div class="preview-dot"></div>
+                                <span>Live Preview</span>
+                                <button onclick="runStudioCode()" style="margin-left:auto;background:none;border:none;color:var(--accent);font-size:0.72rem;font-weight:700;cursor:pointer;"><i class="fas fa-rotate-right"></i> Refresh</button>
+                            </div>
+                            <iframe id="studioPreviewFrame" class="studio-iframe" sandbox="allow-scripts allow-modals"></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </main>
@@ -2407,7 +2873,8 @@
             'dashboardView', 'membersView', 'ideasView', 'chatView',
             'noticesView', 'profileView', 'analyticsView', 'meetingsView',
             'tasksView', 'aboutView', 'learningView',
-            'checkinView', 'pollsView', 'mySubmissionsView', 'notesView', 'activityFeedView'
+            'checkinView', 'pollsView', 'mySubmissionsView', 'notesView', 'activityFeedView',
+            'studioView'
         ];
 
         // Internal: show view without touching history
@@ -2441,7 +2908,7 @@
                 analytics: 'Analytics', meetings: 'Meetings', tasks: 'Tasks',
                 learning: 'Learning', about: 'About', checkin: 'Check-in',
                 polls: 'Polls', mySubmissions: 'My Submissions',
-                notes: 'Notes', activityFeed: 'Team Activity',
+                notes: 'Notes', activityFeed: 'Team Activity', studio: 'Code Studio',
             };
             document.title = (titles[viewName] || 'DarkRoot') + ' · DarkRoot Hub';
 
@@ -2509,6 +2976,10 @@
                 case 'activityFeed':
                     document.getElementById('activityFeedView').style.display = 'block';
                     loadActivityFeed();
+                    break;
+                case 'studio':
+                    document.getElementById('studioView').style.display = 'block';
+                    loadStudioProjects();
                     break;
                 default:
                     document.getElementById('dashboardView').style.display = 'block';
@@ -2687,6 +3158,11 @@
 
                     await loadBlockedUsers();
                     await loadCustomRanks();
+                    // Load saved theme preference
+                    if (currentMemberData.theme) {
+                        localStorage.setItem('dr_theme', currentMemberData.theme);
+                        applyTheme(currentMemberData.theme);
+                    }
                     updateUIWithMemberData();
                     showDashboard();
                     showSkeletons();
@@ -2818,11 +3294,12 @@
             document.getElementById('sidebarSalary').textContent = '$' + salary.toLocaleString();
             document.getElementById('profileAvatarText').textContent = initials;
             document.getElementById('profileName').textContent = name;
-            document.getElementById('profileEmail').textContent = currentMemberData.email || '';
+            const emailSubEl = document.getElementById('profileEmailSub');
+            if (emailSubEl) emailSubEl.textContent = currentMemberData.email || '—';
             document.getElementById('profilePoints').textContent = points.toLocaleString();
             document.getElementById('profileSalary').textContent = '$' + salary.toLocaleString();
-            document.getElementById('profileJoinDate').textContent = moment(currentMemberData.joinDate).format('MMM DD, YYYY');
-            document.getElementById('profileStatus').textContent = currentMemberData.status || 'Active';
+            const joinEl = document.getElementById('profileJoinDate');
+            if (joinEl) joinEl.textContent = currentMemberData.joinDate ? 'Joined ' + moment(currentMemberData.joinDate).format('MMM YYYY') : '—';
             document.getElementById('profileRole').textContent = currentMemberData.role || 'Member';
             if (currentMemberData.photoURL) updateProfilePicture(currentMemberData.photoURL);
             else if (currentUser?.photoURL) updateProfilePicture(currentUser.photoURL);
@@ -2835,10 +3312,10 @@
             const sidebarImg = document.getElementById('sidebarAvatarImg');
             sidebarImg.src = url;
             sidebarImg.style.display = 'block';
-            document.getElementById('profileAvatarText').style.display = 'none';
+            const profileText = document.getElementById('profileAvatarText');
+            if (profileText) profileText.style.display = 'none';
             const profileImg = document.getElementById('profileAvatarImg');
-            profileImg.src = url;
-            profileImg.style.display = 'block';
+            if (profileImg) { profileImg.src = url; profileImg.style.display = 'block'; }
         }
 
         async function calculateRank() {
@@ -2851,6 +3328,8 @@
                 members.sort((a, b) => b.points - a.points);
                 const rank = members.findIndex(m => m.uid === currentUser.uid) + 1;
                 document.getElementById('sidebarRank').textContent = '#' + rank;
+                const profileRankEl = document.getElementById('profileRankStat');
+                if (profileRankEl) profileRankEl.textContent = '#' + rank;
             } catch (error) { console.error('Error calculating rank:', error); }
         }
 
@@ -5074,6 +5553,192 @@
             loadTasks();
             showToast('Task removed');
         };
+
+        // ==================== THEME TOGGLE ====================
+        function applyTheme(mode) {
+            const isLight = mode === 'light';
+            document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+            const input = document.getElementById('themeToggleInput');
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+            const thumb = document.querySelector('.toggle-thumb');
+            if (input) input.checked = isLight;
+            if (icon) icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            if (label) label.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+            if (thumb) thumb.textContent = isLight ? '☀️' : '🌙';
+        }
+
+        window.toggleTheme = function() {
+            const input = document.getElementById('themeToggleInput');
+            const newMode = input.checked ? 'light' : 'dark';
+            applyTheme(newMode);
+            localStorage.setItem('dr_theme', newMode);
+            if (currentUser) {
+                db.ref('members/' + currentUser.uid).update({ theme: newMode }).catch(() => {});
+            }
+        };
+
+        // Init theme from localStorage or Firebase
+        (function initTheme() {
+            const saved = localStorage.getItem('dr_theme') || 'dark';
+            applyTheme(saved);
+        })();
+
+        // ==================== CODE STUDIO ====================
+        let studioCurrentProjectId = null;
+        let studioActiveTab = 'html';
+
+        window.switchStudioTab = function(tab, el) {
+            studioActiveTab = tab;
+            // Update tab UI
+            document.querySelectorAll('.studio-tab').forEach(t => t.classList.remove('active'));
+            if (el) el.classList.add('active');
+            // Show/hide panes
+            const panes = { html: 'studioHtmlPane', css: 'studioCssPane', js: 'studioJsPane', preview: 'studioPreviewPane' };
+            Object.entries(panes).forEach(([key, id]) => {
+                const el2 = document.getElementById(id);
+                if (!el2) return;
+                if (key === tab) {
+                    el2.className = el2.className.replace('studio-editor-pane','').replace('studio-preview-pane','').trim();
+                    if (key === 'preview') el2.className = 'studio-preview-pane active';
+                    else el2.className = 'studio-editor-pane active';
+                } else {
+                    if (key === 'preview') el2.className = 'studio-preview-pane';
+                    else el2.className = 'studio-editor-pane';
+                }
+            });
+            if (tab === 'preview') runStudioCode();
+        };
+
+        window.runStudioCode = function() {
+            const html = document.getElementById('studioHtmlEditor').value;
+            const css = document.getElementById('studioCssEditor').value;
+            const js = document.getElementById('studioJsEditor').value;
+            const frame = document.getElementById('studioPreviewFrame');
+            if (!frame) return;
+            const content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
+            frame.srcdoc = content;
+        };
+
+        window.openNewProject = function() {
+            studioCurrentProjectId = null;
+            document.getElementById('studioProjectNameInput').value = '';
+            document.getElementById('studioHtmlEditor').value = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My Project</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>Start building something awesome.</p>\n</body>\n</html>';
+            document.getElementById('studioCssEditor').value = '/* Your styles here */\nbody {\n  font-family: sans-serif;\n  padding: 20px;\n  background: #f0f0f0;\n}\n\nh1 {\n  color: #6366f1;\n}';
+            document.getElementById('studioJsEditor').value = '// Your JavaScript here\nconsole.log("Hello from Code Studio!");';
+            document.getElementById('studioDeleteBtn').style.display = 'none';
+            document.getElementById('studioProjectsScreen').style.display = 'none';
+            document.getElementById('studioEditorScreen').style.display = 'flex';
+            // Switch to HTML tab
+            const tabs = document.querySelectorAll('.studio-tab');
+            switchStudioTab('html', tabs[0]);
+        };
+
+        window.closeStudioEditor = function() {
+            document.getElementById('studioEditorScreen').style.display = 'none';
+            document.getElementById('studioProjectsScreen').style.display = 'flex';
+            loadStudioProjects();
+        };
+
+        window.saveStudioProject = async function() {
+            if (!currentUser) return;
+            const name = document.getElementById('studioProjectNameInput').value.trim() || 'Untitled Project';
+            const html = document.getElementById('studioHtmlEditor').value;
+            const css = document.getElementById('studioCssEditor').value;
+            const js = document.getElementById('studioJsEditor').value;
+            const data = { name, html, css, js, updatedAt: Date.now(), userId: currentUser.uid, authorName: currentMemberData?.name || 'Member' };
+            try {
+                if (studioCurrentProjectId) {
+                    await db.ref('studio_projects/' + studioCurrentProjectId).update(data);
+                    showToast('Project saved!', 'success');
+                } else {
+                    data.createdAt = Date.now();
+                    const ref = await db.ref('studio_projects').push(data);
+                    studioCurrentProjectId = ref.key;
+                    document.getElementById('studioDeleteBtn').style.display = 'flex';
+                    showToast('Project created!', 'success');
+                }
+            } catch (e) { showToast('Save failed', 'error'); }
+        };
+
+        window.loadStudioProjects = async function() {
+            if (!currentUser) return;
+            const container = document.getElementById('studioProjectsList');
+            if (!container) return;
+            container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-3);"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>';
+            try {
+                const snap = await db.ref('studio_projects').orderByChild('userId').equalTo(currentUser.uid).once('value');
+                const projects = [];
+                snap.forEach(child => projects.push({ id: child.key, ...child.val() }));
+                projects.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
+                if (projects.length === 0) {
+                    container.innerHTML = `<div class="studio-empty"><i class="fas fa-code"></i><h3>No Projects Yet</h3><p>Tap <strong>New Project</strong> to start building your first HTML/CSS/JS project.</p></div>`;
+                    return;
+                }
+                container.innerHTML = '';
+                projects.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'studio-project-card';
+                    const updated = p.updatedAt ? moment(p.updatedAt).fromNow() : '';
+                    card.innerHTML = `
+                        <div class="studio-project-icon"><i class="fas fa-code"></i></div>
+                        <div class="studio-project-info">
+                            <div class="studio-project-title">${escapeHtml(p.name || 'Untitled')}</div>
+                            <div class="studio-project-meta">Updated ${updated}</div>
+                        </div>
+                        <div class="studio-project-actions">
+                            <button class="studio-action-btn edit" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button class="studio-action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    card.querySelector('.studio-action-btn.edit').onclick = (e) => { e.stopPropagation(); openStudioProject(p); };
+                    card.querySelector('.studio-action-btn.delete').onclick = (e) => { e.stopPropagation(); confirmDeleteStudioProject(p.id); };
+                    card.addEventListener('click', () => openStudioProject(p));
+                    container.appendChild(card);
+                });
+            } catch(e) { container.innerHTML = '<div class="studio-empty"><i class="fas fa-exclamation-triangle"></i><h3>Failed to load</h3><p>Please try again.</p></div>'; }
+        };
+
+        function openStudioProject(p) {
+            studioCurrentProjectId = p.id;
+            document.getElementById('studioProjectNameInput').value = p.name || '';
+            document.getElementById('studioHtmlEditor').value = p.html || '';
+            document.getElementById('studioCssEditor').value = p.css || '';
+            document.getElementById('studioJsEditor').value = p.js || '';
+            document.getElementById('studioDeleteBtn').style.display = 'flex';
+            document.getElementById('studioProjectsScreen').style.display = 'none';
+            document.getElementById('studioEditorScreen').style.display = 'flex';
+            const tabs = document.querySelectorAll('.studio-tab');
+            switchStudioTab('html', tabs[0]);
+        }
+
+        function confirmDeleteStudioProject(id) {
+            if (!confirm('Delete this project? This cannot be undone.')) return;
+            db.ref('studio_projects/' + id).remove().then(() => {
+                showToast('Project deleted');
+                loadStudioProjects();
+            }).catch(() => showToast('Delete failed', 'error'));
+        }
+
+        window.deleteStudioProject = function() {
+            if (!studioCurrentProjectId) return;
+            confirmDeleteStudioProject(studioCurrentProjectId);
+            studioCurrentProjectId = null;
+            closeStudioEditor();
+        };
+
+        // Tab key in editors inserts spaces instead of losing focus
+        document.querySelectorAll('.studio-editor-area').forEach(ta => {
+            ta.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const start = this.selectionStart, end = this.selectionEnd;
+                    this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = start + 2;
+                }
+            });
+        });
+
     </script>
 </body>
 </html>
