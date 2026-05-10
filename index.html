@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot • Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot · Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="/about.jpg">
 <link rel="apple-touch-icon" sizes="180x180" href="/about.jpg"> <!-- Libraries --> <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script> <style> /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
         *, *::before, *::after {
@@ -1622,6 +1622,269 @@
             font-size: 0.9rem; color: var(--text-1); cursor: pointer;
         }
         .radio-group input[type="radio"] { accent-color: var(--accent); width: 16px; height: 16px; }
+
+        /* ══════════════════════════════════
+           PROFESSIONAL POLISH v3
+           ══════════════════════════════════ */
+
+        /* Refined root palette */
+        :root {
+            --accent: #5b5ef4;
+            --accent-2: #7c5cf6;
+            --accent-glow: rgba(91,94,244,0.22);
+            --accent-dim: rgba(91,94,244,0.10);
+            --border-accent: rgba(91,94,244,0.30);
+            --surface-1: #111118;
+            --surface-2: #18181f;
+            --surface-3: #1e1e28;
+            --surface-4: #252535;
+            --border: rgba(255,255,255,0.06);
+        }
+
+        /* ─── HEADER REFINEMENT ─── */
+        .header {
+            background: rgba(11,11,17,0.92);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: var(--s3) var(--s5);
+        }
+        .greeting h1 { font-size: 1.05rem; letter-spacing: -0.01em; }
+
+        /* ─── SIDEBAR REFINEMENT ─── */
+        .sidebar {
+            background: #0d0d14;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            width: 272px; left: -272px;
+        }
+        .sidebar-header {
+            padding: var(--s6) var(--s5) var(--s4);
+            background: linear-gradient(135deg, rgba(91,94,244,0.06) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-logo-text {
+            font-size: 1.15rem;
+            background: linear-gradient(135deg, #e8e7ff 0%, #a09fc0 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        /* Sidebar user section */
+        .sidebar-user { background: var(--surface-2); border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .user-stats { gap: 0; }
+        .stat-item {
+            border-left: 1px solid var(--border);
+            padding: var(--s3) var(--s4);
+        }
+        .stat-item:first-child { border-left: none; }
+        .stat-item .value { font-size: 1.05rem; }
+
+        /* Nav section labels */
+        .nav-section-label {
+            font-size: 0.6rem; font-weight: 800;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: rgba(255,255,255,0.2);
+            padding: var(--s3) var(--s5) var(--s1);
+            margin-top: 4px;
+        }
+        .nav-item {
+            margin: 1px var(--s2);
+            padding: var(--s3) var(--s4);
+            border-radius: var(--r-md);
+            transition: all var(--t-fast);
+            border: 1px solid transparent;
+        }
+        .nav-item:hover { background: var(--surface-3); color: var(--text-1); }
+        .nav-item.active {
+            background: var(--accent-dim);
+            border-color: var(--border-accent);
+            color: var(--accent);
+        }
+        .nav-item i { width: 18px; text-align: center; }
+
+        /* ─── CARDS REFINEMENT ─── */
+        .card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: var(--s5);
+            margin-bottom: var(--s4);
+            transition: border-color var(--t-fast);
+        }
+        .card:hover { border-color: rgba(255,255,255,0.1); }
+
+        /* ─── SECTION HEADERS ─── */
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: var(--s4); padding: 0 0 var(--s3) 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: var(--text-1); letter-spacing: -0.01em;
+            display: flex; align-items: center; gap: var(--s2);
+        }
+        .section-header h2 i { color: var(--accent); font-size: 0.9rem; }
+
+        /* ─── STAT CARDS ─── */
+        .stat-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--s4) var(--s5);
+            position: relative; overflow: hidden;
+            transition: border-color var(--t-fast), transform var(--t-fast);
+        }
+        .stat-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-1px); }
+        .stat-card::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(91,94,244,0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* ─── TEAM CARDS ─── */
+        .team-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--s4);
+            transition: all var(--t-fast); cursor: pointer;
+        }
+        .team-card:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        /* ─── BUTTONS REFINEMENT ─── */
+        .btn-primary {
+            background: linear-gradient(135deg, #5b5ef4, #7c5cf6);
+            box-shadow: 0 2px 12px rgba(91,94,244,0.3);
+            letter-spacing: 0.01em;
+        }
+        .btn-primary:hover { box-shadow: 0 4px 20px rgba(91,94,244,0.45); }
+        .btn-google {
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            color: var(--text-1);
+            height: 50px; font-size: 0.95rem; font-weight: 600;
+        }
+        .btn-google:hover { border-color: rgba(255,255,255,0.15); background: var(--surface-3); }
+
+        /* ─── AUTH CARD ─── */
+        .auth-card {
+            background: var(--surface-1);
+            border-color: rgba(255,255,255,0.07);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+        }
+        .auth-header h2 { font-size: 1.45rem; }
+        .auth-divider {
+            display: flex; align-items: center; gap: var(--s3);
+            margin: var(--s4) 0;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .auth-divider span { font-size: 0.72rem; color: var(--text-3); white-space: nowrap; }
+        .auth-note {
+            display: flex; align-items: flex-start; gap: var(--s2);
+            background: var(--accent-dim);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--r-md); padding: var(--s3) var(--s4);
+            font-size: 0.78rem; color: var(--text-2); line-height: 1.5;
+        }
+        .auth-note i { color: var(--accent); margin-top: 1px; flex-shrink: 0; }
+
+        /* ─── MAIN CONTENT ─── */
+        .main-content { padding: var(--s5) var(--s4); }
+
+        /* ─── IDEAS IN SIDEBAR (panel style) ─── */
+        .idea-item {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg); padding: var(--s4);
+            margin-bottom: var(--s3);
+            transition: border-color var(--t-fast);
+        }
+        .idea-item:hover { border-color: rgba(255,255,255,0.1); }
+
+        /* ─── MODAL REFINEMENT ─── */
+        .modal {
+            background: var(--surface-1);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+            box-shadow: 0 -8px 40px rgba(0,0,0,0.6);
+        }
+
+        /* ─── LEADERBOARD ─── */
+        .leaderboard-item {
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg);
+            transition: all var(--t-fast);
+        }
+        .leaderboard-item:hover { border-color: var(--border-accent); background: var(--surface-2); }
+
+        /* ─── BADGES ─── */
+        .badge {
+            display: inline-flex; align-items: center;
+            padding: 3px 10px; border-radius: var(--r-full);
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase;
+        }
+        .badge-primary { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border-accent); }
+        .badge-success { background: var(--success-dim); color: var(--success); border: 1px solid rgba(16,185,129,0.2); }
+
+        /* ─── INPUT REFINEMENT ─── */
+        .input-field input:focus {
+            box-shadow: 0 0 0 3px rgba(91,94,244,0.15);
+        }
+
+        /* ─── NOTICE CARDS ─── */
+        .notice-card {
+            background: var(--surface-1);
+            border: 1px solid var(--border);
+            border-radius: var(--r-lg); overflow: hidden;
+            margin-bottom: var(--s3);
+            transition: border-color var(--t-fast);
+        }
+        .notice-card:hover { border-color: rgba(255,255,255,0.1); }
+
+        /* ─── BOTTOM NAV ─── */
+        .bottom-nav {
+            background: rgba(11,11,17,0.95);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(24px);
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(91,94,244,0.3); border-radius: 3px; }
+
+        /* ─── PROFILE HERO ─── */
+        .profile-hero {
+            background: linear-gradient(135deg, rgba(91,94,244,0.1) 0%, rgba(124,92,246,0.05) 100%);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--r-xl);
+            padding: var(--s8) var(--s4) var(--s5);
+            text-align: center; margin-bottom: var(--s4);
+        }
+
+        /* ─── AI PANEL ─── */
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(91,94,244,0.08) 0%, rgba(124,92,246,0.04) 100%);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--r-lg); padding: var(--s4) var(--s5);
+            margin-bottom: var(--s4);
+        }
+        .ai-header {
+            display: flex; align-items: center; gap: var(--s2);
+            margin-bottom: var(--s3);
+        }
+        .ai-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.88rem; font-weight: 700; color: var(--accent);
+        }
+        .ai-header i { color: var(--accent); }
+
     </style>
 </head>
 <body> <!-- Splash Screen --> <div class="splash-screen" id="splashScreen"> <div class="splash-logo"> <img src="about.jpg" alt="DarkRoot" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
@@ -1629,7 +1892,8 @@
                 </div> <h2>Welcome to DarkRoot</h2> <p>Sign in with your Google account to continue</p> </div> <!-- Google Sign In Button --> <button class="btn btn-google" id="googleSignInBtn"> <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;"> <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/> <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/> <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/> <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/> </svg> Continue with Google
             </button> <div class="auth-divider"> <span>Secure · Fast · One tap</span> </div> <div class="auth-note"> <i class="fas fa-shield-alt"></i> Your Google name, photo and email will be used to auto-fill your profile. No password needed.
             </div> </div> </div> <!-- Main Dashboard --> <div id="dashboardSection" class="dashboard" style="display: none;"> <!-- Header --> <header class="header"> <div class="header-content"> <div class="header-left"> <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div> <div class="greeting"> <h1 id="greeting">Good morning</h1> <p id="date"></p> </div> </div> <div class="header-right"> <div class="icon-btn" id="notificationsBtn"> <i class="fas fa-bell"></i> <span class="notif-dot" id="notifDot" style="display:none;"></span> </div> </div> </div> </header> <!-- Sidebar Overlay --> <div class="sidebar-overlay" id="sidebarOverlay"></div> <!-- Sidebar --> <div class="sidebar" id="sidebar"> <div class="sidebar-header"> <div class="sidebar-logo"> <div class="sidebar-logo-icon"> <img src="about.jpg" alt="DR" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fas fa-cube\'></i>';">
-                    </div> <span class="sidebar-logo-text">DarkRoot</span> </div> </div> <div class="sidebar-user" id="sidebarUser"> <div class="user-profile"> <div class="user-avatar" id="sidebarAvatar" onclick="openImageUploadModal()"> <span id="sidebarAvatarText">DR</span> <img id="sidebarAvatarImg" style="display:none;"> <div class="avatar-overlay"><i class="fas fa-camera"></i></div> </div> <div class="user-info"> <h4 id="sidebarName">Member</h4> <p id="sidebarEmail">—</p> </div> </div> <div class="user-stats"> <div class="stat-item"><div class="value" id="sidebarPoints">0</div><div class="label">Points</div></div> <div class="stat-item"><div class="value" id="sidebarRank">#—</div><div class="label">Rank</div></div> <div class="stat-item"><div class="value" id="sidebarSalary">$0</div><div class="label">Salary</div></div> </div> </div> <nav class="nav-menu" id="sidebarNav"> <div class="nav-section-label">Workspace</div> <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-bar"></i><span>Dashboard</span></div> <div class="nav-item" data-view="meetings"><i class="fas fa-handshake"></i><span>Meetings</span></div> <div class="nav-item" data-view="tasks"><i class="fas fa-check-square"></i><span>Tasks</span></div> <div class="nav-section-label" style="margin-top:8px;">Community</div> <div class="nav-item" data-view="notices"><i class="fas fa-bullhorn"></i><span>Announcements</span></div> <div class="nav-item" data-view="learning"><i class="fas fa-graduation-cap"></i><span>Learning</span></div> <div class="nav-item" data-view="about"><i class="fas fa-info-circle"></i><span>About</span></div>
+                    </div> <span class="sidebar-logo-text">DarkRoot</span> </div> </div> <div class="sidebar-user" id="sidebarUser"> <div class="user-profile"> <div class="user-avatar" id="sidebarAvatar" onclick="openImageUploadModal()"> <span id="sidebarAvatarText">DR</span> <img id="sidebarAvatarImg" style="display:none;"> <div class="avatar-overlay"><i class="fas fa-camera"></i></div> </div> <div class="user-info"> <h4 id="sidebarName">Member</h4> <p id="sidebarEmail">—</p> </div> </div> <div class="user-stats"> <div class="stat-item"><div class="value" id="sidebarPoints">0</div><div class="label">Points</div></div> <div class="stat-item"><div class="value" id="sidebarRank">#—</div><div class="label">Rank</div></div> <div class="stat-item"><div class="value" id="sidebarSalary">$0</div><div class="label">Salary</div></div> </div> </div> <nav class="nav-menu" id="sidebarNav"> <div class="nav-section-label">Workspace</div> <div class="nav-item active" data-view="dashboard"><i class="fas fa-chart-bar"></i><span>Dashboard</span></div> <div class="nav-item" data-view="meetings"><i class="fas fa-handshake"></i><span>Meetings</span></div> <div class="nav-item" data-view="tasks"><i class="fas fa-check-square"></i><span>Tasks</span></div> <div class="nav-section-label" style="margin-top:8px;">Community</div> <div class="nav-item" data-view="ideas"><i class="fas fa-lightbulb"></i><span>Ideas</span></div>
+                <div class="nav-item" data-view="notices"><i class="fas fa-bullhorn"></i><span>Announcements</span></div> <div class="nav-item" data-view="learning"><i class="fas fa-graduation-cap"></i><span>Learning</span></div> <div class="nav-item" data-view="about"><i class="fas fa-info-circle"></i><span>About</span></div>
                 <div class="nav-section-label" style="margin-top:8px;">My Space</div>
                 <div class="nav-item" data-view="checkin"><i class="fas fa-clock"></i><span>Check-in</span></div>
                 <div class="nav-item" data-view="mySubmissions"><i class="fas fa-inbox"></i><span>My Submissions</span></div>
@@ -1912,179 +2176,7 @@
         menuBtn.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        // ==================== URL ROUTER ====================
-        // Maps view names → URL paths and back
-        const ROUTE_MAP = {
-            'dashboard':       '/home',
-            'members':         '/team',
-            'chat':            '/chat',
-            'ideas':           '/ideas',
-            'notices':         '/announcements',
-            'profile':         '/profile',
-            'analytics':       '/analytics',
-            'meetings':        '/meetings',
-            'tasks':           '/tasks',
-            'learning':        '/learning',
-            'about':           '/about',
-            'checkin':         '/checkin',
-            'polls':           '/polls',
-            'mySubmissions':   '/submissions',
-            'notes':           '/notes',
-            'activityFeed':    '/activity',
-        };
-        // Reverse map: path → view name
-        const PATH_MAP = Object.fromEntries(
-            Object.entries(ROUTE_MAP).map(([v, p]) => [p, v])
-        );
 
-        function routePush(viewName) {
-            const path = ROUTE_MAP[viewName] || '/home';
-            const url  = window.location.origin + path;
-            if (window.location.pathname !== path) {
-                history.pushState({ view: viewName }, '', url);
-            }
-            // Update <title>
-            const titles = {
-                dashboard: 'Home', members: 'Team', chat: 'Chat',
-                ideas: 'Ideas', notices: 'Announcements', profile: 'Profile',
-                analytics: 'Analytics', meetings: 'Meetings', tasks: 'Tasks',
-                learning: 'Learning', about: 'About', checkin: 'Check-in',
-                polls: 'Polls', mySubmissions: 'My Submissions',
-                notes: 'Notes', activityFeed: 'Team Activity',
-            };
-            document.title = (titles[viewName] || 'DarkRoot') + ' · DarkRoot';
-        }
-
-        function routeFromPath(path) {
-            // Strip trailing slash
-            const clean = path.replace(/\/$/, '') || '/home';
-            return PATH_MAP[clean] || 'dashboard';
-        }
-
-        // Handle browser back/forward — only when user is authenticated
-        window.addEventListener('popstate', e => {
-            if (!currentUser) return;
-            const view = e.state?.view || routeFromPath(location.pathname);
-            try { showViewInternal(view); } catch(err) { showViewInternal('dashboard'); }
-        });
-
-        // ==================== VIEW MANAGEMENT ====================
-        const ALL_VIEW_IDS = [
-            'dashboardView', 'membersView', 'ideasView', 'chatView',
-            'noticesView', 'profileView', 'analyticsView', 'meetingsView',
-            'tasksView', 'aboutView', 'learningView',
-            'checkinView', 'pollsView', 'mySubmissionsView', 'notesView', 'activityFeedView'
-        ];
-
-        // Internal: show view without touching history
-        function showViewInternal(viewName) {
-            ALL_VIEW_IDS.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            });
-
-            // Update nav active state
-            document.querySelectorAll('.nav-item, .nav-item-bottom').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelectorAll(`[data-view="${viewName}"]`).forEach(item => {
-                item.classList.add('active');
-            });
-
-            // Close sidebar if open
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('sidebarOverlay');
-            if (sb && sb.classList.contains('open')) {
-                sb.classList.remove('open');
-                if (ov) ov.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-
-            // Load the requested view
-            switch (viewName) {
-                case 'dashboard':
-                    document.getElementById('dashboardView').style.display = 'block';
-                    loadDashboardData();
-                    break;
-                case 'members':
-                    document.getElementById('membersView').style.display = 'block';
-                    showTeamTab('members');
-                    break;
-                case 'chat':
-                    document.getElementById('chatView').style.display = 'block';
-                    loadChatMessages();
-                    break;
-                case 'ideas':
-                    document.getElementById('ideasView').style.display = 'block';
-                    setupIdeasListener();
-                    break;
-                case 'notices':
-                    document.getElementById('noticesView').style.display = 'block';
-                    loadNotices();
-                    break;
-                case 'profile':
-                    document.getElementById('profileView').style.display = 'block';
-                    break;
-                case 'analytics':
-                    document.getElementById('analyticsView').style.display = 'block';
-                    if (typeof initAnalyticsChart === 'function') initAnalyticsChart();
-                    break;
-                case 'meetings':
-                    document.getElementById('meetingsView').style.display = 'block';
-                    loadMeetings();
-                    break;
-                case 'tasks':
-                    document.getElementById('tasksView').style.display = 'block';
-                    loadTasks();
-                    break;
-                case 'learning':
-                    document.getElementById('learningView').style.display = 'block';
-                    loadLearningResources();
-                    break;
-                case 'about':
-                    document.getElementById('aboutView').style.display = 'block';
-                    break;
-                case 'checkin':
-                    document.getElementById('checkinView').style.display = 'block';
-                    initCheckin();
-                    break;
-                case 'polls':
-                    document.getElementById('pollsView').style.display = 'block';
-                    loadPolls();
-                    break;
-                case 'mySubmissions':
-                    document.getElementById('mySubmissionsView').style.display = 'block';
-                    loadMySubmissions('all');
-                    break;
-                case 'notes':
-                    document.getElementById('notesView').style.display = 'block';
-                    closeNoteEditor();
-                    loadNotesList();
-                    break;
-                case 'activityFeed':
-                    document.getElementById('activityFeedView').style.display = 'block';
-                    loadActivityFeed();
-                    break;
-                default:
-                    document.getElementById('dashboardView').style.display = 'block';
-                    loadDashboardData();
-            }
-        }
-
-        // Public: show view AND update URL
-        function showView(viewName) {
-            routePush(viewName);
-            showViewInternal(viewName);
-        }
-
-        // On first load after login: navigate to URL path if present
-        function navigateToInitialRoute() {
-            const path  = window.location.pathname;
-            const view  = routeFromPath(path);
-            // Replace current history entry with proper state
-            history.replaceState({ view }, '', window.location.href);
-            showViewInternal(view);
-        }
 
         // Team tabs
         function showTeamTab(tabName) {
@@ -2256,7 +2348,7 @@
                     showDashboard();
                     showSkeletons();
                     loadDashboardData();
-                    navigateToInitialRoute();
+                    showViewInternal('dashboard');
                     if (isNewLogin) { showWelcomePopup(); isNewLogin = false; }
                     showToast('Welcome back, ' + (currentMemberData.name?.split(' ')[0] || 'Member'));
                 } catch (err) {
@@ -2363,7 +2455,7 @@
             showDashboard();
             showSkeletons();
             loadDashboardData();
-            navigateToInitialRoute();
+            showViewInternal('dashboard');
             showWelcomePopup();
         }
 
