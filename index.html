@@ -641,114 +641,191 @@
         .nav-item-bottom.active i { filter: drop-shadow(0 0 6px var(--accent)); }
         .nav-item-bottom:active { background: var(--accent-dim); }
 
-        /* ─── CHAT ─── */
+        /* ═══════════════════════════════════
+           CHAT — PROFESSIONAL REDESIGN
+           ═══════════════════════════════════ */
         .chat-container {
             display: flex; flex-direction: column;
-            height: calc(100vh - 170px);
-            background: var(--surface-1); border: 1px solid var(--border);
-            border-radius: var(--r-lg); overflow: hidden;
+            height: calc(100vh - 138px);
+            background: #0d0d14;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--r-xl); overflow: hidden;
         }
+
+        /* ── message list ── */
         .chat-messages {
             flex: 1; overflow-y: auto;
-            padding: var(--s4); display: flex;
-            flex-direction: column; gap: 2px;
+            padding: var(--s4) var(--s4) var(--s2);
+            display: flex; flex-direction: column; gap: 0;
             scroll-behavior: smooth;
         }
-        .date-separator { text-align: center; margin: var(--s3) 0; }
-        .date-separator span {
-            background: var(--surface-3); color: var(--text-3);
-            padding: 4px var(--s3); border-radius: var(--r-full);
-            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;
+        .chat-messages::-webkit-scrollbar { width: 0; }
+
+        /* ── date separator ── */
+        .date-separator {
+            display: flex; align-items: center; gap: var(--s3);
+            margin: var(--s5) 0 var(--s3);
         }
-        .message-group { display: flex; flex-direction: column; gap: 2px; }
-        .message-group:not(:last-child) { margin-bottom: var(--s3); }
-        .message { display: flex; align-items: flex-end; gap: var(--s2); max-width: 82%; position: relative; }
+        .date-separator::before, .date-separator::after {
+            content: ''; flex: 1; height: 1px;
+            background: rgba(255,255,255,0.06);
+        }
+        .date-separator span {
+            background: transparent; color: rgba(255,255,255,0.25);
+            font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            white-space: nowrap; padding: 0;
+        }
+
+        /* ── message groups ── */
+        .message-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: var(--s3); }
+        .message { display: flex; align-items: flex-end; gap: 8px; max-width: 78%; position: relative; }
         .message-own { align-self: flex-end; flex-direction: row-reverse; }
+
+        /* ── avatar ── */
         .message-avatar {
-            width: 30px; height: 30px;
-            background: var(--accent-dim); border-radius: var(--r-sm);
+            width: 28px; height: 28px; min-width: 28px;
+            border-radius: 50%;
+            background: var(--accent-dim);
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; font-weight: 700; color: var(--accent);
-            flex-shrink: 0; overflow: hidden; margin-bottom: 4px;
+            font-size: 0.6rem; font-weight: 800; color: var(--accent);
+            overflow: hidden; margin-bottom: 2px;
+            border: 1.5px solid rgba(255,255,255,0.07);
+            flex-shrink: 0;
         }
         .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        /* hide avatar on follow-up messages in group (set via JS) */
+        .message-avatar.hidden-avatar { visibility: hidden; }
+
+        /* ── bubble ── */
         .message-bubble {
-            background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: var(--r-lg) var(--r-lg) var(--r-lg) var(--s1);
-            padding: var(--s2) var(--s3);
+            background: #1c1c28;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px 18px 18px 4px;
+            padding: 9px 13px 7px;
             position: relative; word-break: break-word;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            max-width: 100%;
         }
         .message-own .message-bubble {
-            background: var(--accent-dim);
-            border-color: var(--border-accent);
-            border-radius: var(--r-lg) var(--r-lg) var(--s1) var(--r-lg);
+            background: linear-gradient(135deg, #4a4def 0%, #6b5bf0 100%);
+            border-color: transparent;
+            border-radius: 18px 18px 4px 18px;
+            box-shadow: 0 2px 12px rgba(91,94,244,0.3);
         }
-        .message-sender { font-size: 0.68rem; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
-        .message-text { font-size: 0.88rem; color: var(--text-1); line-height: 1.4; }
-        .chat-image { max-width: 190px; max-height: 140px; border-radius: var(--r-md); cursor: pointer; margin-top: 4px; }
-        .message-time { font-size: 0.6rem; color: var(--text-3); margin-top: 3px; text-align: right; display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
+
+        /* ── sender name ── */
+        .message-sender {
+            font-size: 0.67rem; font-weight: 700;
+            color: var(--accent); margin-bottom: 3px;
+            letter-spacing: 0.01em;
+        }
+        .message-own .message-sender { color: rgba(255,255,255,0.7); }
+
+        /* ── message text ── */
+        .message-text {
+            font-size: 0.9rem; color: var(--text-1);
+            line-height: 1.45; letter-spacing: 0.01em;
+        }
+        .message-own .message-text { color: #fff; }
+
+        /* ── image ── */
+        .chat-image {
+            max-width: 200px; border-radius: 12px;
+            cursor: pointer; margin-top: 5px; display: block;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* ── time + status ── */
+        .message-time {
+            font-size: 0.58rem; color: rgba(255,255,255,0.28);
+            margin-top: 4px; text-align: right;
+            display: flex; align-items: center; gap: 3px; justify-content: flex-end;
+        }
+        .message-own .message-time { color: rgba(255,255,255,0.55); }
+        .message-status i { font-size: 0.55rem; color: rgba(255,255,255,0.55); }
+
+        /* ── delete button ── */
         .delete-msg-btn {
+            position: absolute; top: 50%; right: -28px;
+            transform: translateY(-50%);
             opacity: 0; transition: opacity 0.2s;
-            background: none; border: none; color: var(--danger);
-            font-size: 0.75rem; cursor: pointer; padding: 2px 4px;
+            background: rgba(239,68,68,0.15); border: none;
+            color: var(--danger); font-size: 0.7rem;
+            cursor: pointer; padding: 4px 6px;
+            border-radius: 6px;
         }
         .message-own:hover .delete-msg-btn { opacity: 1; }
+
+        /* ── typing indicator ── */
         .typing-indicator {
-            padding: var(--s2) var(--s4);
-            display: none; align-items: center; gap: var(--s3);
-            background: var(--surface-2); border-top: 1px solid var(--border);
-            font-size: 0.78rem; color: var(--text-3);
+            padding: 8px 16px;
+            display: none; align-items: center; gap: 8px;
+            background: #0d0d14;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.75rem; color: var(--text-3);
         }
-        .typing-avatars { display: flex; align-items: center; gap: 3px; }
+        .typing-avatars { display: flex; align-items: center; gap: 2px; }
         .typing-avatar {
-            width: 24px; height: 24px; border-radius: 50%;
+            width: 22px; height: 22px; border-radius: 50%;
             background: var(--accent-dim);
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.6rem; font-weight: 700; color: var(--accent); overflow: hidden;
-            border: 2px solid var(--surface-1);
+            font-size: 0.58rem; font-weight: 700; color: var(--accent);
+            overflow: hidden; border: 2px solid #0d0d14;
         }
         .typing-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .typing-dots { display: inline-flex; gap: 3px; margin-left: 2px; }
         .typing-dots div {
-            width: 5px; height: 5px; background: var(--accent);
-            border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out;
+            width: 5px; height: 5px;
+            background: var(--accent); border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
         }
         .typing-dots div:nth-child(1) { animation-delay: 0s; }
         .typing-dots div:nth-child(2) { animation-delay: 0.2s; }
         .typing-dots div:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+        @keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+        /* ── input area ── */
         .chat-input-area {
-            display: flex; gap: var(--s2); padding: var(--s3) var(--s4);
-            background: var(--surface-1); border-top: 1px solid var(--border);
+            display: flex; gap: var(--s2); padding: 10px 12px;
+            background: #0d0d14;
+            border-top: 1px solid rgba(255,255,255,0.05);
             align-items: center;
         }
         .chat-attach-btn {
-            width: 42px; height: 42px; flex-shrink: 0;
-            background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: var(--r-md);
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: var(--text-2); font-size: 1rem; cursor: pointer; transition: var(--t-fast);
+            color: var(--text-3); font-size: 1rem; cursor: pointer;
+            transition: var(--t-fast);
         }
-        .chat-attach-btn:active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        .chat-attach-btn:active { background: var(--accent-dim); color: var(--accent); }
         .chat-input {
-            flex: 1; height: 42px;
-            background: var(--surface-2); border: 1.5px solid var(--border);
-            border-radius: var(--r-md); padding: 0 var(--s4);
+            flex: 1; height: 40px;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 0 var(--s4);
             font-family: inherit; font-size: 0.9rem; color: var(--text-1);
-            outline: none; transition: border-color var(--t-fast);
+            outline: none; transition: border-color var(--t-fast), background var(--t-fast);
         }
-        .chat-input::placeholder { color: var(--text-3); }
-        .chat-input:focus { border-color: var(--accent); background: var(--surface-3); }
+        .chat-input::placeholder { color: rgba(255,255,255,0.2); }
+        .chat-input:focus {
+            border-color: rgba(91,94,244,0.5);
+            background: rgba(255,255,255,0.08);
+        }
         .chat-send-btn {
-            width: 42px; height: 42px; flex-shrink: 0;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            border: none; border-radius: var(--r-md);
-            color: white; font-size: 1rem;
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: linear-gradient(135deg, #5b5ef4, #7c5cf6);
+            border: none; border-radius: 50%;
+            color: white; font-size: 0.95rem;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: var(--t-fast);
+            box-shadow: 0 2px 12px rgba(91,94,244,0.35);
         }
-        .chat-send-btn:active { opacity: 0.8; transform: scale(0.94); }
-        .chat-send-btn:disabled { background: var(--surface-3); cursor: not-allowed; }
+        .chat-send-btn:active { opacity: 0.8; transform: scale(0.92); }
+        .chat-send-btn:disabled { background: rgba(255,255,255,0.07); box-shadow: none; cursor: not-allowed; }
 
         /* ─── SEARCH BOX ─── */
         .search-box {
@@ -1327,7 +1404,39 @@
         .lc-open-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
         .lc-open-btn i { font-size: 0.65rem; }
 
+
+        /* ── inline video player ── */
+        .lc-player-wrap {
+            display: none; width: 100%;
+            background: #000; position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .lc-player-wrap.open { display: block; }
+        .lc-player-wrap iframe {
+            width: 100%; aspect-ratio: 16/9;
+            border: none; display: block;
+        }
+        .lc-player-close {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
+            color: white; font-size: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .lc-player-close:hover { background: rgba(239,68,68,0.8); }
+
+        /* playing state — dim thumb, show stop icon */
+        .learning-card.playing .lc-thumb { opacity: 0.5; }
+        .learning-card.playing .lc-play-btn { background: #ef4444; }
+        .learning-card.playing .lc-play-btn i::before { content: "\f04d"; } /* fa-stop */
+
+        /* non-video card: no pointer-events on thumb area */
+        .learning-card.article-card .lc-thumb,
+        .learning-card.course-card  .lc-thumb { cursor: default; }
+
         .admin-learning-actions { display: flex; gap: var(--s2); margin-top: var(--s3); }
+
 
 
         /* ─── RANK ADMIN ─── */
@@ -3705,34 +3814,50 @@
             const messagesContainer = document.getElementById('chatMessages');
             messagesContainer.innerHTML = '';
             if (chatMessagesRef) chatMessagesRef.off();
-            chatMessagesRef = db.ref('chat_messages').orderByChild('timestamp').limitToLast(50);
-            let lastMessage = null, currentGroup = null, lastDate = null;
+            chatMessagesRef = db.ref('chat_messages').orderByChild('timestamp').limitToLast(60);
+            let lastMessage = null, currentGroup = null, lastDate = null, groupCount = 0;
+
             chatMessagesRef.on('child_added', (snapshot) => {
                 const msg = snapshot.val();
                 const msgKey = snapshot.key;
                 if (!msg) return;
+
+                // Date separator
                 const msgDate = moment(msg.timestamp).format('YYYY-MM-DD');
                 if (lastDate !== msgDate) {
-                    const separator = document.createElement('div');
-                    separator.className = 'date-separator';
-                    separator.innerHTML = `<span>${moment(msg.timestamp).format('MMMM D, YYYY')}</span>`;
-                    messagesContainer.appendChild(separator);
+                    const sep = document.createElement('div');
+                    sep.className = 'date-separator';
+                    sep.innerHTML = `<span>${moment(msg.timestamp).format('MMMM D, YYYY')}</span>`;
+                    messagesContainer.appendChild(sep);
                     lastDate = msgDate;
                     currentGroup = null;
+                    lastMessage = null;
+                    groupCount = 0;
                 }
-                const isSameSender = lastMessage && msg.senderId === lastMessage.senderId && (msg.timestamp - lastMessage.timestamp) < 120000;
+
+                // Group same-sender messages within 2 min
+                const isSameSender = lastMessage &&
+                    msg.senderId === lastMessage.senderId &&
+                    (msg.timestamp - lastMessage.timestamp) < 120000;
+
                 if (!isSameSender) {
                     currentGroup = document.createElement('div');
                     currentGroup.className = 'message-group';
                     messagesContainer.appendChild(currentGroup);
+                    groupCount = 0;
                 }
-                const messageDiv = createMessageElement(msg, msgKey);
-                currentGroup.appendChild(messageDiv);
+
+                // Hide avatar for follow-up bubbles in same group
+                const hideAvatar = isSameSender;
+                const messageEl = createMessageElement(msg, msgKey, hideAvatar);
+                currentGroup.appendChild(messageEl);
                 lastMessage = msg;
+                groupCount++;
+
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             });
 
-            // Only bind input/send listeners once
+            // Input / send bindings (once)
             if (!chatInitialized) {
                 chatInitialized = true;
                 const chatInput = document.getElementById('chatInput');
@@ -3747,6 +3872,8 @@
                 });
             }
             setupTypingListener();
+
+            // Clear typing status when chat view is hidden
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.target.style.display === 'none' && typingRef) {
@@ -3755,31 +3882,80 @@
                     }
                 });
             });
-            observer.observe(chatView, { attributes: true, attributeFilter: ['style'] });
+            const chatViewEl = document.getElementById('chatView');
+            if (chatViewEl) observer.observe(chatViewEl, { attributes: true, attributeFilter: ['style'] });
         }
 
-        function createMessageElement(msg, key) {
+                function createMessageElement(msg, key, hideAvatar) {
             const isOwn = msg.senderId === currentUser?.uid;
-            const senderInitials = getInitials(msg.senderName || 'Unknown');
-            const senderAvatar = msg.senderPhoto || '';
+            const senderInitials = getInitials(msg.senderName || '?');
+            const senderAvatar   = msg.senderPhoto || '';
+            const timeStr = msg.timestamp ? moment(msg.timestamp).format('hh:mm A') : '';
+
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isOwn ? 'message-own' : ''}`;
             messageDiv.id = `msg-${key}`;
-            const avatarHtml = senderAvatar ? `<img src="${senderAvatar}" style="width:100%; height:100%; object-fit:cover;">` : senderInitials;
-            const timeStr = msg.timestamp ? moment(msg.timestamp).format('hh:mm A') : 'Just now';
-            let contentHtml = '';
-            if (msg.text) contentHtml = `<div class="message-text">${msg.text}</div>`;
-            if (msg.imageUrl) contentHtml += `<img src="${msg.imageUrl}" class="chat-image" onclick="showImageModal('${msg.imageUrl}')">`;
-            const deleteBtn = isOwn ? `<button class="delete-msg-btn" onclick="promptDeleteMessage('${key}')"><i class="fas fa-trash"></i></button>` : '';
-            const statusIcon = isOwn ? '<span class="message-status"><i class="fas fa-check"></i></span>' : '';
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${avatarHtml}</div> <div class="message-bubble"> <div class="message-sender">${isOwn ? 'You' : (msg.senderName || 'Unknown')}</div> ${contentHtml}
-                    <div class="message-time">${timeStr} ${statusIcon}</div> ${deleteBtn}
-                </div> `;
+
+            // Avatar
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'message-avatar' + (hideAvatar ? ' hidden-avatar' : '');
+            if (senderAvatar) {
+                avatarDiv.innerHTML = `<img src="${senderAvatar}" alt="${senderInitials}">`;
+            } else {
+                avatarDiv.textContent = senderInitials;
+            }
+
+            // Bubble
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+
+            // Sender name (only if not own and not hidden)
+            if (!isOwn && !hideAvatar) {
+                const senderEl = document.createElement('div');
+                senderEl.className = 'message-sender';
+                senderEl.textContent = msg.senderName || 'Unknown';
+                bubbleDiv.appendChild(senderEl);
+            }
+
+            // Content
+            if (msg.text) {
+                const textEl = document.createElement('div');
+                textEl.className = 'message-text';
+                textEl.textContent = msg.text;
+                bubbleDiv.appendChild(textEl);
+            }
+            if (msg.imageUrl) {
+                const img = document.createElement('img');
+                img.src = msg.imageUrl;
+                img.className = 'chat-image';
+                img.onclick = () => showImageModal(msg.imageUrl);
+                bubbleDiv.appendChild(img);
+            }
+
+            // Time row
+            const timeRow = document.createElement('div');
+            timeRow.className = 'message-time';
+            timeRow.innerHTML = timeStr;
+            if (isOwn) {
+                timeRow.innerHTML += ` <span class="message-status"><i class="fas fa-check-double"></i></span>`;
+            }
+            bubbleDiv.appendChild(timeRow);
+
+            // Delete button (own messages)
+            if (isOwn) {
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-msg-btn';
+                delBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                delBtn.onclick = () => promptDeleteMessage(key);
+                bubbleDiv.appendChild(delBtn);
+            }
+
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(bubbleDiv);
             return messageDiv;
         }
 
-        async function sendChatMessage() {
+                async function sendChatMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
@@ -3986,17 +4162,53 @@
         }
 
         // ==================== LEARNING MANAGEMENT ====================
+        // ── YouTube helpers ──────────────────────────────────────────────────
         function getYouTubeVideoId(url) {
             if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+            const m = url.match(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
+            return (m && m[2].length === 11) ? m[2] : null;
         }
-
         function getYouTubeThumbnail(videoId) {
+            // Try maxresdefault first; browser will fall back to hqdefault via onerror
+            return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        }
+        function getYouTubeHQFallback(videoId) {
             return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
         }
 
+        // Active player tracking — only one open at a time
+        let activePlayerCard = null;
+
+        function closeLearningPlayer(card) {
+            if (!card) return;
+            const wrap = card.querySelector('.lc-player-wrap');
+            if (wrap) {
+                // Swap src to empty to stop playback immediately
+                const iframe = wrap.querySelector('iframe');
+                if (iframe) iframe.src = '';
+                wrap.classList.remove('open');
+            }
+            card.classList.remove('playing');
+            activePlayerCard = null;
+        }
+
+        function openLearningPlayer(card, videoId) {
+            // Close any previously open player
+            if (activePlayerCard && activePlayerCard !== card) {
+                closeLearningPlayer(activePlayerCard);
+            }
+            const wrap = card.querySelector('.lc-player-wrap');
+            const iframe = wrap.querySelector('iframe');
+            // Enable autoplay + modest branding; rel=0 keeps related videos same channel
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+            wrap.classList.add('open');
+            card.classList.add('playing');
+            activePlayerCard = card;
+            // Smooth scroll card into view
+            setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+        }
+
+        // ── Main loader ──────────────────────────────────────────────────────
         async function loadLearningResources() {
             const snapshot = await db.ref('learning').orderByChild('createdAt').once('value');
             const resources = [];
@@ -4016,56 +4228,96 @@
             }
 
             resources.forEach(res => {
-                const isVideo = res.type === 'video';
+                const isVideo   = res.type === 'video';
                 const isArticle = res.type === 'article';
-                const videoId = isVideo ? getYouTubeVideoId(res.url) : null;
+                const videoId   = isVideo ? getYouTubeVideoId(res.url) : null;
 
-                // Determine thumbnail
+                // Thumbnail
                 let thumbSrc = res.thumbnail || '';
                 if (!thumbSrc && videoId) thumbSrc = getYouTubeThumbnail(videoId);
+                const thumbFallback = videoId ? getYouTubeHQFallback(videoId) : '';
 
-                // Type badge
+                // Icons
                 const typeLabel = (res.type || 'resource').toUpperCase();
                 const typeClass = res.type || 'resource';
-                const typeIcon = isVideo ? 'fa-play' : (isArticle ? 'fa-file-alt' : 'fa-layer-group');
+                const typeIcon  = isVideo ? 'fa-play' : (isArticle ? 'fa-file-alt' : 'fa-layer-group');
+                const playIconClass = isVideo ? 'fa-play' : 'fa-external-link-alt';
+                const dateStr = res.createdAt ? moment(res.createdAt).format('MMM DD, YYYY') : '';
 
                 // Thumbnail HTML
                 let thumbContent = '';
                 if (thumbSrc) {
-                    thumbContent = `<img src="${thumbSrc}" alt="${escapeHtml(res.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                        <div class="lc-thumb-icon" style="display:none;"><i class="fas ${typeIcon}"></i></div>`;
+                    thumbContent = `
+                        <img src="${thumbSrc}" alt="${escapeHtml(res.title)}" loading="lazy"
+                             onerror="this.src='${thumbFallback}';this.onerror=null;">
+                    `;
                 } else {
                     thumbContent = `<div class="lc-thumb-icon"><i class="fas ${typeIcon}"></i></div>`;
                 }
 
-                // Play button (always shown for video, arrow for others)
-                const playIconClass = isVideo ? 'fa-play' : 'fa-arrow-right';
-                const playHtml = `<div class="lc-play"><div class="lc-play-btn"><i class="fas ${playIconClass}"></i></div></div>`;
-
-                const dateStr = res.createdAt ? moment(res.createdAt).format('MMM DD') : '';
-
+                // Build card DOM
                 const card = document.createElement('div');
-                card.className = 'learning-card';
-                card.onclick = () => window.open(res.url, '_blank');
+                card.className = `learning-card ${typeClass}-card`;
                 card.innerHTML = `
                     <div class="lc-thumb">
                         ${thumbContent}
-                        <span class="lc-type-badge ${typeClass}"><i class="fas ${typeIcon}"></i> ${typeLabel}</span>
-                        ${playHtml}
+                        <span class="lc-type-badge ${typeClass}">
+                            <i class="fas ${typeIcon}"></i> ${typeLabel}
+                        </span>
+                        <div class="lc-play">
+                            <div class="lc-play-btn"><i class="fas ${playIconClass}"></i></div>
+                        </div>
                     </div>
+                    ${isVideo && videoId ? `
+                    <div class="lc-player-wrap">
+                        <button class="lc-player-close" title="Close player">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen playsinline></iframe>
+                    </div>` : ''}
                     <div class="lc-body">
                         <div class="lc-title">${escapeHtml(res.title)}</div>
                         ${res.description ? `<div class="lc-desc">${escapeHtml(res.description)}</div>` : ''}
                         <div class="lc-footer">
                             <div class="lc-meta">
-                                ${dateStr ? `<span><i class="far fa-calendar"></i> ${dateStr}</span>` : ''}
+                                ${dateStr ? `<span><i class="far fa-calendar-alt"></i> ${dateStr}</span>` : ''}
                             </div>
-                            <span class="lc-open-btn" onclick="event.stopPropagation();window.open('${res.url}','_blank')">
+                            ${!isVideo ? `
+                            <a href="${res.url}" target="_blank" class="lc-open-btn" onclick="event.stopPropagation()">
                                 Open <i class="fas fa-external-link-alt"></i>
-                            </span>
+                            </a>` : `
+                            <span class="lc-open-btn" onclick="event.stopPropagation();window.open('${res.url}','_blank')">
+                                YouTube <i class="fab fa-youtube"></i>
+                            </span>`}
                         </div>
                     </div>
                 `;
+
+                // ── Click handlers ─────────────────────────────────────────
+                if (isVideo && videoId) {
+                    // Tap thumbnail → toggle inline player
+                    const thumb = card.querySelector('.lc-thumb');
+                    thumb.style.cursor = 'pointer';
+                    thumb.addEventListener('click', () => {
+                        if (card.classList.contains('playing')) {
+                            closeLearningPlayer(card);
+                        } else {
+                            openLearningPlayer(card, videoId);
+                        }
+                    });
+                    // Close button inside player
+                    const closeBtn = card.querySelector('.lc-player-close');
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        closeLearningPlayer(card);
+                    });
+                } else {
+                    // Non-video: open link on card click
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', () => window.open(res.url, '_blank'));
+                }
+
                 container.appendChild(card);
             });
         }
