@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot · Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot · Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
 <link rel="icon" type="image/png" sizes="16x16" href="/about.jpg">
 <link rel="apple-touch-icon" sizes="180x180" href="/about.jpg"> <!-- Libraries --> <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script> <style> /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
         *, *::before, *::after {
@@ -64,56 +64,145 @@
             --t-slow: 400ms cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* ─── LIGHT THEME ─── */
+        /* ─── LIGHT THEME — PROFESSIONAL ─── */
         [data-theme="light"] {
-            --bg: #f0f0f8;
-            --surface-0: #f8f8ff;
+            --bg: #f5f6fa;
+            --surface-0: #ffffff;
             --surface-1: #ffffff;
-            --surface-2: #f0f0f8;
-            --surface-3: #e4e4f0;
-            --surface-4: #d4d4e8;
-            --border: rgba(0,0,0,0.08);
-            --border-accent: rgba(99,102,241,0.3);
-            --text-1: #1a1a2e;
-            --text-2: #4a4a6a;
-            --text-3: #8888aa;
+            --surface-2: #f0f2f8;
+            --surface-3: #e4e8f4;
+            --surface-4: #d0d7ea;
+            --border: rgba(15,20,60,0.09);
+            --border-accent: rgba(91,94,244,0.28);
+            --text-1: #0f1226;
+            --text-2: #3d4468;
+            --text-3: #8b94b8;
             --text-inv: #ffffff;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-            --accent-dim: rgba(99,102,241,0.1);
-            --accent-glow: rgba(99,102,241,0.2);
-            --success-dim: rgba(16,185,129,0.1);
-            --warning-dim: rgba(245,158,11,0.1);
-            --danger-dim: rgba(239,68,68,0.1);
+            --shadow-sm: 0 1px 4px rgba(15,20,60,0.08);
+            --shadow-md: 0 4px 20px rgba(15,20,60,0.10);
+            --shadow-lg: 0 8px 36px rgba(15,20,60,0.13);
+            --accent-dim: rgba(91,94,244,0.08);
+            --accent-glow: rgba(91,94,244,0.18);
+            --success-dim: rgba(16,185,129,0.09);
+            --warning-dim: rgba(245,158,11,0.09);
+            --danger-dim: rgba(239,68,68,0.09);
         }
         [data-theme="light"] .header {
-            background: rgba(240,240,248,0.92);
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid rgba(15,20,60,0.08);
+            box-shadow: 0 1px 12px rgba(15,20,60,0.06);
         }
         [data-theme="light"] .bottom-nav {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.97);
+            border-top: 1px solid rgba(15,20,60,0.08);
+            box-shadow: 0 -2px 16px rgba(15,20,60,0.07);
         }
         [data-theme="light"] .sidebar {
-            background: var(--surface-1);
-            border-right: 1px solid var(--border);
+            background: #ffffff;
+            border-right: 1px solid rgba(15,20,60,0.09);
+            box-shadow: 4px 0 24px rgba(15,20,60,0.08);
+        }
+        [data-theme="light"] .sidebar-header {
+            background: linear-gradient(135deg, rgba(91,94,244,0.06) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(15,20,60,0.08);
+        }
+        [data-theme="light"] .nav-section-label { color: rgba(15,20,60,0.35); }
+        [data-theme="light"] .nav-item { color: var(--text-2); }
+        [data-theme="light"] .nav-item:hover { background: rgba(91,94,244,0.06); color: var(--text-1); }
+        [data-theme="light"] .nav-item.active { background: rgba(91,94,244,0.09); color: var(--accent); border-color: rgba(91,94,244,0.2); }
+        [data-theme="light"] .sidebar-logo-text {
+            background: linear-gradient(135deg, #1a1f4e 0%, #5b5ef4 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        [data-theme="light"] .menu-btn,
+        [data-theme="light"] .icon-btn {
+            background: #f0f2f8;
+            border-color: rgba(15,20,60,0.10);
+            color: var(--text-2);
         }
         [data-theme="light"] .chat-container,
         [data-theme="light"] .chat-input-area,
-        [data-theme="light"] .chat-header-bar {
-            background: #f8f8ff;
-        }
+        [data-theme="light"] .chat-header-bar { background: #f5f6fa; }
         [data-theme="light"] .message-bubble {
             background: #ffffff;
-            border-color: rgba(0,0,0,0.08);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border-color: rgba(15,20,60,0.09);
+            box-shadow: 0 1px 6px rgba(15,20,60,0.07);
         }
         [data-theme="light"] .message-own .message-bubble {
             background: linear-gradient(135deg, #5b5ef4, #7c5cf6);
         }
-        [data-theme="light"] .code-editor-area {
-            background: #1e1e2e !important;
+        [data-theme="light"] .code-editor-area { background: #1e1e2e !important; }
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(15,20,60,0.18); }
+
+        /* Light theme: team card, stat card, leaderboard refinement */
+        [data-theme="light"] .team-card,
+        [data-theme="light"] .stat-card,
+        [data-theme="light"] .leaderboard-item,
+        [data-theme="light"] .notice-card,
+        [data-theme="light"] .task-card,
+        [data-theme="light"] .idea-item,
+        [data-theme="light"] .poll-card,
+        [data-theme="light"] .meeting-card,
+        [data-theme="light"] .card {
+            background: #ffffff;
+            border-color: rgba(15,20,60,0.09);
+            box-shadow: 0 1px 8px rgba(15,20,60,0.06);
         }
-        [data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--surface-3); }
+        [data-theme="light"] .team-card:hover,
+        [data-theme="light"] .stat-card:hover,
+        [data-theme="light"] .leaderboard-item:hover {
+            box-shadow: 0 4px 20px rgba(91,94,244,0.12);
+            border-color: rgba(91,94,244,0.25);
+        }
+        [data-theme="light"] .ai-panel {
+            background: linear-gradient(135deg, rgba(91,94,244,0.06) 0%, rgba(124,92,246,0.03) 100%);
+            border-color: rgba(91,94,244,0.2);
+        }
+        [data-theme="light"] .insight-item {
+            background: rgba(255,255,255,0.8);
+            border-color: rgba(15,20,60,0.09);
+        }
+        [data-theme="light"] .insight-icon { background: rgba(91,94,244,0.08); }
+        [data-theme="light"] .team-stats { border-color: rgba(15,20,60,0.08); }
+        [data-theme="light"] .stat-card::after {
+            background: linear-gradient(135deg, rgba(91,94,244,0.04) 0%, transparent 60%);
+        }
+        [data-theme="light"] .member-tab-pill {
+            background: #f0f2f8;
+            border-color: rgba(15,20,60,0.09);
+        }
+        [data-theme="light"] .member-tab-pill.active {
+            background: rgba(91,94,244,0.08);
+            border-color: rgba(91,94,244,0.25);
+        }
+        [data-theme="light"] .section-header { border-color: rgba(15,20,60,0.08); }
+        [data-theme="light"] .notice-header-bar {
+            background: linear-gradient(135deg, rgba(91,94,244,0.07), rgba(124,92,246,0.04));
+            border-bottom-color: rgba(91,94,244,0.15);
+        }
+        [data-theme="light"] .notice-footer { background: #f8f9fc; }
+        [data-theme="light"] .task-footer { background: #f8f9fc; }
+        [data-theme="light"] .poll-option { background: #f0f2f8; border-color: rgba(15,20,60,0.10); color: var(--text-1); }
+        [data-theme="light"] .checkin-card { background: #ffffff; box-shadow: 0 2px 16px rgba(15,20,60,0.08); }
+        [data-theme="light"] .profile-card-wrap { background: #ffffff; }
+        [data-theme="light"] .profile-stat-box { background: #f0f2f8; border-color: rgba(15,20,60,0.09); }
+        [data-theme="light"] .modal { background: #ffffff; box-shadow: 0 -8px 40px rgba(15,20,60,0.18); }
+        [data-theme="light"] .modal input,
+        [data-theme="light"] .modal textarea,
+        [data-theme="light"] .modal select { background: #f0f2f8; border-color: rgba(15,20,60,0.12); color: var(--text-1); }
+        [data-theme="light"] .input-field input { background: #f0f2f8; border-color: rgba(15,20,60,0.12); }
+        [data-theme="light"] .chat-input { background: #f0f2f8; border-color: rgba(15,20,60,0.12); color: var(--text-1); }
+        [data-theme="light"] .auth-card { background: #ffffff; box-shadow: 0 24px 80px rgba(15,20,60,0.14), 0 0 0 1px rgba(15,20,60,0.07); }
+        [data-theme="light"] .btn-google { background: #f5f6fa; border-color: rgba(15,20,60,0.12); color: var(--text-1); }
+        [data-theme="light"] .btn-outline { background: transparent; border-color: rgba(15,20,60,0.14); color: var(--text-2); }
+        [data-theme="light"] .btn-ghost { background: #f0f2f8; border-color: rgba(15,20,60,0.12); }
+        [data-theme="light"] .toast { background: #ffffff; border-color: rgba(15,20,60,0.12); box-shadow: 0 4px 20px rgba(15,20,60,0.15); }
+        [data-theme="light"] .studio-topbar,
+        [data-theme="light"] .studio-tabs,
+        [data-theme="light"] .studio-preview-bar { background: #f5f6fa; border-color: rgba(15,20,60,0.09); }
+        [data-theme="light"] .studio-project-card { background: #ffffff; border-color: rgba(15,20,60,0.09); box-shadow: 0 1px 8px rgba(15,20,60,0.06); }
+        [data-theme="light"] .studio-btn { background: #f0f2f8; border-color: rgba(15,20,60,0.12); color: var(--text-2); }
 
         /* ─── THEME TRANSITION ─── */
         *, *::before, *::after { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease; }
@@ -428,7 +517,7 @@
         .main-content { padding: var(--s4); }
         /* Chat and Studio view get no extra padding to maximize space */
         #chatView { margin: -16px; }
-        #studioView { margin: -16px; overflow: hidden; }
+        /* studio view padding reset handled below */
 
         /* ─── SECTION HEADER ─── */
         .section-header {
@@ -2166,160 +2255,267 @@
         .ai-header i { color: var(--accent); }
 
         /* ═══════════════════════════════════
-           CODE STUDIO
+           CODE STUDIO — PRO IDE REDESIGN
            ═══════════════════════════════════ */
+
+        /* Studio Layout */
         .studio-layout {
             display: flex; flex-direction: column;
             height: calc(100vh - 72px);
-            margin: -16px;
+            margin: -20px;
             overflow: hidden;
+            background: #0d0d14;
         }
+
+        /* ── Top Action Bar (IDE toolbar style) ── */
         .studio-topbar {
-            display: flex; align-items: center; gap: var(--s2);
-            padding: 10px 14px;
-            background: var(--surface-1);
-            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px;
+            background: #111118;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             flex-shrink: 0; z-index: 10;
+            min-height: 48px;
         }
+        [data-theme="light"] .studio-topbar {
+            background: #fafbff;
+            border-bottom-color: rgba(15,20,60,0.09);
+        }
+
+        /* Back icon in topbar */
+        .studio-back-btn {
+            width: 32px; height: 32px; border: none; border-radius: 8px;
+            background: rgba(255,255,255,0.06); color: #a0a0c0;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+            font-size: 0.85rem;
+        }
+        .studio-back-btn:active { background: rgba(91,94,244,0.15); color: #5b5ef4; }
+        [data-theme="light"] .studio-back-btn { background: #f0f2f8; color: #3d4468; }
+
+        /* Project name input - looks like a file tab */
         .studio-project-name {
             flex: 1; font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700; font-size: 0.92rem; color: var(--text-1);
-            background: none; border: none; outline: none;
+            font-weight: 600; font-size: 0.88rem; color: #e2e2f2;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 8px;
+            outline: none; padding: 6px 12px;
             -webkit-user-select: text; user-select: text;
+            min-width: 0;
         }
-        .studio-project-name::placeholder { color: var(--text-3); }
+        .studio-project-name::placeholder { color: rgba(160,160,192,0.5); }
+        .studio-project-name:focus { border-color: rgba(91,94,244,0.4); background: rgba(91,94,244,0.06); }
+        [data-theme="light"] .studio-project-name {
+            color: #0f1226; background: #f0f2f8; border-color: rgba(15,20,60,0.12);
+        }
+
+        /* Action Buttons */
         .studio-btn {
-            height: 34px; padding: 0 12px;
-            border: 1px solid var(--border);
-            border-radius: var(--r-sm);
-            background: var(--surface-2); color: var(--text-2);
-            font-family: inherit; font-size: 0.78rem; font-weight: 600;
+            height: 32px; padding: 0 11px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05); color: #a0a0c0;
+            font-family: inherit; font-size: 0.75rem; font-weight: 600;
             cursor: pointer; display: flex; align-items: center; gap: 5px;
-            transition: var(--t-fast); white-space: nowrap;
+            transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
         }
-        .studio-btn:active { background: var(--surface-3); }
+        .studio-btn:active { transform: scale(0.95); }
+        [data-theme="light"] .studio-btn { background: #f0f2f8; border-color: rgba(15,20,60,0.12); color: #3d4468; }
         .studio-btn.primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            background: linear-gradient(135deg, #5b5ef4, #7c5cf6);
             color: white; border-color: transparent;
+            box-shadow: 0 2px 10px rgba(91,94,244,0.3);
         }
+        .studio-btn.primary:active { box-shadow: none; }
         .studio-btn.run-btn {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white; border-color: transparent;
+            box-shadow: 0 2px 10px rgba(16,185,129,0.3);
         }
         .studio-btn.danger-btn {
-            background: var(--danger-dim); color: var(--danger); border-color: var(--danger);
+            background: rgba(239,68,68,0.12); color: #ef4444; border-color: rgba(239,68,68,0.3);
         }
+        .studio-btn.danger-btn:active { background: rgba(239,68,68,0.2); }
+
+        /* ── Tab Bar (language tabs like VS Code) ── */
         .studio-tabs {
-            display: flex; background: var(--surface-0);
-            border-bottom: 1px solid var(--border);
+            display: flex; 
+            background: #0d0d14;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             flex-shrink: 0;
+            padding: 0 4px;
+            gap: 2px;
+            padding-top: 4px;
         }
+        [data-theme="light"] .studio-tabs { background: #f5f6fa; border-bottom-color: rgba(15,20,60,0.09); }
+
         .studio-tab {
-            padding: 8px 16px;
-            font-size: 0.75rem; font-weight: 700;
-            color: var(--text-3); cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: var(--t-fast); letter-spacing: 0.05em;
+            padding: 7px 14px;
+            font-size: 0.72rem; font-weight: 700;
+            color: #606080; cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            border: 1px solid transparent;
+            border-bottom: none;
+            transition: all 0.15s; letter-spacing: 0.04em;
             text-transform: uppercase; user-select: none;
             display: flex; align-items: center; gap: 6px;
+            position: relative; background: transparent;
         }
-        .studio-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .studio-tab .tab-dot {
-            width: 6px; height: 6px; border-radius: 50%;
+        .studio-tab:hover { color: #a0a0c0; background: rgba(255,255,255,0.04); }
+        .studio-tab.active {
+            color: #e2e2f2;
+            background: #1a1a28;
+            border-color: rgba(255,255,255,0.07);
+            border-bottom-color: #1a1a28;
+            margin-bottom: -1px;
         }
+        [data-theme="light"] .studio-tab { color: #8b94b8; }
+        [data-theme="light"] .studio-tab:hover { color: #3d4468; background: rgba(15,20,60,0.04); }
+        [data-theme="light"] .studio-tab.active { color: #0f1226; background: #ffffff; border-color: rgba(15,20,60,0.09); border-bottom-color: #ffffff; }
+        .studio-tab .tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
         .studio-tab:nth-child(1) .tab-dot { background: #f97316; }
         .studio-tab:nth-child(2) .tab-dot { background: #3b82f6; }
         .studio-tab:nth-child(3) .tab-dot { background: #f59e0b; }
+        .studio-tab:nth-child(4) .tab-dot { background: #10b981; }
+
+        /* ── Editor Wrap ── */
         .studio-editor-wrap {
             flex: 1; position: relative; overflow: hidden;
+            background: #1a1a28;
         }
-        .studio-editor-pane {
-            display: none; height: 100%;
-            flex-direction: column;
-        }
+        [data-theme="light"] .studio-editor-wrap { background: #1e1e2e; }
+
+        .studio-editor-pane { display: none; height: 100%; flex-direction: column; }
         .studio-editor-pane.active { display: flex; }
+
+        /* Editor area — true dark IDE */
         .studio-editor-area {
             flex: 1; resize: none; border: none; outline: none;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            font-size: 13px; line-height: 1.65;
-            padding: 16px; tab-size: 2;
-            background: #1a1a2e; color: #e2e8f0;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 13px; line-height: 1.7;
+            padding: 20px 20px 20px 24px;
+            tab-size: 2;
+            background: #1a1a28;
+            color: #cdd6f4;
+            caret-color: #5b5ef4;
             -webkit-user-select: text; user-select: text;
             overflow-y: auto; overflow-x: auto;
             white-space: pre; word-break: normal;
+            letter-spacing: 0.01em;
         }
+        /* Always keep editor dark regardless of theme */
         [data-theme="light"] .studio-editor-area {
-            background: #1e1e2e; color: #e2e8f0;
+            background: #1e1e2e; color: #cdd6f4;
         }
-        .studio-preview-pane {
-            display: none; height: 100%; flex-direction: column;
-        }
+        .studio-editor-area::selection { background: rgba(91,94,244,0.4); }
+        .studio-editor-area::-webkit-scrollbar { width: 6px; height: 6px; }
+        .studio-editor-area::-webkit-scrollbar-thumb { background: rgba(91,94,244,0.25); border-radius: 3px; }
+        .studio-editor-area::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+
+        /* ── Preview Pane ── */
+        .studio-preview-pane { display: none; height: 100%; flex-direction: column; }
         .studio-preview-pane.active { display: flex; }
+
         .studio-preview-bar {
-            display: flex; align-items: center; gap: var(--s2);
-            padding: 6px 14px;
-            background: var(--surface-1);
-            border-bottom: 1px solid var(--border);
-            font-size: 0.72rem; color: var(--text-3);
+            display: flex; align-items: center; gap: 8px;
+            padding: 7px 14px;
+            background: #111118;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.7rem; color: #606080; font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
             flex-shrink: 0;
         }
+        [data-theme="light"] .studio-preview-bar { background: #f5f6fa; border-bottom-color: rgba(15,20,60,0.09); color: #8b94b8; }
         .studio-preview-bar .preview-dot {
             width: 8px; height: 8px; border-radius: 50%;
-            background: var(--success); animation: livePulse 2s infinite;
+            background: #10b981; animation: livePulse 2s infinite;
+            box-shadow: 0 0 6px rgba(16,185,129,0.5);
         }
         @keyframes livePulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        .studio-iframe {
-            flex: 1; border: none; background: #fff;
+
+        .studio-iframe { flex: 1; border: none; background: #fff; }
+
+        /* ── Projects Screen ── */
+        .studio-projects-screen {
+            flex: 1; display: flex; flex-direction: column;
+            background: var(--bg); overflow: hidden;
         }
+        .studio-projects-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .studio-projects-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem; font-weight: 800; color: var(--text-1);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .studio-projects-title i { color: var(--accent); }
         .studio-projects-list {
-            padding: 16px; overflow-y: auto;
-            flex: 1;
+            padding: 12px 14px; overflow-y: auto; flex: 1;
         }
         .studio-project-card {
             background: var(--surface-1); border: 1px solid var(--border);
-            border-radius: var(--r-lg); padding: 14px 16px;
+            border-radius: 12px; padding: 12px 14px;
             margin-bottom: 10px; cursor: pointer;
-            transition: var(--t-fast);
+            transition: all 0.15s;
             display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
         }
+        .studio-project-card:hover { border-color: var(--border-accent); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
         .studio-project-card:active { transform: scale(0.98); border-color: var(--accent); }
+
         .studio-project-icon {
-            width: 44px; height: 44px; border-radius: var(--r-md);
-            background: linear-gradient(135deg, var(--accent-dim), rgba(139,92,246,0.1));
-            border: 1px solid var(--border-accent);
+            width: 46px; height: 46px; border-radius: 10px;
+            background: linear-gradient(135deg, rgba(91,94,244,0.15), rgba(124,92,246,0.1));
+            border: 1px solid rgba(91,94,244,0.2);
             display: flex; align-items: center; justify-content: center;
-            color: var(--accent); font-size: 1.1rem; flex-shrink: 0;
+            color: var(--accent); font-size: 1.15rem; flex-shrink: 0;
+            position: relative; overflow: hidden;
+        }
+        .studio-project-icon::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 100%);
         }
         .studio-project-info { flex: 1; min-width: 0; }
         .studio-project-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700; font-size: 0.92rem; color: var(--text-1);
+            font-weight: 700; font-size: 0.9rem; color: var(--text-1);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .studio-project-meta {
-            font-size: 0.7rem; color: var(--text-3); margin-top: 3px;
+            font-size: 0.68rem; color: var(--text-3); margin-top: 3px;
+            display: flex; align-items: center; gap: 4px;
         }
+        .studio-project-meta::before { content: ''; width: 4px; height: 4px; background: var(--text-3); border-radius: 50%; opacity: 0.5; }
         .studio-project-actions { display: flex; gap: 6px; }
         .studio-action-btn {
-            width: 32px; height: 32px; border: none; border-radius: var(--r-sm);
+            width: 32px; height: 32px; border: none; border-radius: 8px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; cursor: pointer; transition: var(--t-fast);
+            font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
         }
-        .studio-action-btn.edit { background: var(--accent-dim); color: var(--accent); }
-        .studio-action-btn.delete { background: var(--danger-dim); color: var(--danger); }
-        .studio-action-btn:active { transform: scale(0.9); }
+        .studio-action-btn.edit { background: rgba(91,94,244,0.1); color: #5b5ef4; border: 1px solid rgba(91,94,244,0.2); }
+        .studio-action-btn.edit:active { background: rgba(91,94,244,0.2); }
+        .studio-action-btn.delete { background: rgba(239,68,68,0.08); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .studio-action-btn.delete:active { background: rgba(239,68,68,0.18); }
+        .studio-action-btn:active { transform: scale(0.88); }
+
+        /* Empty state */
         .studio-empty {
             display: flex; flex-direction: column; align-items: center;
-            justify-content: center; padding: 48px 24px; text-align: center;
-            color: var(--text-3);
+            justify-content: center; padding: 52px 24px; text-align: center;
+            color: var(--text-3); flex: 1;
         }
-        .studio-empty i { font-size: 3rem; margin-bottom: 16px; color: var(--accent); opacity: 0.4; }
+        .studio-empty-icon {
+            width: 72px; height: 72px; border-radius: 20px; margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(91,94,244,0.1), rgba(124,92,246,0.06));
+            border: 1px solid rgba(91,94,244,0.15);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .studio-empty i { font-size: 2rem; color: var(--accent); opacity: 0.5; margin: 0; }
         .studio-empty h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-2); margin-bottom: 8px; }
-        .studio-empty p { font-size: 0.82rem; line-height: 1.6; }
+        .studio-empty p { font-size: 0.82rem; line-height: 1.6; max-width: 240px; }
         #studioView { padding: 0 !important; }
-
-        /* ── line numbers hint ── */
-        .studio-editor-area::selection { background: rgba(99,102,241,0.35); }
 
         /* ═══════════════════════════════════
            PROFILE — REDESIGN
@@ -2618,32 +2814,47 @@
                 <!-- Project list screen -->
                 <div id="studioProjectsScreen" class="studio-layout">
                     <div class="studio-topbar">
-                        <i class="fas fa-code" style="color:var(--accent);font-size:1rem;"></i>
-                        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:0.95rem;color:var(--text-1);flex:1;margin-left:4px;">Code Studio</span>
-                        <button class="studio-btn primary" onclick="openNewProject()"><i class="fas fa-plus"></i> New Project</button>
+                        <div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#5b5ef4,#7c5cf6);box-shadow:0 0 8px rgba(91,94,244,0.5);flex-shrink:0;"></div>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:0.9rem;color:#e2e2f2;flex:1;letter-spacing:-0.01em;">Code Studio</span>
+                        <button class="studio-btn run-btn" style="font-size:0.72rem;" onclick="openNewProject()"><i class="fas fa-plus"></i> New</button>
+                    </div>
+                    <!-- stat strip -->
+                    <div style="display:flex;gap:0;background:#111118;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0;">
+                        <div style="flex:1;padding:8px 14px;border-right:1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#606080;margin-bottom:2px;">Projects</div>
+                            <div id="studioStatProjects" style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1rem;color:#e2e2f2;">—</div>
+                        </div>
+                        <div style="flex:1;padding:8px 14px;border-right:1px solid rgba(255,255,255,0.05);">
+                            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#606080;margin-bottom:2px;">Stack</div>
+                            <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:0.72rem;color:#5b5ef4;">HTML · CSS · JS</div>
+                        </div>
+                        <div style="flex:1;padding:8px 14px;">
+                            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#606080;margin-bottom:2px;">Runtime</div>
+                            <div style="font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:0.72rem;color:#10b981;">Browser</div>
+                        </div>
                     </div>
                     <div class="studio-projects-list" id="studioProjectsList">
                         <div class="studio-empty">
-                            <i class="fas fa-code"></i>
+                            <div class="studio-empty-icon"><i class="fas fa-code"></i></div>
                             <h3>No Projects Yet</h3>
-                            <p>Create your first HTML/CSS/JS project and bring your ideas to life.</p>
+                            <p>Tap <strong>New</strong> to create your first HTML/CSS/JS project and start building.</p>
                         </div>
                     </div>
                 </div>
                 <!-- Editor screen -->
                 <div id="studioEditorScreen" style="display:none;" class="studio-layout">
                     <div class="studio-topbar">
-                        <button class="studio-btn" onclick="closeStudioEditor()"><i class="fas fa-arrow-left"></i></button>
-                        <input type="text" class="studio-project-name" id="studioProjectNameInput" placeholder="Project name…">
-                        <button class="studio-btn run-btn" onclick="runStudioCode()"><i class="fas fa-play"></i> Run</button>
-                        <button class="studio-btn primary" onclick="saveStudioProject()"><i class="fas fa-save"></i> Save</button>
-                        <button class="studio-btn danger-btn" id="studioDeleteBtn" onclick="deleteStudioProject()" style="display:none;"><i class="fas fa-trash"></i></button>
+                        <button class="studio-btn" onclick="closeStudioEditor()" title="Back to projects" style="width:32px;padding:0;justify-content:center;flex-shrink:0;"><i class="fas fa-arrow-left"></i></button>
+                        <input type="text" class="studio-project-name" id="studioProjectNameInput" placeholder="Untitled Project">
+                        <button class="studio-btn run-btn" onclick="switchStudioTab('preview',document.querySelector(\'.studio-tab:nth-child(4)\'))" title="Run preview"><i class="fas fa-play"></i></button>
+                        <button class="studio-btn primary" onclick="saveStudioProject()" title="Save"><i class="fas fa-cloud-upload-alt"></i> Save</button>
+                        <button class="studio-btn danger-btn" id="studioDeleteBtn" onclick="deleteStudioProject()" style="display:none;width:32px;padding:0;justify-content:center;" title="Delete"><i class="fas fa-trash"></i></button>
                     </div>
                     <div class="studio-tabs">
                         <div class="studio-tab active" onclick="switchStudioTab('html',this)"><span class="tab-dot"></span>HTML</div>
                         <div class="studio-tab" onclick="switchStudioTab('css',this)"><span class="tab-dot"></span>CSS</div>
                         <div class="studio-tab" onclick="switchStudioTab('js',this)"><span class="tab-dot"></span>JS</div>
-                        <div class="studio-tab" onclick="switchStudioTab('preview',this)" style="margin-left:auto;"><i class="fas fa-eye" style="font-size:0.7rem;margin-right:4px;"></i>Preview</div>
+                        <div class="studio-tab" onclick="switchStudioTab('preview',this)" style="margin-left:auto;border-left:1px solid rgba(255,255,255,0.05);"><span class="tab-dot" style="background:#10b981;"></span>Preview</div>
                     </div>
                     <div class="studio-editor-wrap">
                         <div class="studio-editor-pane active" id="studioHtmlPane">
@@ -2659,7 +2870,8 @@
                             <div class="studio-preview-bar">
                                 <div class="preview-dot"></div>
                                 <span>Live Preview</span>
-                                <button onclick="runStudioCode()" style="margin-left:auto;background:none;border:none;color:var(--accent);font-size:0.72rem;font-weight:700;cursor:pointer;"><i class="fas fa-rotate-right"></i> Refresh</button>
+                                <div style="flex:1;"></div>
+                                <button onclick="runStudioCode()" style="background:rgba(91,94,244,0.1);border:1px solid rgba(91,94,244,0.2);border-radius:6px;padding:3px 10px;color:#5b5ef4;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;"><i class="fas fa-rotate-right" style="font-size:0.62rem;"></i> Refresh</button>
                             </div>
                             <iframe id="studioPreviewFrame" class="studio-iframe" sandbox="allow-scripts allow-modals"></iframe>
                         </div>
@@ -5665,14 +5877,16 @@
             if (!currentUser) return;
             const container = document.getElementById('studioProjectsList');
             if (!container) return;
-            container.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-3);"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i></div>';
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#606080;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:#5b5ef4;"></i><div style="margin-top:10px;font-size:0.78rem;font-family:\'Space Grotesk\',sans-serif;">Loading projects…</div></div>';
             try {
                 const snap = await db.ref('studio_projects').orderByChild('userId').equalTo(currentUser.uid).once('value');
                 const projects = [];
                 snap.forEach(child => projects.push({ id: child.key, ...child.val() }));
                 projects.sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
+                const statEl = document.getElementById('studioStatProjects');
+                if (statEl) statEl.textContent = projects.length || '0';
                 if (projects.length === 0) {
-                    container.innerHTML = `<div class="studio-empty"><i class="fas fa-code"></i><h3>No Projects Yet</h3><p>Tap <strong>New Project</strong> to start building your first HTML/CSS/JS project.</p></div>`;
+                    container.innerHTML = `<div class="studio-empty"><div class="studio-empty-icon"><i class="fas fa-code"></i></div><h3>No Projects Yet</h3><p>Tap <strong>New</strong> to create your first HTML/CSS/JS project.</p></div>`;
                     return;
                 }
                 container.innerHTML = '';
@@ -5680,11 +5894,16 @@
                     const card = document.createElement('div');
                     card.className = 'studio-project-card';
                     const updated = p.updatedAt ? moment(p.updatedAt).fromNow() : '';
+                    // Detect file types in project
+                    const hasHtml = !!(p.html && p.html.trim());
+                    const hasCss = !!(p.css && p.css.trim());
+                    const hasJs = !!(p.js && p.js.trim());
+                    const langs = [hasHtml?'HTML':'', hasCss?'CSS':'', hasJs?'JS':''].filter(Boolean).join(' · ') || 'Empty';
                     card.innerHTML = `
                         <div class="studio-project-icon"><i class="fas fa-code"></i></div>
                         <div class="studio-project-info">
                             <div class="studio-project-title">${escapeHtml(p.name || 'Untitled')}</div>
-                            <div class="studio-project-meta">Updated ${updated}</div>
+                            <div class="studio-project-meta">${updated} &nbsp;·&nbsp; ${langs}</div>
                         </div>
                         <div class="studio-project-actions">
                             <button class="studio-action-btn edit" title="Edit"><i class="fas fa-pen"></i></button>
@@ -5696,7 +5915,7 @@
                     card.addEventListener('click', () => openStudioProject(p));
                     container.appendChild(card);
                 });
-            } catch(e) { container.innerHTML = '<div class="studio-empty"><i class="fas fa-exclamation-triangle"></i><h3>Failed to load</h3><p>Please try again.</p></div>'; }
+            } catch(e) { container.innerHTML = '<div class="studio-empty"><div class="studio-empty-icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Failed to load</h3><p>Please try again.</p></div>'; }
         };
 
         function openStudioProject(p) {
