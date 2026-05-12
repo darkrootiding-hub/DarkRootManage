@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot · Team Hub</title> <!-- Fonts & Icons --> <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="/about.jpg">
-<link rel="apple-touch-icon" sizes="180x180" href="/about.jpg"> <!-- Libraries --> <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script> <style> /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"> <title>DarkRoot · Team Hub</title>
+<!-- Preconnect for faster font load -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" type="image/png" sizes="32x32" href="/about.jpg">
+<link rel="apple-touch-icon" sizes="180x180" href="/about.jpg">
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style> /* ==================== DARKROOT DESIGN SYSTEM v2 ==================== */
         *, *::before, *::after {
             margin: 0; padding: 0;
             box-sizing: border-box;
@@ -204,10 +212,15 @@
         [data-theme="light"] .studio-project-card { background: #ffffff; border-color: rgba(15,20,60,0.09); box-shadow: 0 1px 8px rgba(15,20,60,0.06); }
         [data-theme="light"] .studio-btn { background: #f0f2f8; border-color: rgba(15,20,60,0.12); color: var(--text-2); }
 
-        /* ─── THEME TRANSITION ─── */
-        *, *::before, *::after { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease; }
-        /* But NOT layout/position transitions — those should stay instant */
-        .btn, .nav-item, .team-card, .modal { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease, transform var(--t-fast), box-shadow var(--t-fast); }
+        /* ─── THEME TRANSITION — only targeted elements, not * ─── */
+        .btn, .nav-item, .team-card, .stat-card, .leaderboard-item,
+        .notice-card, .task-card, .idea-item, .poll-card, .card,
+        .modal, .sidebar, .header, .bottom-nav, .chat-container,
+        .chat-header-bar, .chat-input-area, .input-field input,
+        .chat-input, .message-bubble, .studio-project-card,
+        .member-tab-pill, .studio-btn, .ai-panel {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, transform var(--t-fast), box-shadow var(--t-fast);
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -215,8 +228,10 @@
             color: var(--text-1);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
             overflow-x: hidden;
+            overscroll-behavior: none;
         }
 
         /* ─── SCROLLBAR ─── */
@@ -816,6 +831,8 @@
             display: flex; flex-direction: column; gap: 0;
             scroll-behavior: smooth;
             overscroll-behavior: contain;
+            contain: layout style;
+            will-change: scroll-position;
         }
         .chat-messages::-webkit-scrollbar { width: 0; }
 
@@ -2179,7 +2196,7 @@
         .auth-note i { color: var(--accent); margin-top: 1px; flex-shrink: 0; }
 
         /* ─── MAIN CONTENT ─── */
-        .main-content { padding: var(--s5) var(--s4); }
+        .main-content { padding: var(--s5) var(--s4); contain: layout; }
 
         /* ─── IDEAS IN SIDEBAR (panel style) ─── */
         .idea-item {
@@ -2535,7 +2552,41 @@
         .studio-empty i { font-size: 2rem; color: var(--accent); opacity: 0.5; margin: 0; }
         .studio-empty h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-2); margin-bottom: 8px; }
         .studio-empty p { font-size: 0.82rem; line-height: 1.6; max-width: 240px; }
-        #studioView { padding: 0 !important; }
+        /* ── Status Bar (VS Code style) ── */
+        .studio-statusbar {
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 14px;
+            height: 24px; min-height: 24px; flex-shrink: 0;
+            background: #0d1117;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem; color: #606080;
+            letter-spacing: 0.03em;
+        }
+        [data-theme="light"] .studio-statusbar {
+            background: #1e1e2e; border-top-color: rgba(255,255,255,0.05);
+        }
+        .studio-statusbar-sep {
+            width: 1px; height: 12px; background: rgba(255,255,255,0.1); flex-shrink: 0;
+        }
+
+        /* ── Perf: contain on list items ── */
+        .team-card, .leaderboard-item, .task-card, .notice-card, .feed-item {
+            contain: layout style;
+        }
+        .team-grid { contain: layout; }
+
+        /* ── Smooth scrolling for all scroll containers ── */
+        .main-content-scroll, .studio-projects-list, .chat-messages, .leaderboard-list {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ── Sidebar: GPU layer ── */
+        .sidebar {
+            transform: translateZ(0);
+            will-change: transform;
+        }
 
         /* ═══════════════════════════════════
            PROFILE — REDESIGN
@@ -2878,13 +2929,13 @@
                     </div>
                     <div class="studio-editor-wrap">
                         <div class="studio-editor-pane active" id="studioHtmlPane">
-                            <textarea class="studio-editor-area" id="studioHtmlEditor" placeholder="<!-- Write your HTML here -->" spellcheck="false"></textarea>
+                            <textarea class="studio-editor-area" id="studioHtmlEditor" placeholder="<!-- Write your HTML here -->" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
                         </div>
                         <div class="studio-editor-pane" id="studioCssPane">
-                            <textarea class="studio-editor-area" id="studioCssEditor" placeholder="/* Write your CSS here */" spellcheck="false"></textarea>
+                            <textarea class="studio-editor-area" id="studioCssEditor" placeholder="/* Write your CSS here */" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
                         </div>
                         <div class="studio-editor-pane" id="studioJsPane">
-                            <textarea class="studio-editor-area" id="studioJsEditor" placeholder="// Write your JavaScript here" spellcheck="false"></textarea>
+                            <textarea class="studio-editor-area" id="studioJsEditor" placeholder="// Write your JavaScript here" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
                         </div>
                         <div class="studio-preview-pane" id="studioPreviewPane">
                             <div class="studio-preview-bar">
@@ -2895,6 +2946,19 @@
                             </div>
                             <iframe id="studioPreviewFrame" class="studio-iframe" sandbox="allow-scripts allow-modals"></iframe>
                         </div>
+                    </div>
+                    <!-- Status bar -->
+                    <div class="studio-statusbar">
+                        <span id="studioStatusLang" style="color:#5b5ef4;font-weight:700;">HTML</span>
+                        <span class="studio-statusbar-sep"></span>
+                        <span id="studioLineCount">Ln 1 · 1 lines</span>
+                        <span class="studio-statusbar-sep"></span>
+                        <span id="studioUnsavedDot" style="display:none;color:#f59e0b;"><i class="fas fa-circle" style="font-size:0.45rem;vertical-align:middle;margin-right:3px;"></i>Unsaved</span>
+                        <span id="studioSavedBadge" style="color:#10b981;display:none;"><i class="fas fa-check" style="margin-right:3px;font-size:0.65rem;"></i>Saved</span>
+                        <div style="flex:1;"></div>
+                        <span>UTF-8</span>
+                        <span class="studio-statusbar-sep"></span>
+                        <span>2 spaces</span>
                     </div>
                 </div>
             </div>
@@ -5817,87 +5881,191 @@
         })();
 
         // ==================== CODE STUDIO ====================
+        // ==================== CODE STUDIO ====================
         let studioCurrentProjectId = null;
         let studioActiveTab = 'html';
+        let studioPreviewDebounce = null;
+        let studioUnsaved = false;
+
+        // Cache DOM refs for studio
+        const studioEls = {};
+        function getStudioEl(id) {
+            if (!studioEls[id]) studioEls[id] = document.getElementById(id);
+            return studioEls[id];
+        }
+
+        // Mark unsaved changes
+        function studioMarkDirty() {
+            studioUnsaved = true;
+            const unsavedEl = document.getElementById('studioUnsavedDot');
+            const savedEl = document.getElementById('studioSavedBadge');
+            if (unsavedEl) unsavedEl.style.display = 'inline';
+            if (savedEl) savedEl.style.display = 'none';
+            const saveBtn = document.querySelector('.studio-btn.primary');
+            if (saveBtn) saveBtn.style.boxShadow = '0 0 0 2px rgba(245,158,11,0.45), 0 2px 10px rgba(91,94,244,0.3)';
+        }
+
+        function studioMarkClean() {
+            studioUnsaved = false;
+            const unsavedEl = document.getElementById('studioUnsavedDot');
+            const savedEl = document.getElementById('studioSavedBadge');
+            if (unsavedEl) unsavedEl.style.display = 'none';
+            if (savedEl) { savedEl.style.display = 'inline'; setTimeout(() => { savedEl.style.display = 'none'; }, 2500); }
+            const saveBtn = document.querySelector('.studio-btn.primary');
+            if (saveBtn) saveBtn.style.boxShadow = '';
+        }
 
         window.switchStudioTab = function(tab, el) {
             studioActiveTab = tab;
-            // Update tab UI
             document.querySelectorAll('.studio-tab').forEach(t => t.classList.remove('active'));
             if (el) el.classList.add('active');
-            // Show/hide panes
             const panes = { html: 'studioHtmlPane', css: 'studioCssPane', js: 'studioJsPane', preview: 'studioPreviewPane' };
             Object.entries(panes).forEach(([key, id]) => {
-                const el2 = document.getElementById(id);
-                if (!el2) return;
-                if (key === tab) {
-                    el2.className = el2.className.replace('studio-editor-pane','').replace('studio-preview-pane','').trim();
-                    if (key === 'preview') el2.className = 'studio-preview-pane active';
-                    else el2.className = 'studio-editor-pane active';
-                } else {
-                    if (key === 'preview') el2.className = 'studio-preview-pane';
-                    else el2.className = 'studio-editor-pane';
-                }
+                const pane = document.getElementById(id);
+                if (!pane) return;
+                const isTarget = key === tab;
+                const isPreview = key === 'preview';
+                pane.className = isPreview
+                    ? (isTarget ? 'studio-preview-pane active' : 'studio-preview-pane')
+                    : (isTarget ? 'studio-editor-pane active' : 'studio-editor-pane');
             });
-            if (tab === 'preview') runStudioCode();
+            // Update status bar language
+            const langEl = document.getElementById('studioStatusLang');
+            const langMap = { html: 'HTML', css: 'CSS', js: 'JavaScript', preview: 'Preview' };
+            if (langEl) langEl.textContent = langMap[tab] || tab.toUpperCase();
+            if (tab === 'preview') {
+                runStudioCode();
+            } else {
+                const editorMap = { html: 'studioHtmlEditor', css: 'studioCssEditor', js: 'studioJsEditor' };
+                const edId = editorMap[tab];
+                if (edId) requestAnimationFrame(() => document.getElementById(edId)?.focus());
+            }
+            updateLineCount(tab);
         };
 
+        // Live preview with debounce (300ms) — only if preview tab is active
+        function scheduleLivePreview() {
+            if (studioActiveTab !== 'preview') return;
+            clearTimeout(studioPreviewDebounce);
+            studioPreviewDebounce = setTimeout(runStudioCode, 400);
+        }
+
         window.runStudioCode = function() {
-            const html = document.getElementById('studioHtmlEditor').value;
-            const css = document.getElementById('studioCssEditor').value;
-            const js = document.getElementById('studioJsEditor').value;
-            const frame = document.getElementById('studioPreviewFrame');
+            const html = getStudioEl('studioHtmlEditor')?.value || '';
+            const css  = getStudioEl('studioCssEditor')?.value || '';
+            const js   = getStudioEl('studioJsEditor')?.value || '';
+            const frame = getStudioEl('studioPreviewFrame');
             if (!frame) return;
-            const content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
-            frame.srcdoc = content;
+            frame.srcdoc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>*{box-sizing:border-box;}${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
         };
+
+        // Line counter display
+        function updateLineCount(tab) {
+            const editorMap = { html: 'studioHtmlEditor', css: 'studioCssEditor', js: 'studioJsEditor' };
+            const edId = editorMap[tab];
+            const lineEl = document.getElementById('studioLineCount');
+            if (!edId || !lineEl) return;
+            const ed = document.getElementById(edId);
+            if (!ed) return;
+            const lines = (ed.value.match(/\n/g) || []).length + 1;
+            const pos = ed.selectionStart;
+            const lineNum = (ed.value.substr(0, pos).match(/\n/g) || []).length + 1;
+            lineEl.textContent = `Ln ${lineNum} · ${lines} lines`;
+        }
 
         window.openNewProject = function() {
             studioCurrentProjectId = null;
-            document.getElementById('studioProjectNameInput').value = '';
-            document.getElementById('studioHtmlEditor').value = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>My Project</title>\n</head>\n<body>\n  <h1>Hello World!</h1>\n  <p>Start building something awesome.</p>\n</body>\n</html>';
-            document.getElementById('studioCssEditor').value = '/* Your styles here */\nbody {\n  font-family: sans-serif;\n  padding: 20px;\n  background: #f0f0f0;\n}\n\nh1 {\n  color: #6366f1;\n}';
-            document.getElementById('studioJsEditor').value = '// Your JavaScript here\nconsole.log("Hello from Code Studio!");';
-            document.getElementById('studioDeleteBtn').style.display = 'none';
-            document.getElementById('studioProjectsScreen').style.display = 'none';
-            document.getElementById('studioEditorScreen').style.display = 'flex';
-            // Switch to HTML tab
+            getStudioEl('studioProjectNameInput').value = '';
+            getStudioEl('studioHtmlEditor').value = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Project</title>
+</head>
+<body>
+  <h1>Hello World! 👋</h1>
+  <p>Start building something awesome.</p>
+</body>
+</html>`;
+            getStudioEl('studioCssEditor').value = `/* ── Styles ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f18;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+
+p { color: #94a3b8; }`;
+            getStudioEl('studioJsEditor').value = `// ── JavaScript ──
+console.log('Hello from Code Studio! 🚀');
+
+// Example: add interactivity
+document.querySelector('h1')?.addEventListener('click', () => {
+  document.body.style.background = \`hsl(\${Math.random()*360},60%,8%)\`;
+});`;
+            getStudioEl('studioDeleteBtn').style.display = 'none';
+            getStudioEl('studioProjectsScreen').style.display = 'none';
+            getStudioEl('studioEditorScreen').style.display = 'flex';
+            studioMarkClean();
             const tabs = document.querySelectorAll('.studio-tab');
             switchStudioTab('html', tabs[0]);
         };
 
         window.closeStudioEditor = function() {
-            document.getElementById('studioEditorScreen').style.display = 'none';
-            document.getElementById('studioProjectsScreen').style.display = 'flex';
+            if (studioUnsaved && !confirm('You have unsaved changes. Discard?')) return;
+            getStudioEl('studioEditorScreen').style.display = 'none';
+            getStudioEl('studioProjectsScreen').style.display = 'flex';
+            studioMarkClean();
             loadStudioProjects();
         };
 
         window.saveStudioProject = async function() {
             if (!currentUser) return;
-            const name = document.getElementById('studioProjectNameInput').value.trim() || 'Untitled Project';
-            const html = document.getElementById('studioHtmlEditor').value;
-            const css = document.getElementById('studioCssEditor').value;
-            const js = document.getElementById('studioJsEditor').value;
+            const saveBtn = document.querySelector('.studio-btn.primary');
+            if (saveBtn) { saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'; saveBtn.disabled = true; }
+            const name = getStudioEl('studioProjectNameInput').value.trim() || 'Untitled Project';
+            const html = getStudioEl('studioHtmlEditor').value;
+            const css  = getStudioEl('studioCssEditor').value;
+            const js   = getStudioEl('studioJsEditor').value;
             const data = { name, html, css, js, updatedAt: Date.now(), userId: currentUser.uid, authorName: currentMemberData?.name || 'Member' };
             try {
                 if (studioCurrentProjectId) {
                     await db.ref('studio_projects/' + studioCurrentProjectId).update(data);
-                    showToast('Project saved!', 'success');
+                    showToast('Saved ✓', 'success');
                 } else {
                     data.createdAt = Date.now();
                     const ref = await db.ref('studio_projects').push(data);
                     studioCurrentProjectId = ref.key;
-                    document.getElementById('studioDeleteBtn').style.display = 'flex';
+                    getStudioEl('studioDeleteBtn').style.display = 'flex';
                     showToast('Project created!', 'success');
                 }
+                studioMarkClean();
             } catch (e) { showToast('Save failed', 'error'); }
+            finally {
+                if (saveBtn) { saveBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save'; saveBtn.disabled = false; }
+            }
         };
 
         window.loadStudioProjects = async function() {
             if (!currentUser) return;
-            const container = document.getElementById('studioProjectsList');
+            const container = getStudioEl('studioProjectsList');
             if (!container) return;
-            container.innerHTML = '<div style="text-align:center;padding:40px;color:#606080;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:#5b5ef4;"></i><div style="margin-top:10px;font-size:0.78rem;font-family:\'Space Grotesk\',sans-serif;">Loading projects…</div></div>';
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#606080;"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;color:#5b5ef4;"></i><div style="margin-top:10px;font-size:0.78rem;font-family:\'Space Grotesk\',sans-serif;letter-spacing:0.04em;">Loading projects…</div></div>';
             try {
                 const snap = await db.ref('studio_projects').orderByChild('userId').equalTo(currentUser.uid).once('value');
                 const projects = [];
@@ -5909,73 +6077,150 @@
                     container.innerHTML = `<div class="studio-empty"><div class="studio-empty-icon"><i class="fas fa-code"></i></div><h3>No Projects Yet</h3><p>Tap <strong>New</strong> to create your first HTML/CSS/JS project.</p></div>`;
                     return;
                 }
-                container.innerHTML = '';
+                // Use DocumentFragment for batch DOM insert
+                const frag = document.createDocumentFragment();
                 projects.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'studio-project-card';
                     const updated = p.updatedAt ? moment(p.updatedAt).fromNow() : '';
-                    // Detect file types in project
-                    const hasHtml = !!(p.html && p.html.trim());
-                    const hasCss = !!(p.css && p.css.trim());
-                    const hasJs = !!(p.js && p.js.trim());
-                    const langs = [hasHtml?'HTML':'', hasCss?'CSS':'', hasJs?'JS':''].filter(Boolean).join(' · ') || 'Empty';
+                    const hasHtml = !!(p.html?.trim()), hasCss = !!(p.css?.trim()), hasJs = !!(p.js?.trim());
+                    const langs = [hasHtml&&'HTML', hasCss&&'CSS', hasJs&&'JS'].filter(Boolean).join(' · ') || 'Empty';
+                    // estimate lines
+                    const totalLines = (p.html||'').split('\n').length + (p.css||'').split('\n').length + (p.js||'').split('\n').length;
                     card.innerHTML = `
                         <div class="studio-project-icon"><i class="fas fa-code"></i></div>
                         <div class="studio-project-info">
                             <div class="studio-project-title">${escapeHtml(p.name || 'Untitled')}</div>
-                            <div class="studio-project-meta">${updated} &nbsp;·&nbsp; ${langs}</div>
+                            <div class="studio-project-meta">${updated} · ${langs} · ${totalLines} lines</div>
                         </div>
                         <div class="studio-project-actions">
-                            <button class="studio-action-btn edit" title="Edit"><i class="fas fa-pen"></i></button>
+                            <button class="studio-action-btn edit" title="Open"><i class="fas fa-pen"></i></button>
                             <button class="studio-action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                    card.querySelector('.studio-action-btn.edit').onclick = (e) => { e.stopPropagation(); openStudioProject(p); };
-                    card.querySelector('.studio-action-btn.delete').onclick = (e) => { e.stopPropagation(); confirmDeleteStudioProject(p.id); };
+                        </div>`;
+                    card.querySelector('.studio-action-btn.edit').onclick = e => { e.stopPropagation(); openStudioProject(p); };
+                    card.querySelector('.studio-action-btn.delete').onclick = e => { e.stopPropagation(); confirmDeleteStudioProject(p.id); };
                     card.addEventListener('click', () => openStudioProject(p));
-                    container.appendChild(card);
+                    frag.appendChild(card);
                 });
-            } catch(e) { container.innerHTML = '<div class="studio-empty"><div class="studio-empty-icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Failed to load</h3><p>Please try again.</p></div>'; }
+                container.innerHTML = '';
+                container.appendChild(frag);
+            } catch(e) {
+                container.innerHTML = '<div class="studio-empty"><div class="studio-empty-icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Load failed</h3><p>Check your connection and try again.</p></div>';
+            }
         };
 
         function openStudioProject(p) {
             studioCurrentProjectId = p.id;
-            document.getElementById('studioProjectNameInput').value = p.name || '';
-            document.getElementById('studioHtmlEditor').value = p.html || '';
-            document.getElementById('studioCssEditor').value = p.css || '';
-            document.getElementById('studioJsEditor').value = p.js || '';
-            document.getElementById('studioDeleteBtn').style.display = 'flex';
-            document.getElementById('studioProjectsScreen').style.display = 'none';
-            document.getElementById('studioEditorScreen').style.display = 'flex';
+            getStudioEl('studioProjectNameInput').value = p.name || '';
+            getStudioEl('studioHtmlEditor').value = p.html || '';
+            getStudioEl('studioCssEditor').value = p.css || '';
+            getStudioEl('studioJsEditor').value = p.js || '';
+            getStudioEl('studioDeleteBtn').style.display = 'flex';
+            getStudioEl('studioProjectsScreen').style.display = 'none';
+            getStudioEl('studioEditorScreen').style.display = 'flex';
+            studioMarkClean();
             const tabs = document.querySelectorAll('.studio-tab');
             switchStudioTab('html', tabs[0]);
         }
 
         function confirmDeleteStudioProject(id) {
             if (!confirm('Delete this project? This cannot be undone.')) return;
-            db.ref('studio_projects/' + id).remove().then(() => {
-                showToast('Project deleted');
-                loadStudioProjects();
-            }).catch(() => showToast('Delete failed', 'error'));
+            db.ref('studio_projects/' + id).remove()
+                .then(() => { showToast('Project deleted'); loadStudioProjects(); })
+                .catch(() => showToast('Delete failed', 'error'));
         }
 
         window.deleteStudioProject = function() {
             if (!studioCurrentProjectId) return;
             confirmDeleteStudioProject(studioCurrentProjectId);
             studioCurrentProjectId = null;
-            closeStudioEditor();
+            getStudioEl('studioEditorScreen').style.display = 'none';
+            getStudioEl('studioProjectsScreen').style.display = 'flex';
         };
 
-        // Tab key in editors inserts spaces instead of losing focus
+        // ── Enhanced editor: Tab key, auto-close brackets, dirty tracking, line count ──
+        const AUTO_CLOSE = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' };
+
         document.querySelectorAll('.studio-editor-area').forEach(ta => {
+            // Tab → 2 spaces
             ta.addEventListener('keydown', function(e) {
                 if (e.key === 'Tab') {
                     e.preventDefault();
-                    const start = this.selectionStart, end = this.selectionEnd;
-                    this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
-                    this.selectionStart = this.selectionEnd = start + 2;
+                    const s = this.selectionStart, end = this.selectionEnd;
+                    // Multi-line indent
+                    if (s !== end) {
+                        const lines = this.value.split('\n');
+                        let charCount = 0, startLine = -1, endLine = -1;
+                        for (let i = 0; i < lines.length; i++) {
+                            if (startLine === -1 && charCount + lines[i].length >= s) startLine = i;
+                            if (charCount + lines[i].length >= end - 1) { endLine = i; break; }
+                            charCount += lines[i].length + 1;
+                        }
+                        if (startLine !== -1 && endLine !== -1) {
+                            for (let i = startLine; i <= endLine; i++) {
+                                lines[i] = e.shiftKey ? lines[i].replace(/^  /, '') : '  ' + lines[i];
+                            }
+                            this.value = lines.join('\n');
+                            return;
+                        }
+                    }
+                    this.value = this.value.substring(0, s) + '  ' + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = s + 2;
+                    return;
+                }
+                // Auto-close brackets
+                if (AUTO_CLOSE[e.key]) {
+                    e.preventDefault();
+                    const s = this.selectionStart, end = this.selectionEnd;
+                    const close = AUTO_CLOSE[e.key];
+                    const selected = this.value.substring(s, end);
+                    this.value = this.value.substring(0, s) + e.key + selected + close + this.value.substring(end);
+                    this.selectionStart = this.selectionEnd = s + 1 + (selected ? selected.length + 1 : 0);
+                    return;
+                }
+                // Enter → smart indent
+                if (e.key === 'Enter') {
+                    const s = this.selectionStart;
+                    const lineStart = this.value.lastIndexOf('\n', s - 1) + 1;
+                    const currentLine = this.value.substring(lineStart, s);
+                    const indent = currentLine.match(/^(\s*)/)[1];
+                    const charBefore = this.value[s - 1];
+                    const charAfter = this.value[s];
+                    if (AUTO_CLOSE[charBefore] && Object.values(AUTO_CLOSE).includes(charAfter)) {
+                        e.preventDefault();
+                        const ins = '\n' + indent + '  \n' + indent;
+                        this.value = this.value.substring(0, s) + ins + this.value.substring(s);
+                        this.selectionStart = this.selectionEnd = s + indent.length + 3;
+                        return;
+                    }
+                    if (indent) {
+                        e.preventDefault();
+                        this.value = this.value.substring(0, s) + '\n' + indent + this.value.substring(s);
+                        this.selectionStart = this.selectionEnd = s + 1 + indent.length;
+                    }
                 }
             });
+
+            // Dirty tracking + line count update
+            ta.addEventListener('input', function() {
+                studioMarkDirty();
+                updateLineCount(studioActiveTab);
+                scheduleLivePreview();
+            });
+
+            ta.addEventListener('click', () => updateLineCount(studioActiveTab));
+            ta.addEventListener('keyup', () => updateLineCount(studioActiveTab));
+        });
+
+        // Ctrl/Cmd+S → save
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's' && studioActiveTab !== null) {
+                const editorScreen = getStudioEl('studioEditorScreen');
+                if (editorScreen && editorScreen.style.display !== 'none') {
+                    e.preventDefault();
+                    saveStudioProject();
+                }
+            }
         });
 
     </script>
