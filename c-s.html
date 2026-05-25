@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 11 CS — Important Questions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --border: #1e2d40;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --gold: #fbbf24;
+    --green: #10b981;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --red: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 50px 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0d1526 0%, var(--bg) 100%);
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent3), #4f46e5);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 60%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SEARCH & FILTER */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,14,26,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    width: 240px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--muted); }
+
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 30px 16px 60px;
+  }
+
+  /* CHAPTER SECTION */
+  .chapter {
+    margin-bottom: 40px;
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ch-num {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .ch-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .ch-tag {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* QUESTION CARDS */
+  .q-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .q-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateX(4px);
+  }
+
+  .q-card:hover::before { opacity: 1; }
+
+  .q-card.hot::before { background: var(--red); }
+  .q-card.important::before { background: var(--gold); }
+  .q-card.normal::before { background: var(--accent); }
+
+  .q-card:hover.hot { border-color: rgba(239,68,68,0.3); }
+  .q-card:hover.important { border-color: rgba(251,191,36,0.3); }
+
+  .q-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .q-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #cbd5e1;
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .marks-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  .priority {
+    font-size: 16px;
+  }
+
+  /* MARK COLORS */
+  .m1 { background: rgba(100,116,139,0.2); color: #94a3b8; border: 1px solid #334155; }
+  .m2 { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .m5 { background: rgba(251,191,36,0.15); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
+  .m8 { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+
+  /* CHAPTER COLORS */
+  .c1 { background: linear-gradient(135deg, #1e3a5f, #1a2a4a); color: #60a5fa; }
+  .c2 { background: linear-gradient(135deg, #3b1f5e, #2d1a4a); color: #c084fc; }
+  .c3 { background: linear-gradient(135deg, #1a3d2b, #152e20); color: #34d399; }
+  .c4 { background: linear-gradient(135deg, #5e3a1a, #4a2d15); color: #fb923c; }
+  .c5 { background: linear-gradient(135deg, #1a3a5e, #152e4a); color: #38bdf8; }
+  .c6 { background: linear-gradient(135deg, #5e1a3a, #4a1530); color: #f472b6; }
+  .c7 { background: linear-gradient(135deg, #2d3a1a, #22300f); color: #a3e635; }
+  .c8 { background: linear-gradient(135deg, #3a2d1a, #2e2310); color: #fbbf24; }
+
+  .tag-mcq { background: rgba(100,116,139,0.2); color: #94a3b8; border: 1px solid #334155; }
+  .tag-board { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .tag-long { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+    z-index: 1;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+
+  /* Answer panel */
+  .ans-panel {
+    display: none;
+    background: #0d1520;
+    border-top: 1px solid var(--border);
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #94a3b8;
+    margin: 10px -18px -14px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .ans-panel.open { display: block; }
+
+  .ans-panel strong { color: var(--accent); }
+  .ans-panel code {
+    background: #1e2d40;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  @media (max-width: 600px) {
+    .q-meta { flex-direction: column; align-items: flex-end; }
+    .q-card { flex-wrap: wrap; }
+    .controls { gap: 8px; }
+    .search-box { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">NEB · Grade XI · 2081</div>
+  <h1>Computer Science<br>Important Questions</h1>
+  <p class="subtitle">Complete Question Bank · All Chapters · Exam Ready</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Questions</div></div>
+    <div class="stat"><div class="stat-num">50</div><div class="stat-label">Full Marks</div></div>
+    <div class="stat"><div class="stat-num">2 Hrs</div><div class="stat-label">Duration</div></div>
+  </div>
+</header>
+
+<div class="controls">
+  <input class="search-box" type="text" placeholder="🔍 Search questions..." id="searchBox" oninput="filterQ()">
+  <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('hot',this)">🔥 Most Asked</button>
+  <button class="filter-btn" onclick="setFilter('important',this)">⭐ Important</button>
+  <button class="filter-btn" onclick="setFilter('m5',this)">5 Marks</button>
+  <button class="filter-btn" onclick="setFilter('m8',this)">8 Marks</button>
+  <button class="filter-btn" onclick="setFilter('mcq',this)">MCQ</button>
+</div>
+
+<main>
+
+<div class="legend">
+  <div class="legend-item">🔥 <span>Most Asked in Board</span></div>
+  <div class="legend-item">⭐ <span>Important</span></div>
+  <div class="legend-item">💡 <span>Normal</span></div>
+  <div class="legend-item"><span style="color:var(--red)">■</span> <span>8 Marks</span></div>
+  <div class="legend-item"><span style="color:var(--gold)">■</span> <span>5 Marks</span></div>
+  <div class="legend-item"><span style="color:var(--green)">■</span> <span>2 Marks</span></div>
+  <div class="legend-item"><span style="color:#94a3b8">■</span> <span>1 Mark</span></div>
+</div>
+
+<!-- ===== CHAPTER 1 ===== -->
+<div class="chapter" data-chapter="1">
+  <div class="chapter-header">
+    <div class="ch-num c1">01</div>
+    <div class="ch-title">Computer System & Generations</div>
+    <span class="ch-tag tag-board">High Weight</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c1">💻</div>
+      <div class="q-text">What is computer generation? Explain all five generations of computer with their features and examples.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c1">🧠</div>
+      <div class="q-text">What is a computer? Explain different characteristics/features of computer.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c1">📊</div>
+      <div class="q-text">Differentiate between First Generation and Fourth Generation computers.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c1">⚡</div>
+      <div class="q-text">Which technology was used in 1st, 2nd, 3rd, and 4th generation computers? (MCQ Favourite)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c1">🔲</div>
+      <div class="q-text">What is ENIAC? Why is it considered the first electronic computer?</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c1">🖥️</div>
+      <div class="q-text">Differentiate between Supercomputer, Mainframe, Mini, and Microcomputer.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 2 ===== -->
+<div class="chapter" data-chapter="2">
+  <div class="chapter-header">
+    <div class="ch-num c2">02</div>
+    <div class="ch-title">Number System & Boolean Algebra</div>
+    <span class="ch-tag tag-board">High Weight</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m8">
+      <div class="q-icon c2">⚙️</div>
+      <div class="q-text">What is Boolean algebra? Explain AND, OR, XOR, and XNOR gates with truth tables and logic diagrams.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m8">8 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c2">🔢</div>
+      <div class="q-text">Convert the following: Binary to Decimal, Decimal to Binary, Hexadecimal to Binary, Octal to Decimal.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c2">➖</div>
+      <div class="q-text">Explain 9's complement method of subtraction with a suitable example.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c2">🔁</div>
+      <div class="q-text">Explain 1's complement and 2's complement method of subtraction with examples.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c2">🚪</div>
+      <div class="q-text">What are logic gates? Explain NOT, NAND, NOR gates with truth tables and symbols.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c2">❓</div>
+      <div class="q-text">XNOR gate produces high output when both inputs are ___. (MCQ — Answer: Same)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c2">📐</div>
+      <div class="q-text">What is BCD (Binary Coded Decimal)? Write BCD of 49.</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c2">🔤</div>
+      <div class="q-text">What is ASCII? What is its significance in computing?</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 3 ===== -->
+<div class="chapter" data-chapter="3">
+  <div class="chapter-header">
+    <div class="ch-num c3">03</div>
+    <div class="ch-title">Computer Memory</div>
+    <span class="ch-tag tag-long">8 Marks Chapter</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m8">
+      <div class="q-icon c3">🧠</div>
+      <div class="q-text">What is computer memory? Explain different types of computer memory in brief.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m8">8 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c3">💾</div>
+      <div class="q-text">Differentiate between RAM and ROM with at least 5 points.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c3">⚡</div>
+      <div class="q-text">What is cache memory? How does it improve CPU performance?</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c3">💿</div>
+      <div class="q-text">Differentiate between primary memory and secondary memory.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c3">📀</div>
+      <div class="q-text">What is virtual memory? What is its purpose in an OS?</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2 mcq">
+      <div class="q-icon c3">🔌</div>
+      <div class="q-text">Data transfer rate of USB 2.0 is ___. (Answer: 480 Mbps)</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c3">🖴</div>
+      <div class="q-text">What is a Hard Disk? Explain its working principle.</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 4 ===== -->
+<div class="chapter" data-chapter="4">
+  <div class="chapter-header">
+    <div class="ch-num c4">04</div>
+    <div class="ch-title">Operating System</div>
+    <span class="ch-tag tag-board">Board Favourite</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c4">🖥️</div>
+      <div class="q-text">What is an Operating System? Distinguish between GUI and CUI based OS with examples.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c4">⚙️</div>
+      <div class="q-text">Explain the functions of an Operating System in detail.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c4">🔄</div>
+      <div class="q-text">What is multitasking? Differentiate between multiprogramming and multitasking OS.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c4">💾</div>
+      <div class="q-text">BIOS is used by which component? (Answer: Operating System during boot)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c4">🔐</div>
+      <div class="q-text">What is open source OS? Give two examples.</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c4">📋</div>
+      <div class="q-text">What is utility software? List different types of utility software with examples.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 5 ===== -->
+<div class="chapter" data-chapter="5">
+  <div class="chapter-header">
+    <div class="ch-num c5">05</div>
+    <div class="ch-title">Application Software & Multimedia</div>
+    <span class="ch-tag tag-board">Board Favourite</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c5">🎬</div>
+      <div class="q-text">What is multimedia? Explain different components of multimedia in brief.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c5">📄</div>
+      <div class="q-text">What is CMS (Content Management System)? List its features and examples.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c5">🗂️</div>
+      <div class="q-text">Differentiate between system software and application software with examples.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2">
+      <div class="q-icon c5">🖼️</div>
+      <div class="q-text">Which of the following is NOT an image format — GIF, TIFF, JPEG, WAV? (Answer: WAV)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c5">📊</div>
+      <div class="q-text">What is MS Word? Explain any 5 features of MS Word useful for document preparation.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2 mcq">
+      <div class="q-icon c5">⌨️</div>
+      <div class="q-text">Shortcut key for force page break in MS Word? (Answer: Ctrl + Enter)</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 6 ===== -->
+<div class="chapter" data-chapter="6">
+  <div class="chapter-header">
+    <div class="ch-num c6">06</div>
+    <div class="ch-title">Language Processor & Computer Virus</div>
+    <span class="ch-tag tag-board">Regular in Board</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c6">🔤</div>
+      <div class="q-text">What is a language processor? Explain different types of language processors (Compiler, Interpreter, Assembler).</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c6">🦠</div>
+      <div class="q-text">What is a computer virus? Explain its types and how to protect a computer from virus attacks.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c6">⚖️</div>
+      <div class="q-text">Differentiate between Compiler and Interpreter with at least 5 points.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c6">🕵️</div>
+      <div class="q-text">Software that monitors user activity and sends info secretly is called ___. (Answer: Spyware)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c6">🤖</div>
+      <div class="q-text">Which language can computer directly understand? (Answer: Machine Level Language)</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c6">🔑</div>
+      <div class="q-text">What is antivirus software? Give two examples.</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 7 ===== -->
+<div class="chapter" data-chapter="7">
+  <div class="chapter-header">
+    <div class="ch-num c7">07</div>
+    <div class="ch-title">Programming in C</div>
+    <span class="ch-tag tag-long">8 Marks Chapter</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m8">
+      <div class="q-icon c7">💾</div>
+      <div class="q-text">Write a C program to enter 10 numbers and sort them in ascending order using array (Bubble Sort).</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m8">8 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c7">🔢</div>
+      <div class="q-text">Write a C program to check whether a number is prime or not.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c7">🔄</div>
+      <div class="q-text">Write a C program to find factorial of a number using loop.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c7">📐</div>
+      <div class="q-text">Write a C program to find the sum of natural numbers from 1 to N.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">🔁</div>
+      <div class="q-text">Write a C program to print Fibonacci series up to N terms.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">⬆️</div>
+      <div class="q-text">Write a C program to find the largest number among N numbers using array.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">📊</div>
+      <div class="q-text">Write a C program to calculate the average of N numbers using array.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">🔀</div>
+      <div class="q-text">Write a C program to swap two numbers using a third variable.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2 mcq">
+      <div class="q-icon c7">♾️</div>
+      <div class="q-text">How many times does While(1){printf("Hello World");} loop repeat? (Answer: Infinite times)</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2">
+      <div class="q-icon c7">📋</div>
+      <div class="q-text">What is an array in C? Write syntax to declare a one-dimensional array.</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">🔺</div>
+      <div class="q-text">Write a C program to print a multiplication table of any given number.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c7">🔍</div>
+      <div class="q-text">Write a C program to check whether a number is Armstrong or not.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CHAPTER 8 ===== -->
+<div class="chapter" data-chapter="8">
+  <div class="chapter-header">
+    <div class="ch-num c8">08</div>
+    <div class="ch-title">Internet & Networking</div>
+    <span class="ch-tag tag-board">MCQ Heavy</span>
+  </div>
+  <div class="q-grid">
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c8">🌐</div>
+      <div class="q-text">What is internet? Explain different services provided by the internet.</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card hot" data-tags="hot m5">
+      <div class="q-icon c8">🔗</div>
+      <div class="q-text">What is computer network? Explain different types of network (LAN, MAN, WAN).</div>
+      <div class="q-meta">
+        <span class="priority">🔥</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c8">📡</div>
+      <div class="q-text">What is network topology? Explain Bus, Star, and Ring topology with diagrams.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2">
+      <div class="q-icon c8">📧</div>
+      <div class="q-text">What is email? Write its advantages over traditional mail.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m2 mcq">
+      <div class="q-icon c8">🔐</div>
+      <div class="q-text">What is a firewall? What is its role in network security?</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m2">2 Marks</span>
+      </div>
+    </div>
+
+    <div class="q-card normal" data-tags="normal m2 mcq">
+      <div class="q-icon c8">🌍</div>
+      <div class="q-text">What does WWW stand for? Who invented it?</div>
+      <div class="q-meta">
+        <span class="priority">💡</span>
+        <span class="marks-badge m2">MCQ</span>
+      </div>
+    </div>
+
+    <div class="q-card important" data-tags="important m5">
+      <div class="q-icon c8">🔒</div>
+      <div class="q-text">What is cybercrime? Explain different types of cybercrime with examples.</div>
+      <div class="q-meta">
+        <span class="priority">⭐</span>
+        <span class="marks-badge m5">5 Marks</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="noResults" class="no-results" style="display:none">
+  No questions found. Try a different search or filter. 🔍
+</div>
+
+</main>
+
+<footer>
+  NEB Class XI · Computer Science · Important Questions Bank 2081<br>
+  <span style="color:var(--accent)">Tap any question to study it</span>
+</footer>
+
+<script>
+  let currentFilter = 'all';
+
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterQ();
+  }
+
+  function filterQ() {
+    const search = document.getElementById('searchBox').value.toLowerCase();
+    let visible = 0;
+
+    document.querySelectorAll('.q-card').forEach(card => {
+      const text = card.querySelector('.q-text').textContent.toLowerCase();
+      const tags = card.dataset.tags || '';
+      const matchSearch = text.includes(search);
+      const matchFilter = currentFilter === 'all' || tags.includes(currentFilter);
+      const show = matchSearch && matchFilter;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) visible++;
+    });
+
+    // Hide empty chapters
+    document.querySelectorAll('.chapter').forEach(ch => {
+      const anyVisible = [...ch.querySelectorAll('.q-card')].some(c => c.style.display !== 'none');
+      ch.style.display = anyVisible ? 'block' : 'none';
+    });
+
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  }
+</script>
+
+</body>
+</html>
