@@ -5,6 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>नेपाली सिफर स्टेशन</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwv_styszA_RiDsehLIxW1fKgXZ28U1Qs",
+      authDomain: "cipher-dark-b364d.firebaseapp.com",
+      databaseURL: "https://cipher-dark-b364d-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "cipher-dark-b364d",
+      storageBucket: "cipher-dark-b364d.firebasestorage.app",
+      messagingSenderId: "360401947024",
+      appId: "1:360401947024:web:403390575d210efee30b15"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Save word to Firebase if not already there
+    async function saveWordToFirebase(word) {
+      const key = encodeWordKey(word);
+      const wordRef = ref(db, 'words/' + key);
+      const snapshot = await get(wordRef);
+      if (!snapshot.exists()) {
+        await set(wordRef, { word: word, addedAt: Date.now() });
+        console.log('New word saved to Firebase:', word);
+      }
+    }
+
+    // Encode Devanagari word as a safe Firebase key
+    function encodeWordKey(word) {
+      return btoa(unescape(encodeURIComponent(word))).replace(/[.#$/\[\]]/g, '_');
+    }
+
+    // Get all words from Firebase
+    async function getWordsFromFirebase() {
+      const wordsRef = ref(db, 'words');
+      const snapshot = await get(wordsRef);
+      if (!snapshot.exists()) return [];
+      const data = snapshot.val();
+      return Object.values(data).map(entry => entry.word);
+    }
+
+    // Expose to global scope for use by the main scripts
+    window._fb = { saveWordToFirebase, getWordsFromFirebase };
+  </script>
   <style>
     :root {
       --bg:        #080a10;
@@ -1214,7 +1259,7 @@
     }
   }
 
-  function runRhymeMatch() {
+  async function runRhymeMatch() {
     const raw    = document.getElementById('wordInput').value.trim();
     const area   = document.getElementById('resultsArea');
     const countEl = document.getElementById('matchCount');
@@ -1227,8 +1272,31 @@
       return;
     }
 
+    // Show loading state
+    area.innerHTML = `<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-text">Searching…</div></div>`;
+    suffixEl.textContent = '-' + raw.slice(-2);
+    suffixEl.style.display = 'inline-block';
+    countEl.textContent = '';
+
+    // 1. Save the searched word to Firebase (if not already there)
+    if (window._fb) {
+      window._fb.saveWordToFirebase(raw).catch(e => console.warn('Firebase save error:', e));
+    }
+
+    // 2. Fetch all words from Firebase and merge with local database
+    let allWords = [...rhymeDatabase];
+    if (window._fb) {
+      try {
+        const firebaseWords = await window._fb.getWordsFromFirebase();
+        // Merge, deduplicate
+        firebaseWords.forEach(w => { if (!allWords.includes(w)) allWords.push(w); });
+      } catch(e) {
+        console.warn('Firebase fetch error, using local only:', e);
+      }
+    }
+
     const suffix  = raw.slice(-2);
-    const matches = rhymeDatabase.filter(w => w.endsWith(suffix) && w !== raw);
+    const matches = allWords.filter(w => w.endsWith(suffix) && w !== raw);
 
     suffixEl.textContent    = '-' + suffix;
     suffixEl.style.display  = 'inline-block';
