@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>नेपाली सिफर स्टेशन</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #080a10;
+      --surface:   #0f1118;
+      --elevated:  #161b26;
+      --border:    rgba(255,255,255,0.07);
+      --red:       #ff2251;
+      --cyan:      #00e5ff;
+      --gold:      #ffd166;
+      --text:      #e8edf5;
+      --muted:     #5a6278;
+      --glow-red:  rgba(255,34,81,0.25);
+      --glow-cyan: rgba(0,229,255,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Background texture ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 20%, rgba(255,34,81,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 85% 80%, rgba(0,229,255,0.06) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Grain overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4; pointer-events: none; z-index: 0;
+    }
+
+    /* ── Layout wrapper ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 56px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .header-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 9vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      position: relative;
+      display: inline-block;
+    }
+
+    header h1 .accent { color: var(--red); }
+
+    header h1::after {
+      content: '';
+      display: block;
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--cyan));
+      margin: 18px auto 0;
+      border-radius: 2px;
+    }
+
+    .header-sub {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 680px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.7s ease both;
+      transition: border-color 0.3s;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.12s; }
+
+    .card:hover { border-color: rgba(255,255,255,0.13); }
+
+    /* Subtle top-edge glow per card */
+    .card-beat::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+    }
+    .card-rhyme::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    .card-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .card-number {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      display: grid; place-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .card-beat .card-number  { background: rgba(255,34,81,0.15);  color: var(--red); }
+    .card-rhyme .card-number { background: rgba(0,229,255,0.12);  color: var(--cyan); }
+
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Beat selector ── */
+    .beat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .beat-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .beat-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+
+    .beat-option:hover { border-color: rgba(255,34,81,0.4); background: #1c2030; }
+    .beat-option.active {
+      border-color: var(--red);
+      background: rgba(255,34,81,0.08);
+    }
+
+    .beat-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .beat-option.active .beat-dot {
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red);
+    }
+
+    .beat-info { flex: 1; }
+    .beat-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .beat-bpm  { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+
+    .beat-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .tag-boom  { background: rgba(255,209,102,0.12); color: var(--gold); }
+    .tag-trap  { background: rgba(255,34,81,0.12);   color: var(--red); }
+    .tag-lofi  { background: rgba(0,229,255,0.1);    color: var(--cyan); }
+
+    /* ── Audio player ── */
+    .player-bar {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .player-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .play-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--red);
+      border: none;
+      display: grid; place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 0 rgba(255,34,81,0);
+    }
+
+    .play-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 16px var(--glow-red);
+    }
+
+    .play-btn svg { width: 16px; height: 16px; fill: #fff; }
+
+    .now-playing {
+      flex: 1;
+      overflow: hidden;
+    }
+    .now-label  { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); }
+    .now-track  { font-size: 0.88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+    .loop-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      display: grid; place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color 0.2s, color 0.2s;
+      font-size: 0.75rem;
+    }
+    .loop-btn.active { border-color: var(--cyan); color: var(--cyan); }
+
+    /* Waveform visualizer bars */
+    .waveform {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 28px;
+    }
+    .waveform .bar {
+      width: 3px;
+      border-radius: 2px;
+      background: rgba(255,34,81,0.3);
+      transition: height 0.1s;
+      flex-shrink: 0;
+    }
+    .waveform.playing .bar { background: var(--red); }
+    .waveform.playing .bar:nth-child(odd)  { animation: waveBounce 0.6s ease-in-out infinite alternate; }
+    .waveform.playing .bar:nth-child(even) { animation: waveBounce 0.6s 0.2s ease-in-out infinite alternate; }
+    .waveform.playing .bar:nth-child(3n)   { animation: waveBounce 0.4s 0.1s ease-in-out infinite alternate; }
+
+    /* ── Rhyme engine ── */
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      stroke: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 13px 14px 13px 38px;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1.05rem;
+      font-family: 'Noto Sans Devanagari', 'Outfit', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder { color: var(--muted); font-size: 0.88rem; font-family: 'Outfit', sans-serif; }
+    .search-input:focus {
+      border-color: rgba(0,229,255,0.5);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.07);
+    }
+
+    .search-btn {
+      padding: 13px 18px;
+      background: linear-gradient(135deg, var(--red) 0%, #c9003e 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .search-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--glow-red);
+    }
+    .search-btn:active { transform: translateY(0); }
+
+    /* Suffix chip */
+    .suffix-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      min-height: 26px;
+    }
+    .suffix-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .suffix-chip {
+      padding: 3px 10px;
+      background: rgba(0,229,255,0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-weight: 600;
+    }
+    .match-count { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+
+    /* Results grid */
+    .results-area {
+      background: var(--elevated);
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 16px;
+      min-height: 150px;
+      max-height: 240px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-content: flex-start;
+    }
+
+    /* Scrollbar */
+    .results-area::-webkit-scrollbar { width: 4px; }
+    .results-area::-webkit-scrollbar-track { background: transparent; }
+    .results-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .rhyme-chip {
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 8px;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      animation: chipIn 0.25s ease both;
+    }
+    .rhyme-chip:hover {
+      border-color: var(--cyan);
+      background: rgba(0,229,255,0.06);
+      transform: translateY(-2px);
+    }
+    .rhyme-chip:active { transform: translateY(0); }
+
+    /* Copy toast */
+    .rhyme-chip.copied { border-color: var(--gold); color: var(--gold); }
+
+    .empty-state {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      gap: 8px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .empty-icon { font-size: 1.8rem; opacity: 0.4; }
+    .empty-text { font-size: 0.85rem; line-height: 1.5; }
+
+    /* ── Bottom status bar ── */
+    .status-bar {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #3d4455; }
+    .status-dot.green { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); animation: pulse 2s infinite; }
+
+    /* ── Toast notification ── */
+    .toast {
+      position: fixed;
+      bottom: 30px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Keyframes ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes chipIn {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes waveBounce {
+      from { height: 4px; }
+      to   { height: 22px; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* ── Upload Beat Button (top-right of beat card) ── */
+    .card-beat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .card-beat-header .card-label { margin-bottom: 0; }
+
+    .upload-trigger-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      background: rgba(0,229,255,0.08);
+      border: 1px solid rgba(0,229,255,0.25);
+      border-radius: 8px;
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .upload-trigger-btn:hover {
+      background: rgba(0,229,255,0.14);
+      border-color: var(--cyan);
+      transform: translateY(-1px);
+    }
+    .upload-trigger-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* ── Upload Modal Overlay ── */
+    .upload-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .upload-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .upload-modal {
+      background: var(--surface);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 18px;
+      padding: 32px;
+      width: 90%;
+      max-width: 440px;
+      position: relative;
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.25s;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.05);
+    }
+    .upload-overlay.open .upload-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .upload-modal-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .upload-modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .upload-modal-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 3px;
+      margin-bottom: 22px;
+    }
+    .modal-close {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 1rem;
+      display: grid; place-items: center;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+    /* Tab switcher */
+    .upload-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      background: var(--elevated);
+      padding: 5px;
+      border-radius: 10px;
+    }
+    .upload-tab {
+      flex: 1;
+      padding: 9px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .upload-tab.active {
+      background: var(--surface);
+      color: var(--cyan);
+    }
+
+    /* Drag & Drop zone */
+    .drop-zone {
+      border: 2px dashed rgba(0,229,255,0.2);
+      border-radius: 12px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .drop-zone.dragover {
+      border-color: var(--cyan);
+      background: rgba(0,229,255,0.05);
+    }
+    .drop-zone input[type=file] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .drop-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .drop-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+    .drop-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .drop-formats {
+      margin-top: 12px;
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+    .fmt-badge {
+      padding: 3px 8px;
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* File picker (auto select) panel */
+    .file-picker-panel { display: none; }
+    .file-picker-panel.active { display: block; }
+    .drop-zone-panel { display: block; }
+    .drop-zone-panel.hidden { display: none; }
+
+    .file-select-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(0,229,255,0.04));
+      border: 1px solid rgba(0,229,255,0.25);
+      border-radius: 10px;
+      color: var(--cyan);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .file-select-btn:hover {
+      background: rgba(0,229,255,0.14);
+      border-color: var(--cyan);
+    }
+    .file-select-btn input[type=file] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+
+    .selected-file-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--elevated);
+      border: 1px solid rgba(0,229,255,0.15);
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+    .selected-file-info.visible { display: flex; }
+    .file-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .file-details { flex: 1; overflow: hidden; }
+    .file-fname {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-fsize { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .file-remove {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      display: grid; place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .file-remove:hover { color: var(--red); border-color: var(--red); }
+
+    .upload-load-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--red), #c9003e);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 4px;
+    }
+    .upload-load-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .upload-load-btn:not(:disabled):hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--glow-red);
+    }
+
+    /* Custom beat chip in beat list */
+    .beat-option.custom-beat .beat-dot { background: var(--gold); }
+    .beat-option.custom-beat.active .beat-dot {
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+    .tag-custom { background: rgba(255,209,102,0.12); color: var(--gold); }
+
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <header>
+    <div class="header-eyebrow">Freestyle Tool &nbsp;·&nbsp; v2.0</div>
+    <h1>नेपाली<br><span class="accent">सिफर</span> STATION</h1>
+    <p class="header-sub">Drop beats &nbsp;·&nbsp; Find rhymes &nbsp;·&nbsp; Spit bars &nbsp;·&nbsp; 🎤</p>
+  </header>
+
+  <!-- Two-column grid -->
+  <div class="grid">
+
+    <!-- ── BEAT PLAYER ── -->
+    <div class="card card-beat">
+      <div class="card-beat-header">
+        <div class="card-label">
+          <div class="card-number">01</div>
+          <span class="card-title">Instrumental</span>
+        </div>
+        <button class="upload-trigger-btn" onclick="openUploadModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Add Beat
+        </button>
+      </div>
+
+      <p class="beat-label">SELECT BEAT</p>
+      <div class="beat-options" id="beatOptions">
+        <div class="beat-option active" data-beat="boombap" data-name="Boom Bap Classic" onclick="selectBeat(this)">
+          <div class="beat-dot"></div>
+          <div class="beat-info">
+            <div class="beat-name">Boom Bap Classic</div>
+            <div class="beat-bpm">90 BPM &nbsp;·&nbsp; Hip-Hop</div>
+          </div>
+          <span class="beat-tag tag-boom">Boom</span>
+        </div>
+        <div class="beat-option" data-beat="trap" data-name="Trap Instrumental" onclick="selectBeat(this)">
+          <div class="beat-dot"></div>
+          <div class="beat-info">
+            <div class="beat-name">Trap Instrumental</div>
+            <div class="beat-bpm">140 BPM &nbsp;·&nbsp; Trap</div>
+          </div>
+          <span class="beat-tag tag-trap">Trap</span>
+        </div>
+        <div class="beat-option" data-beat="lofi" data-name="Lo-Fi Cypher Groove" onclick="selectBeat(this)">
+          <div class="beat-dot"></div>
+          <div class="beat-info">
+            <div class="beat-name">Lo-Fi Cypher Groove</div>
+            <div class="beat-bpm">85 BPM &nbsp;·&nbsp; Lo-Fi</div>
+          </div>
+          <span class="beat-tag tag-lofi">Lo-Fi</span>
+        </div>
+      </div>
+
+      <!-- Player bar -->
+      <div class="player-bar">
+        <div class="player-top">
+          <button class="play-btn" id="playBtn" onclick="togglePlay()">
+            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <div class="now-playing">
+            <div class="now-label">Now Playing</div>
+            <div class="now-track" id="nowTrack">Boom Bap Classic</div>
+          </div>
+          <button class="loop-btn active" id="loopBtn" onclick="toggleLoop()" title="Loop">
+            ↻
+          </button>
+        </div>
+
+        <!-- Animated waveform -->
+        <div class="waveform" id="waveform">
+          <div class="bar" style="height:6px"></div>
+          <div class="bar" style="height:14px"></div>
+          <div class="bar" style="height:10px"></div>
+          <div class="bar" style="height:18px"></div>
+          <div class="bar" style="height:8px"></div>
+          <div class="bar" style="height:22px"></div>
+          <div class="bar" style="height:12px"></div>
+          <div class="bar" style="height:16px"></div>
+          <div class="bar" style="height:7px"></div>
+          <div class="bar" style="height:20px"></div>
+          <div class="bar" style="height:11px"></div>
+          <div class="bar" style="height:15px"></div>
+          <div class="bar" style="height:9px"></div>
+          <div class="bar" style="height:19px"></div>
+          <div class="bar" style="height:13px"></div>
+          <div class="bar" style="height:5px"></div>
+          <div class="bar" style="height:17px"></div>
+          <div class="bar" style="height:10px"></div>
+          <div class="bar" style="height:22px"></div>
+          <div class="bar" style="height:8px"></div>
+          <div class="bar" style="height:14px"></div>
+          <div class="bar" style="height:6px"></div>
+          <div class="bar" style="height:18px"></div>
+          <div class="bar" style="height:12px"></div>
+          <div class="bar" style="height:20px"></div>
+          <div class="bar" style="height:9px"></div>
+          <div class="bar" style="height:16px"></div>
+          <div class="bar" style="height:11px"></div>
+          <div class="bar" style="height:4px"></div>
+          <div class="bar" style="height:15px"></div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- ── RHYME ENGINE ── -->
+    <div class="card card-rhyme">
+      <div class="card-label">
+        <div class="card-number">02</div>
+        <span class="card-title">Rhyming Engine &nbsp; (अनुप्रास)</span>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            class="search-input"
+            id="wordInput"
+            type="text"
+            placeholder="शब्द टाइप गर्नुस् …  e.g. बजार, शान"
+            onkeydown="if(event.key==='Enter') runRhymeMatch()"
+            oninput="liveUpdate()"
+          />
+        </div>
+        <button class="search-btn" onclick="runRhymeMatch()">खोज</button>
+      </div>
+
+      <div class="suffix-indicator">
+        <span class="suffix-label">Suffix</span>
+        <span class="suffix-chip" id="suffixDisplay" style="display:none"></span>
+        <span class="match-count" id="matchCount"></span>
+      </div>
+
+      <div class="results-area" id="resultsArea">
+        <div class="empty-state">
+          <div class="empty-icon">🎙️</div>
+          <div class="empty-text">Type a Nepali word above<br>to find rhyming bars instantly</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-pill">
+      <div class="status-dot green"></div>
+      Live Rhyme Engine
+    </div>
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      24 Words in Dictionary
+    </div>
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      3 Beats Loaded
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── Upload Modal ── -->
+<div class="upload-overlay" id="uploadOverlay" onclick="overlayClickClose(event)">
+  <div class="upload-modal" id="uploadModal">
+    <div class="upload-modal-top">
+      <div>
+        <div class="upload-modal-title">Upload Your Beat</div>
+        <div class="upload-modal-sub">Load an audio file from your device</div>
+      </div>
+      <button class="modal-close" onclick="closeUploadModal()">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="upload-tabs">
+      <button class="upload-tab active" id="tabDrag" onclick="switchTab('drag')">⬇ Drag &amp; Drop</button>
+      <button class="upload-tab" id="tabPick" onclick="switchTab('pick')">📂 Browse Files</button>
+    </div>
+
+    <!-- Drag & Drop panel -->
+    <div class="drop-zone-panel" id="dragPanel">
+      <div class="drop-zone" id="dropZone"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <input type="file" accept="audio/*" onchange="handleFileInput(event)" id="dropFileInput">
+        <span class="drop-icon">🎵</span>
+        <div class="drop-title">Drop your beat here</div>
+        <div class="drop-sub">or click to browse</div>
+        <div class="drop-formats">
+          <span class="fmt-badge">MP3</span>
+          <span class="fmt-badge">WAV</span>
+          <span class="fmt-badge">OGG</span>
+          <span class="fmt-badge">FLAC</span>
+          <span class="fmt-badge">M4A</span>
+        </div>
+      </div>
+      <div class="selected-file-info" id="dragFileInfo">
+        <span class="file-icon">🎶</span>
+        <div class="file-details">
+          <div class="file-fname" id="dragFileName">—</div>
+          <div class="file-fsize" id="dragFileSize">—</div>
+        </div>
+        <button class="file-remove" onclick="clearDragFile()">✕</button>
+      </div>
+      <button class="upload-load-btn" id="dragLoadBtn" disabled onclick="loadCustomBeat('drag')">Load Beat</button>
+    </div>
+
+    <!-- Browse Files panel -->
+    <div class="file-picker-panel" id="pickPanel">
+      <div class="file-select-btn">
+        📂 &nbsp; Select Audio File
+        <input type="file" accept="audio/*" onchange="handlePickInput(event)" id="pickFileInput">
+      </div>
+      <div class="selected-file-info" id="pickFileInfo">
+        <span class="file-icon">🎶</span>
+        <div class="file-details">
+          <div class="file-fname" id="pickFileName">—</div>
+          <div class="file-fsize" id="pickFileSize">—</div>
+        </div>
+        <button class="file-remove" onclick="clearPickFile()">✕</button>
+      </div>
+      <button class="upload-load-btn" id="pickLoadBtn" disabled onclick="loadCustomBeat('pick')">Load Beat</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── Web Audio Beat Engine ────────────────────────────────
+  let actx = null;
+  let beatInterval = null;
+  let currentBeat = 'boombap';
+  let isPlaying = false;
+  let isLooped = true;
+  let step = 0;
+
+  // Beat patterns: 16-step sequencer [kick, snare, hihat, bass]
+  const BEATS = {
+    boombap: {
+      bpm: 90,
+      kick:  [1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0],
+      snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
+      hat:   [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+      bass:  [1,0,0,1, 0,0,1,0, 0,1,0,0, 1,0,0,0],
+    },
+    trap: {
+      bpm: 140,
+      kick:  [1,0,0,0, 0,0,1,0, 0,0,1,0, 0,0,0,0],
+      snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1],
+      hat:   [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
+      bass:  [1,0,1,0, 0,1,0,0, 1,0,0,1, 0,0,1,0],
+    },
+    lofi: {
+      bpm: 85,
+      kick:  [1,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,0],
+      snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,1,0],
+      hat:   [1,0,1,0, 0,0,1,0, 1,0,0,0, 1,0,1,0],
+      bass:  [1,0,0,0, 1,0,0,0, 0,0,1,0, 0,1,0,0],
+    }
+  };
+
+  function initAudio() {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  function playKick(t) {
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.connect(g); g.connect(actx.destination);
+    o.frequency.setValueAtTime(160, t);
+    o.frequency.exponentialRampToValueAtTime(40, t + 0.15);
+    g.gain.setValueAtTime(1.2, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    o.start(t); o.stop(t + 0.3);
+  }
+
+  function playSnare(t) {
+    // White noise burst
+    const bufSize = actx.sampleRate * 0.12;
+    const buf = actx.createBuffer(1, bufSize, actx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = actx.createBufferSource();
+    src.buffer = buf;
+    const g = actx.createGain();
+    const f = actx.createBiquadFilter();
+    f.type = 'highpass'; f.frequency.value = 1800;
+    src.connect(f); f.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.7, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    src.start(t); src.stop(t + 0.12);
+    // Tone body
+    const o = actx.createOscillator();
+    const og = actx.createGain();
+    o.connect(og); og.connect(actx.destination);
+    o.frequency.setValueAtTime(220, t);
+    og.gain.setValueAtTime(0.4, t);
+    og.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    o.start(t); o.stop(t + 0.08);
+  }
+
+  function playHat(t, open) {
+    const bufSize = actx.sampleRate * (open ? 0.18 : 0.04);
+    const buf = actx.createBuffer(1, bufSize, actx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = actx.createBufferSource();
+    src.buffer = buf;
+    const g = actx.createGain();
+    const f = actx.createBiquadFilter();
+    f.type = 'highpass'; f.frequency.value = 7000;
+    src.connect(f); f.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.25, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + (open ? 0.18 : 0.04));
+    src.start(t); src.stop(t + (open ? 0.18 : 0.04));
+  }
+
+  function playBass(t, beatType) {
+    const notes = beatType === 'trap' ? [55, 55, 73, 49] : [55, 65, 49, 41];
+    const freq = notes[Math.floor(Math.random() * notes.length)];
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    const f = actx.createBiquadFilter();
+    f.type = 'lowpass'; f.frequency.value = 300;
+    o.type = 'sawtooth';
+    o.connect(f); f.connect(g); g.connect(actx.destination);
+    o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.5, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+    o.start(t); o.stop(t + 0.25);
+  }
+
+  function tickBeat() {
+    const b = BEATS[currentBeat];
+    const stepDur = (60 / b.bpm) / 4; // 16th note
+    const t = actx.currentTime;
+    if (b.kick[step])  playKick(t);
+    if (b.snare[step]) playSnare(t);
+    if (b.hat[step])   playHat(t, false);
+    if (b.bass[step])  playBass(t, currentBeat);
+    step = (step + 1) % 16;
+    // Animate waveform
+    const bars = document.querySelectorAll('.waveform .bar');
+    bars.forEach(bar => {
+      bar.style.height = (4 + Math.random() * 18) + 'px';
+    });
+  }
+
+  function startBeat() {
+    if (beatInterval) { clearInterval(beatInterval); beatInterval = null; }
+    initAudio();
+    if (actx.state === 'suspended') actx.resume();
+    const bpm = BEATS[currentBeat].bpm;
+    const stepMs = (60000 / bpm) / 4;
+    step = 0;
+    tickBeat();
+    beatInterval = setInterval(tickBeat, stepMs);
+    isPlaying = true;
+    document.getElementById('waveform').classList.add('playing');
+    document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  }
+
+  function stopBeat() {
+    clearInterval(beatInterval);
+    beatInterval = null;
+    isPlaying = false;
+    document.getElementById('waveform').classList.remove('playing');
+    document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+    document.querySelectorAll('.waveform .bar').forEach((b, i) => {
+      b.style.height = (4 + i % 7 * 3) + 'px';
+    });
+  }
+
+  function selectBeat(el) {
+    document.querySelectorAll('.beat-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    currentBeat = el.dataset.beat;
+    document.getElementById('nowTrack').textContent = el.dataset.name;
+    startBeat();
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      stopBeat();
+    } else {
+      startBeat();
+    }
+  }
+
+  function toggleLoop() {
+    isLooped = !isLooped;
+    document.getElementById('loopBtn').classList.toggle('active', isLooped);
+    showToast(isLooped ? 'Loop enabled' : 'Loop disabled');
+  }
+
+  // ─── Data ───────────────────────────────────────────────
+  const rhymeDatabase = [
+    "बजार","संसार","कलाकार","प्रहार","उपहार","साकार","अन्धकार","बिचार",
+    "शान","मान","समान","महान","विद्वान","वरदान","चहान","स्थान",
+    "चाल","काल","जाल","नेपाल","मसाल","कंगाल","बेहाल","धमाल"
+  ];
+
+  // ─── Rhyme engine ─────────────────────────────────────────
+  function liveUpdate() {
+    const val = document.getElementById('wordInput').value.trim();
+    const suffixEl = document.getElementById('suffixDisplay');
+    if (val.length >= 2) {
+      const suffix = val.slice(-2);
+      suffixEl.textContent = '-' + suffix;
+      suffixEl.style.display = 'inline-block';
+    } else {
+      suffixEl.style.display = 'none';
+      document.getElementById('matchCount').textContent = '';
+    }
+  }
+
+  function runRhymeMatch() {
+    const raw    = document.getElementById('wordInput').value.trim();
+    const area   = document.getElementById('resultsArea');
+    const countEl = document.getElementById('matchCount');
+    const suffixEl = document.getElementById('suffixDisplay');
+
+    if (!raw) {
+      area.innerHTML = `<div class="empty-state"><div class="empty-icon">✏️</div><div class="empty-text">Please enter a Nepali word first</div></div>`;
+      countEl.textContent = '';
+      suffixEl.style.display = 'none';
+      return;
+    }
+
+    const suffix  = raw.slice(-2);
+    const matches = rhymeDatabase.filter(w => w.endsWith(suffix) && w !== raw);
+
+    suffixEl.textContent    = '-' + suffix;
+    suffixEl.style.display  = 'inline-block';
+
+    if (matches.length > 0) {
+      countEl.textContent = matches.length + ' matches';
+      area.innerHTML = '';
+      matches.forEach((word, i) => {
+        const chip = document.createElement('span');
+        chip.className = 'rhyme-chip';
+        chip.textContent = word;
+        chip.style.animationDelay = (i * 0.04) + 's';
+        chip.title = 'Click to copy';
+        chip.onclick = () => copyWord(chip, word);
+        area.appendChild(chip);
+      });
+    } else {
+      countEl.textContent = '0 matches';
+      area.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">No rhymes found for ending "-${suffix}"<br><span style="font-size:0.78rem;opacity:0.6">Try a different word</span></div></div>`;
+    }
+  }
+
+  // ─── Copy to clipboard ───────────────────────────────────
+  function copyWord(el, word) {
+    navigator.clipboard.writeText(word).then(() => {
+      el.classList.add('copied');
+      showToast('Copied: ' + word);
+      setTimeout(() => el.classList.remove('copied'), 1200);
+    });
+  }
+
+  // ─── Toast ───────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ─── Upload Beat Modal ────────────────────────────────────
+  let customAudioBuffer = null;
+  let customAudioSource = null;
+  let customAudioGain   = null;
+  let isCustomBeat      = false;
+  let customFile        = { drag: null, pick: null };
+
+  function openUploadModal() {
+    document.getElementById('uploadOverlay').classList.add('open');
+  }
+  function closeUploadModal() {
+    document.getElementById('uploadOverlay').classList.remove('open');
+  }
+  function overlayClickClose(e) {
+    if (e.target === document.getElementById('uploadOverlay')) closeUploadModal();
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabDrag').classList.toggle('active', tab === 'drag');
+    document.getElementById('tabPick').classList.toggle('active', tab === 'pick');
+    document.getElementById('dragPanel').classList.toggle('hidden', tab !== 'drag');
+    document.getElementById('dragPanel').style.display = tab === 'drag' ? 'block' : 'none';
+    document.getElementById('pickPanel').classList.toggle('active', tab === 'pick');
+  }
+
+  // ── Drag & Drop handlers ──
+  function handleDragOver(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.add('dragover');
+  }
+  function handleDragLeave(e) {
+    document.getElementById('dropZone').classList.remove('dragover');
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('audio/')) {
+      setFilePreview('drag', file);
+    } else {
+      showToast('Please drop a valid audio file');
+    }
+  }
+  function handleFileInput(e) {
+    const file = e.target.files[0];
+    if (file) setFilePreview('drag', file);
+  }
+
+  // ── Browse/pick handlers ──
+  function handlePickInput(e) {
+    const file = e.target.files[0];
+    if (file) setFilePreview('pick', file);
+  }
+
+  function setFilePreview(type, file) {
+    customFile[type] = file;
+    const nameEl = document.getElementById(type === 'drag' ? 'dragFileName' : 'pickFileName');
+    const sizeEl = document.getElementById(type === 'drag' ? 'dragFileSize' : 'pickFileSize');
+    const infoEl = document.getElementById(type === 'drag' ? 'dragFileInfo' : 'pickFileInfo');
+    const btnEl  = document.getElementById(type === 'drag' ? 'dragLoadBtn'  : 'pickLoadBtn');
+    nameEl.textContent = file.name;
+    sizeEl.textContent = formatBytes(file.size) + ' · ' + (file.type || 'audio');
+    infoEl.classList.add('visible');
+    btnEl.disabled = false;
+  }
+
+  function clearDragFile() {
+    customFile.drag = null;
+    document.getElementById('dragFileInfo').classList.remove('visible');
+    document.getElementById('dragLoadBtn').disabled = true;
+    document.getElementById('dropFileInput').value = '';
+  }
+  function clearPickFile() {
+    customFile.pick = null;
+    document.getElementById('pickFileInfo').classList.remove('visible');
+    document.getElementById('pickLoadBtn').disabled = true;
+    document.getElementById('pickFileInput').value = '';
+  }
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  // ── Load custom beat into player ──
+  function loadCustomBeat(type) {
+    const file = customFile[type];
+    if (!file) return;
+    initAudio();
+
+    const btn = document.getElementById(type === 'drag' ? 'dragLoadBtn' : 'pickLoadBtn');
+    btn.textContent = 'Decoding…';
+    btn.disabled = true;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      actx.decodeAudioData(e.target.result.slice(0), (buffer) => {
+        customAudioBuffer = buffer;
+        isCustomBeat = true;
+
+        // Stop whatever is playing
+        if (isPlaying) stopBeat();
+
+        // Deactivate all preset beat options
+        document.querySelectorAll('.beat-option').forEach(o => o.classList.remove('active'));
+
+        // Add or update custom beat chip in the list
+        const existing = document.getElementById('customBeatOption');
+        const truncName = file.name.length > 22 ? file.name.substring(0, 20) + '…' : file.name;
+        if (existing) {
+          existing.querySelector('.beat-name').textContent = truncName;
+          existing.classList.add('active');
+        } else {
+          const div = document.createElement('div');
+          div.className = 'beat-option custom-beat active';
+          div.id = 'customBeatOption';
+          div.setAttribute('onclick', 'selectCustomBeat(this)');
+          div.innerHTML = `
+            <div class="beat-dot"></div>
+            <div class="beat-info">
+              <div class="beat-name">${truncName}</div>
+              <div class="beat-bpm">Custom Upload &nbsp;·&nbsp; Your File</div>
+            </div>
+            <span class="beat-tag tag-custom">Custom</span>
+          `;
+          document.getElementById('beatOptions').appendChild(div);
+        }
+
+        document.getElementById('nowTrack').textContent = file.name.replace(/\.[^.]+$/, '');
+        btn.textContent = 'Load Beat';
+        btn.disabled = false;
+        closeUploadModal();
+        startCustomBeat();
+        showToast('Beat loaded: ' + truncName);
+      }, (err) => {
+        btn.textContent = 'Load Beat';
+        btn.disabled = false;
+        showToast('Could not decode audio file');
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function selectCustomBeat(el) {
+    if (!customAudioBuffer) { showToast('No custom beat loaded'); return; }
+    document.querySelectorAll('.beat-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    isCustomBeat = true;
+    document.getElementById('nowTrack').textContent = el.querySelector('.beat-name').textContent;
+    if (isPlaying) stopBeat();
+    startCustomBeat();
+  }
+
+  function startCustomBeat() {
+    if (!customAudioBuffer) return;
+    // Stop any existing synth beat
+    if (beatInterval) { clearInterval(beatInterval); beatInterval = null; }
+    // Stop any previous custom source
+    if (customAudioSource) { try { customAudioSource.stop(); } catch(e){} customAudioSource = null; }
+
+    initAudio();
+    if (actx.state === 'suspended') actx.resume();
+
+    customAudioGain = actx.createGain();
+    customAudioGain.gain.value = 1;
+    customAudioGain.connect(actx.destination);
+
+    customAudioSource = actx.createBufferSource();
+    customAudioSource.buffer = customAudioBuffer;
+    customAudioSource.loop = isLooped;
+    customAudioSource.connect(customAudioGain);
+    customAudioSource.start(0);
+
+    customAudioSource.onended = () => {
+      if (!isLooped && isPlaying) {
+        isPlaying = false;
+        document.getElementById('waveform').classList.remove('playing');
+        document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+      }
+    };
+
+    isPlaying = true;
+    isCustomBeat = true;
+
+    // Animate waveform with random interval for custom beats
+    if (customWaveInterval) clearInterval(customWaveInterval);
+    customWaveInterval = setInterval(() => {
+      document.querySelectorAll('.waveform .bar').forEach(bar => {
+        bar.style.height = (4 + Math.random() * 18) + 'px';
+      });
+    }, 120);
+
+    document.getElementById('waveform').classList.add('playing');
+    document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  }
+
+  let customWaveInterval = null;
+
+  // ── Patch stopBeat to also stop custom audio ──
+  const _origStopBeat = stopBeat;
+  stopBeat = function() {
+    if (customAudioSource) {
+      try { customAudioSource.stop(); } catch(e){}
+      customAudioSource = null;
+    }
+    if (customWaveInterval) { clearInterval(customWaveInterval); customWaveInterval = null; }
+    _origStopBeat();
+    isCustomBeat = false;
+  };
+
+  // ── Patch togglePlay to handle custom beat ──
+  const _origTogglePlay = togglePlay;
+  togglePlay = function() {
+    if (isCustomBeat && customAudioBuffer) {
+      if (isPlaying) {
+        stopBeat();
+      } else {
+        startCustomBeat();
+      }
+    } else {
+      _origTogglePlay();
+    }
+  };
+
+  // ── Patch selectBeat to exit custom mode ──
+  const _origSelectBeat = selectBeat;
+  selectBeat = function(el) {
+    isCustomBeat = false;
+    if (customAudioSource) { try { customAudioSource.stop(); } catch(e){} customAudioSource = null; }
+    if (customWaveInterval) { clearInterval(customWaveInterval); customWaveInterval = null; }
+    document.querySelectorAll('.beat-option').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    currentBeat = el.dataset.beat;
+    document.getElementById('nowTrack').textContent = el.dataset.name;
+    startBeat();
+  };
+
+  // Init: make sure drag panel is visible, pick panel hidden
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('dragPanel').style.display = 'block';
+    document.getElementById('pickPanel').classList.remove('active');
+  });
+
+</script>
+</body>
+</html>
